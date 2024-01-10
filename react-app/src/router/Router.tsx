@@ -11,12 +11,12 @@ export const Router: FC = memo(() => {
     return(
         <BrowserRouter>
             <Routes>
-                <Route path="/home" element={<HeaderLayout><Home /></HeaderLayout>} />
+                <Route path="/" element={<HeaderLayout><Home /></HeaderLayout>} />
                 <Route path="/map" element={<HeaderLayout><Map /></HeaderLayout>} />
                 <Route path="/search" element={<HeaderLayout><Search /></HeaderLayout>} />
                 <Route path="/register_place" element={<HeaderLayout><RegisterPlace /></HeaderLayout>} />
                 <Route path="/guide" element={<HeaderLayout><Guide /></HeaderLayout>} />
-                <Route path="*" element={<Page404 />} />
+                <Route path="*" element={<HeaderLayout><Page404 /></HeaderLayout>} />
             </Routes>
         </BrowserRouter>
     )
