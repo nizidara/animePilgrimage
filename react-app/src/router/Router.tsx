@@ -7,15 +7,16 @@ import { Map } from "../components/pages/Map";
 import { Search } from "../components/pages/Search";
 import { RegisterPlace } from "../components/pages/RegisterPlace";
 import { Guide } from "../components/pages/Guide";
+import { FullLayout } from "../components/templates/FullLayout";
 export const Router: FC = memo(() => {
     return(
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<HeaderLayout><Home /></HeaderLayout>} />
-                <Route path="/map" element={<HeaderLayout><Map /></HeaderLayout>} />
-                <Route path="/search" element={<HeaderLayout><Search /></HeaderLayout>} />
-                <Route path="/register_place" element={<HeaderLayout><RegisterPlace /></HeaderLayout>} />
-                <Route path="/guide" element={<HeaderLayout><Guide /></HeaderLayout>} />
+                <Route path="/" element={<FullLayout><Home /></FullLayout>} />
+                <Route path="/map" element={<FullLayout><Map /></FullLayout>} />
+                <Route path="/search" element={<FullLayout><Search /></FullLayout>} />
+                <Route path="/register_place" element={<FullLayout><RegisterPlace /></FullLayout>} />
+                <Route path="/guide" element={<FullLayout><Guide /></FullLayout>} />
                 <Route path="*" element={<HeaderLayout><Page404 /></HeaderLayout>} />
             </Routes>
         </BrowserRouter>
