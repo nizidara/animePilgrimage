@@ -26,6 +26,7 @@ export const Header: FC = memo(() => {
                             <Nav.Link href="./search">検索</Nav.Link>
                             <Nav.Link href="./register_place">聖地登録</Nav.Link>
                             <Nav.Link href="./guide">利用ガイド</Nav.Link>
+                            <Nav.Link href="./contact">お問い合わせ</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

@@ -1,11 +1,15 @@
 import {memo, FC} from "react";
+import { ContactForm } from "../organisms/forms/ContactForm";
+import { Container } from "react-bootstrap";
 
 export const Guide: FC = memo(() =>{
     return (
         <>
-            <h1>FAQ</h1>
-            <h2>その他</h2>
-            <p>お問い合わせフォーム</p>
+            <Container>
+                <h1>FAQ</h1>
+                <h2>その他</h2>
+                <ContactForm />
+            </Container>
         </>
     )
 });
