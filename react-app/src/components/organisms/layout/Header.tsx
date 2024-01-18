@@ -1,6 +1,5 @@
-import { FC, memo, useCallback } from "react"
+import { FC, memo } from "react"
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
 
 export const Header: FC = memo(() => {
@@ -11,7 +10,6 @@ export const Header: FC = memo(() => {
     // const onClickSearch = useCallback(() => navigate("/search"), [navigate]);
     // const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
     // const onClickGuide = useCallback(() => navigate("/guide"), [navigate]);
-
 
     return (
         <>
