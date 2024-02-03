@@ -1,7 +1,7 @@
 import {memo, FC, useState} from "react";
 import { Container } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { responseSendContents } from "../../hooks/useSendContact";
+import { responseSendContents } from "../../type/api/contact";
 
 export const ContactResult: FC = memo(() =>{
     const location = useLocation();

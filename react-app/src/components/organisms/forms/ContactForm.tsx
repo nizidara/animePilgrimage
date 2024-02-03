@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, memo, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { sendContents, useSendContact } from "../../../hooks/useSendContact";
+import { useSendContact } from "../../../hooks/useSendContact";
+import { sendContents } from "../../../type/api/contact";
 
 
 export const ContactForm: FC = memo(() => {
