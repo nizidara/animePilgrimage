@@ -21,7 +21,9 @@ export const Header: FC = memo(() => {
                         <Nav className="me-auto">
                             <Nav.Link href="/">Home</Nav.Link>
                             <Nav.Link href="/map">Map</Nav.Link>
-                            <Nav.Link href="/search">検索</Nav.Link>
+                            <Nav.Link href="/search/anime">アニメ検索</Nav.Link>
+                            <Nav.Link href="/search/place">聖地検索</Nav.Link>
+                            <Nav.Link href="/register_anime">アニメ登録</Nav.Link>
                             <Nav.Link href="/register_place">聖地登録</Nav.Link>
                             <Nav.Link href="/guide">利用ガイド</Nav.Link>
                             <Nav.Link href="/contact">お問い合わせ</Nav.Link>

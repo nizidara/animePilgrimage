@@ -1,7 +1,7 @@
 import {memo, FC} from "react";
 import { Container } from "react-bootstrap";
 
-export const Search: FC = memo(() =>{
+export const SearchAnime: FC = memo(() =>{
     return (
         <Container>
             <h1>検索ページです．</h1>

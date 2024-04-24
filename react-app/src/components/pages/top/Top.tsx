@@ -1,8 +1,8 @@
 import {memo, FC} from "react";
 import { Container } from "react-bootstrap";
-import { useFastAPITest } from "../../hooks/useFastAPITest";
+import { useFastAPITest } from "../../../hooks/useFastAPITest";
 
-export const Home: FC = memo(() =>{
+export const Top: FC = memo(() =>{
     const {GetData, data} = useFastAPITest();
     const onClickGetData = () => GetData("hello");
     return (

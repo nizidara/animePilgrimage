@@ -1,5 +1,5 @@
 import {memo, FC} from "react";
-import { ContactForm } from "../organisms/forms/ContactForm";
+import { ContactForm } from "../../organisms/forms/ContactForm";
 import { Container } from "react-bootstrap";
 
 export const Contact: FC = memo(() =>{
