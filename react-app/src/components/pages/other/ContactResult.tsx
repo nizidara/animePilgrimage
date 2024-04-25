@@ -2,6 +2,7 @@ import {memo, FC, useState} from "react";
 import { Container } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { responseSendContents } from "../../../type/api/contact";
+import { ContactDetailDisplay } from "../../organisms/display/ContactDetailDisplay";
 
 export const ContactResult: FC = memo(() =>{
     const location = useLocation();
@@ -16,6 +17,7 @@ export const ContactResult: FC = memo(() =>{
             <p>メール：{responseSendContents.email}</p>
             <p>タイトル：{responseSendContents.title}</p>
             <p>内容：{responseSendContents.contents}</p>
+            <ContactDetailDisplay />
         </Container>
     )
 });

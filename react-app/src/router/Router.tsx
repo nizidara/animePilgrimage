@@ -44,7 +44,7 @@ import { DeleteRequestCommentComplete } from "../components/pages/comment/Delete
 import { Contact } from "../components/pages/other/Contact";
 import { ContactResult } from "../components/pages/other/ContactResult";
 import { Guide } from "../components/pages/other/Guide";
-import { Page404 } from "../components/pages/Page404";
+import { Page404 } from "../components/pages/other/Page404";
 
 import { Map } from "../components/pages/Map";
 
