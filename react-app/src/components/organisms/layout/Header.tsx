@@ -20,7 +20,7 @@ export const Header: FC = memo(() => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href="/">Home</Nav.Link>
-                            <Nav.Link href="/map">Map</Nav.Link>
+                            {/* <Nav.Link href="/map">Map</Nav.Link> */}
                             <Nav.Link href="/search/anime">アニメ検索</Nav.Link>
                             <Nav.Link href="/search/place">聖地検索</Nav.Link>
                             <Nav.Link href="/register_anime">アニメ登録</Nav.Link>
