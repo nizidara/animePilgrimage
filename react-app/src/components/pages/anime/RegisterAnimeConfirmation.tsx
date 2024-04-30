@@ -1,18 +1,25 @@
 import {memo, FC, useCallback} from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { registerAnime } from "../../../type/api/anime";
 
 export const RegisterAnimeConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const registerAnime = location.state.formData as registerAnime;
     
-    const onClickSend = useCallback(() => navigate("/register_anime/complete"), [navigate]);
-    const onClickBack = useCallback(() => navigate(-1), [navigate]);
+    const back = useCallback((formData:registerAnime) => navigate("/register_anime", {state: {formData}}), [navigate]);
+    const send = useCallback((formData:registerAnime) => navigate("/register_anime/complete", {state: {formData}}), [navigate]);
+
+    const onClickBack = () => back(registerAnime);
+    const onClickSend = () => send(registerAnime);
 
     return (
         <Container>
             <h2>アニメ登録確認ページです．</h2>
-            <RegisterAnimeDetailDisplay />
+            <RegisterAnimeDetailDisplay title={registerAnime.title} kana={registerAnime.kana} introduction={registerAnime.introduction} />
             <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
         </Container>
     )
