@@ -1,11 +1,14 @@
 import { FC, memo } from "react"
+import { deletePlace } from "../../../type/api/place";
 
 
-export const DeletePlaceDetailDisplay: FC = memo(() => {
+export const DeletePlaceDetailDisplay: FC<deletePlace> = memo((props) => {
+    const {contents} = props;
     
     return (
         <>
-            <div>削除聖地詳細表示</div>
+            <p>削除申請理由</p>
+            <p>{contents}</p>
         </>
     )
 });
