@@ -25,22 +25,22 @@ export const ContactForm: FC = memo(() => {
             <Form>
                 <Form.Group className="mb-3" controlId="contactFormName">
                     <Form.Label>名前</Form.Label>
-                    <Form.Control value={name} onChange={onChangeName} />
+                    <Form.Control value={name} maxLength={20} onChange={onChangeName} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="contactFormEmail">
                     <Form.Label>メールアドレス</Form.Label>
-                    <Form.Control type="email" placeholder="aaa@example.com" value={email} onChange={onChangeEmail}/>
+                    <Form.Control type="email" placeholder="aaa@example.com" maxLength={256} value={email} onChange={onChangeEmail}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="contactFormTitle">
                     <Form.Label>題名</Form.Label>
-                    <Form.Control value={title} onChange={onChangeTitle}/>
+                    <Form.Control value={title} maxLength={100} onChange={onChangeTitle}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="contactFormContents">
                     <Form.Label>メッセージ本文</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={contents} onChange={onChangeContents}/>
+                    <Form.Control as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents}/>
                 </Form.Group>
                 <div className="d-grid gap-2">
                     <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
