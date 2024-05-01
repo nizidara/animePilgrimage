@@ -1,11 +1,13 @@
 import { FC, memo } from "react"
+import { deleteComment } from "../../../type/api/comment";
 
 
-export const DeleteCommentDetailDisplay: FC = memo(() => {
-    
+export const DeleteCommentDetailDisplay: FC<deleteComment> = memo((props) => {
+    const {contents} = props;
     return (
         <>
-            <div>削除コメント詳細表示</div>
+            <p>削除申請理由</p>
+            <p>{contents}</p>
         </>
     )
 });
