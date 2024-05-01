@@ -21,12 +21,12 @@ export const LoginForm: FC = memo(() => {
         <>
             <p>ログインフォームです</p>
             <Form>
-                <Form.Group className="mb-3" controlId="contactFormName">
+                <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
                     <Form.Control value={loginId} onChange={onChangeLoginId} />
                 </Form.Group>
                 
-                <Form.Group className="mb-3" controlId="contactFormEmail">
+                <Form.Group className="mb-3" controlId="loginFormPassword">
                     <Form.Label>パスワード</Form.Label>
                     <Form.Control type="password" value={password} onChange={onChangePassword}/>
                 </Form.Group>
