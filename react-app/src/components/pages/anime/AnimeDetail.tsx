@@ -1,5 +1,5 @@
 import {memo, FC, useCallback} from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
@@ -13,11 +13,21 @@ export const AnimeDetail: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>アニメ詳細ページです．</h2>
-            <Button variant="secondary" size="lg" onClick={onClickEdit}>修正</Button>
-            <AnimeIntroductionDisplay />
+            <Row>
+                <Col xs={6}>
+                    <h2>アニメ詳細ページです．</h2>
+                </Col>
+                <Col xs={6} className="d-flex justify-content-end align-items-center">
+                <Button variant="secondary" onClick={onClickEdit}>修正</Button>
+                </Col>
+            </Row>
+            <AnimeIntroductionDisplay title={"リコリコ"} introduction={"さかなー"} />
             <hr />
-            <Button variant="primary" size="lg" onClick={onClickMap}>MAPを見る</Button> <Button variant="secondary" size="lg" onClick={onClickRegister}>登録</Button>
+            <Row>
+                <Col xs={12} className="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <Button variant="primary" onClick={onClickMap}>MAPを見る</Button> <Button variant="secondary" onClick={onClickRegister}>登録</Button>
+                </Col>
+            </Row>
             <hr />
             <PlaceSummaryCard />
         </Container>

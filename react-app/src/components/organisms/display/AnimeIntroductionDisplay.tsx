@@ -1,11 +1,14 @@
 import { FC, memo } from "react"
+import { animeDetail } from "../../../type/api/anime";
 
 
-export const AnimeIntroductionDisplay: FC = memo(() => {
+export const AnimeIntroductionDisplay: FC<animeDetail> = memo((props) => {
+    const {title, introduction} = props;
     
     return (
         <>
-            <div>アニメ紹介表示</div>
+            <div>img? {title}</div>
+            <p>{introduction}</p>
         </>
     )
 });
