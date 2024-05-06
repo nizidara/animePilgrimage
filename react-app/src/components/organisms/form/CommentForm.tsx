@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { BsImage } from "react-icons/bs";
 
 
 export const CommentForm: FC = memo(() => {
@@ -30,8 +31,8 @@ export const CommentForm: FC = memo(() => {
                 <Row>
                     <Col sm={10}>
                         <Form.Group controlId="commentformPhoto" className="mb-3">
-                            <Form.Label>写真を添付</Form.Label>
-                            <Form.Control type="file" />
+                            <Form.Label><BsImage /></Form.Label>
+                            <Form.Control type="file" hidden/>
                         </Form.Group>
                     </Col>
 
