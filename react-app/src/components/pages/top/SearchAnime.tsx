@@ -9,7 +9,7 @@ export const SearchAnime: FC = memo(() =>{
         <Container>
             <h1>アニメ検索ページです．</h1>
             <SearchAnimeForm />
-            <SwitchSearchLink />
+            <SwitchSearchLink flag={0} />
             <AnimeSummaryCard />
         </Container>
     )

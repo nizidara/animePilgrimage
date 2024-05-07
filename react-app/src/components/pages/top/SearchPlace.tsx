@@ -9,7 +9,7 @@ export const SearchPlace: FC = memo(() =>{
         <Container>
             <h1>聖地検索ページです．</h1>
             <SearchPlaceForm />
-            <SwitchSearchLink />
+            <SwitchSearchLink flag={1} />
             <PlaceSummaryCard />
         </Container>
     )
