@@ -8,3 +8,8 @@ export type registerPlace ={
     regionId: number;
     comment: string;
 }
+
+export type photoData = {
+    title: string;
+    name: string;
+}

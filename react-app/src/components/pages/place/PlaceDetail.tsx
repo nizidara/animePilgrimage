@@ -20,7 +20,7 @@ export const PlaceDetail: FC = memo(() =>{
             <Button variant="secondary" size="lg" onClick={onClickEdit}>修正</Button> <Button variant="secondary" size="lg" onClick={onClickDelete}>削除</Button>
             <DisplayMap />
             <PlaceSummaryCard />
-            <PhotoCard />
+            <PhotoCard title="リコリコ" name="すみだ水族館" />
             <CommentForm />
             <CommentCard />
         </Container>

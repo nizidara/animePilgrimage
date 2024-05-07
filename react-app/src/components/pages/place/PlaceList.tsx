@@ -17,7 +17,7 @@ export const PlaceList: FC = memo(() =>{
             <Button variant="secondary" size="lg" onClick={onClickAnime}>#anime</Button>
             <DisplayMap />
             <PlaceSummaryCard /><br />
-            <PhotoCard />
+            <PhotoCard title="リコリコ" name="すみだ水族館" />
             <hr />
             <Button variant="secondary" size="lg" onClick={onClickRegisterPlace}>登録</Button><br />
             <PlaceSummaryCard />
