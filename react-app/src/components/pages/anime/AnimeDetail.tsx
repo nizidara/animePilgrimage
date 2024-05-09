@@ -1,11 +1,17 @@
 import {memo, FC, useCallback} from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
 
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
+
+    const placeList = [
+        { place_id: 1, name: "すみだ水族館", comment: "さかなー ちんあなご～", title: "リコリス・リコイル" },
+        { place_id: 2, name: "東京スカイツリー", comment: "バランス", title: "リコリス・リコイル" },
+        { place_id: 3, name: "錦糸公園", comment: "出会いの場", title: "リコリス・リコイル" },
+    ];
 
     const onClickEdit = useCallback(() => navigate("/edit_anime"), [navigate]);
     const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
@@ -29,7 +35,14 @@ export const AnimeDetail: FC = memo(() =>{
                 </Col>
             </Row>
             <hr />
-            <PlaceSummaryCard />
+            
+            <ListGroup>
+                {placeList.map(place => (
+                    <ListGroup.Item key={place.place_id}>
+                        <PlaceSummaryCard name={place.name} title={place.title} comment={place.comment} />
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
         </Container>
     )
 });

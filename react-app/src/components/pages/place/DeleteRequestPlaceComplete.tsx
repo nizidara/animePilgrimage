@@ -17,7 +17,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
     return (
         <Container>
             <h2>聖地削除完了ページです．</h2>
-            <PlaceSummaryCard />
+            <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
             <DeletePlaceDetailDisplay contents={deletePlace.contents} />
             <Button variant="primary" size="lg" onClick={onClickPlace}>聖地情報に戻る</Button><br />
             <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>

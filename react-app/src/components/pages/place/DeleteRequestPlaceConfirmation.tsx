@@ -20,7 +20,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>聖地削除確認ページです．</h2>
-            <PlaceSummaryCard />
+            <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
             <DeletePlaceDetailDisplay contents={deletePlace.contents} />
             <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
         </Container>

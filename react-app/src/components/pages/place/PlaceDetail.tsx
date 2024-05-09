@@ -28,7 +28,7 @@ export const PlaceDetail: FC = memo(() =>{
             <h2>聖地詳細ページです．</h2>
             <Button variant="secondary" size="lg" onClick={onClickEdit}>修正</Button> <Button variant="secondary" size="lg" onClick={onClickDelete}>削除</Button>
             <DisplayMap />
-            <PlaceSummaryCard />
+            <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
             <PhotoCard title="リコリコ" name="すみだ水族館" />
             <CommentForm />
             <ListGroup>
