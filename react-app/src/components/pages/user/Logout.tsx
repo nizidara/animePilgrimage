@@ -1,5 +1,5 @@
 import {memo, FC, useCallback} from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export const Logout: FC = memo(() =>{
@@ -9,8 +9,13 @@ export const Logout: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>ログアウトページです．</h2>
-            <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>
+            <h2>ログアウトしました</h2>
+            
+            <Row className="justify-content-md-center mt-2">
+                <Col md="auto">
+                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                </Col>
+            </Row>
         </Container>
     )
 });

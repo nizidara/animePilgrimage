@@ -19,7 +19,6 @@ export const LoginForm: FC = memo(() => {
 
     return (
         <>
-            <p>ログインフォームです</p>
             <Form>
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
