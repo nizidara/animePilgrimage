@@ -8,8 +8,8 @@ export const FAQCard: FC<faqList> = memo((props) => {
     return (
         <>
             <Accordion alwaysOpen>
-                {faq.map((item) => (
-                    <Accordion.Item eventKey={item.question}>
+                {faq.map((item, index) => (
+                    <Accordion.Item key={index} eventKey={item.question}>
                         <Accordion.Header>{item.question}</Accordion.Header>
                         <Accordion.Body>{item.answer}</Accordion.Body>
                     </Accordion.Item>
