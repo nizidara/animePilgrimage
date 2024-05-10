@@ -11,7 +11,7 @@ export const AdminContactDetail: FC = memo(() =>{
     return (
         <Container>
             <h2>Adminお問い合わせ内容詳細ページです．</h2>
-            <ContactDetailDisplay />
+            <ContactDetailDisplay id={111} name="hoge" email="hoge@hoge" title="hoge" contents="hogehoge" />
             <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>
         </Container>
     )
