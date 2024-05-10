@@ -1,5 +1,5 @@
 import {memo, FC, useCallback} from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { registerAnime } from "../../../type/api/anime";
@@ -15,10 +15,20 @@ export const EditRequestAnimeComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>アニメ修正完了ページです．</h2>
+            <h2>修正リクエストが完了しました</h2>
             <RegisterAnimeDetailDisplay title={registerAnime.title} kana={registerAnime.kana} introduction={registerAnime.introduction} />
-            <Button variant="primary" size="lg" onClick={onClickAnime}>アニメ情報に戻る</Button><br />
-            <Button variant="primary" size="lg" onClick={onClickTop}>TOP</Button>
+
+            <Row className="justify-content-md-center mt-2">
+                <Col md="auto">
+                    <Button variant="primary" onClick={onClickAnime}>アニメ情報に戻る</Button>
+                </Col>
+            </Row>
+
+            <Row className="justify-content-md-center mt-2">
+                <Col md="auto">
+                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                </Col>
+            </Row>
         </Container>
     )
 });

@@ -3,6 +3,7 @@ import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { registerAnime } from "../../../type/api/anime";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 
 export const EditRequestAnime: FC = memo(() =>{
     const navigate = useNavigate();
@@ -23,9 +24,10 @@ export const EditRequestAnime: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>アニメ修正ページです．</h2>
+            <h2>作品修正リクエスト</h2>
             <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData}/>
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickNext}>次へ</Button>
+
+            <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>
     )
 });

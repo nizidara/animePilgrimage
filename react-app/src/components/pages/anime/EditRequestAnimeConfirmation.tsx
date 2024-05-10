@@ -3,6 +3,7 @@ import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { registerAnime } from "../../../type/api/anime";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 
 export const EditRequestAnimeConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
@@ -18,9 +19,10 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>アニメ修正確認ページです．</h2>
+            <h2>リクエスト内容確認</h2>
             <RegisterAnimeDetailDisplay title={registerAnime.title} kana={registerAnime.kana} introduction={registerAnime.introduction} />
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
+
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
     )
 });
