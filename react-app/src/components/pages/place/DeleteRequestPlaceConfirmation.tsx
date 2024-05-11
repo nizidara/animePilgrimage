@@ -4,6 +4,7 @@ import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deletePlace } from "../../../type/api/place";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 
 export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
@@ -19,10 +20,14 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地削除確認ページです．</h2>
+            <h2>リクエスト内容確認</h2>
+            <p>削除リクエスト内容をご確認ください。</p>
+
             <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
+            <br />
             <DeletePlaceDetailDisplay contents={deletePlace.contents} />
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
+
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
     )
 });
