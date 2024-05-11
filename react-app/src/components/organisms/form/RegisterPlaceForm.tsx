@@ -2,6 +2,7 @@ import { ChangeEvent, FC, memo } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { registerPlace } from "../../../type/api/place";
 import { Form } from "react-bootstrap";
+import { animeList, regionList } from "../../../testdatas/testdata";
 
 type FormProps = {
     onFormChange: (data: registerPlace) => void;
@@ -40,9 +41,9 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     <Form.Label>作品名※</Form.Label>
                     <Form.Select className="mb-3" name="animeId" value={formData.animeId} onChange={selectChange}>
                         <option>作品名を選択してください</option>
-                        <option value="A01">リコリコ</option>
-                        <option value="A02">青ブタ</option>
-                        <option value="A03">ユーフォ</option>
+                        {animeList.map(anime => (
+                            <option key={anime.anime_id} value={anime.anime_id}>{anime.title}</option>
+                        ))}
                     </Form.Select>
                 </Form.Group>
             </Form>
@@ -52,14 +53,12 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     <Form.Label>都道府県名※</Form.Label>
                     <Form.Select className="mb-3" name="regionId" value={formData.regionId} onChange={selectChange}>
                         <option>都道府県を選択してください</option>
-                        <option value="R01">北海道</option>
-                        <option value="R02">東京都</option>
-                        <option value="R03">海外</option>
+                        {regionList.map(region => (
+                            <option key={region.region_id} value={region.region_id}>{region.region_name}</option>
+                        ))}
                     </Form.Select>
                 </Form.Group>
             </Form>
-
-
 
             <SearchMap />
 
@@ -70,7 +69,6 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     <Form.Text className="text-muted">{formData.comment.length} / 200 </Form.Text>
                 </Form.Group>
             </Form>
-            
         </>
     )
 });

@@ -16,11 +16,15 @@ export const RegisterPlaceComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地登録完了ページです．</h2>
+            <h2>聖地の登録が完了しました</h2>
             <RegisterPlaceDetailDisplay name={registerPlace.name} animeId={registerPlace.animeId} regionId={registerPlace.regionId} comment={registerPlace.comment} />
-            <Button variant="primary" size="lg" onClick={onClickRegisterPlace}>続けて聖地を登録</Button><br />
-            <Button variant="primary" size="lg" onClick={onClickAnime}>アニメ情報</Button><br />
-            <Button variant="primary" size="lg" onClick={onClickPlace}>聖地情報</Button>
+
+            <center>
+            <Button variant="primary" onClick={onClickRegisterPlace} className="mt-2">続けて聖地を登録</Button><br />
+            <Button variant="primary" onClick={onClickAnime} className="mt-2">アニメ情報</Button><br />
+            <Button variant="primary" onClick={onClickPlace} className="mt-2">聖地情報</Button>
+            </center>
+            
         </Container>
     )
 });
