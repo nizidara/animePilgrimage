@@ -15,10 +15,14 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地修正完了ページです．</h2>
+            <h2>修正リクエストを送信しました</h2>
+
             <RegisterPlaceDetailDisplay name={registerPlace.name} animeId={registerPlace.animeId} regionId={registerPlace.regionId} comment={registerPlace.comment} />
-            <Button variant="primary" size="lg" onClick={onClickPlace}>聖地情報に戻る</Button><br />
-            <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>
+
+            <center>
+            <Button variant="primary" onClick={onClickPlace} className="mt-2">聖地情報に戻る</Button><br />
+            <Button variant="primary" onClick={onClickTop} className="mt-2">TOPへ</Button>
+            </center>
         </Container>
     )
 });

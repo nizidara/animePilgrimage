@@ -3,6 +3,7 @@ import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { registerPlace } from "../../../type/api/place";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 
 export const EditRequestPlaceConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
@@ -18,9 +19,12 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地修正確認ページです．</h2>
+            <h2>修正リクエスト内容確認</h2>
+            <p>聖地情報の修正リクエストの内容をご確認ください。</p>
+            
             <RegisterPlaceDetailDisplay name={registerPlace.name} animeId={registerPlace.animeId} regionId={registerPlace.regionId} comment={registerPlace.comment} />
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
+
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
     )
 });
