@@ -15,12 +15,12 @@ export const SearchAnimeForm: FC = memo(() => {
     return (
         <>
             <Form>
-                <Form.Group as={Row} className="mb-3" controlId="SearchAnimeFormTitle">
-                    <Col sm="10">
-                    <Form.Control type="search" value={title} placeholder="アニメタイトル絞り込み" onChange={onChangeTitle} />
+                <Form.Group as={Row} className="mb-3 d-flex justify-content-between mt-2" controlId="SearchAnimeFormTitle">
+                    <Col>
+                        <Form.Control type="search" value={title} placeholder="アニメタイトル絞り込み" onChange={onChangeTitle} />
                     </Col>
-                    <Col sm="2">
-                    <Button variant="secondary" onClick={onClickSearch}>検索</Button>
+                    <Col xs="auto">
+                        <Button variant="outline-primary" onClick={onClickSearch}>検索</Button>
                     </Col>
                 </Form.Group>
             </Form>

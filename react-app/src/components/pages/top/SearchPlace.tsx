@@ -1,22 +1,27 @@
-import {memo, FC} from "react";
-import { Container, ListGroup } from "react-bootstrap";
+import {memo, FC, useCallback} from "react";
+import { Button, Container, ListGroup } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
+import { placeList } from "../../../testdatas/testdata";
+import { useNavigate } from "react-router-dom";
 
 export const SearchPlace: FC = memo(() =>{
-    
-    const placeList = [
-        { place_id: 1, name: "すみだ水族館", comment: "さかなー ちんあなご～", title: "リコリス・リコイル" },
-        { place_id: 2, name: "東京スカイツリー", comment: "バランス", title: "リコリス・リコイル" },
-        { place_id: 3, name: "錦糸公園", comment: "出会いの場", title: "リコリス・リコイル" },
-    ];
+    const navigate = useNavigate();
+
+    const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
 
     return (
         <Container>
-            <h1>聖地検索ページです．</h1>
+            <h1>聖地検索</h1>
+            
             <SearchPlaceForm />
+
             <SwitchSearchLink flag={1} />
+
+            <div className="d-flex justify-content-end mb-2">
+                <Button variant="primary" onClick={onClickMap}>一覧をMAPで表示</Button>
+            </div>
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>

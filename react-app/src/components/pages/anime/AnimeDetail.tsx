@@ -30,7 +30,7 @@ export const AnimeDetail: FC = memo(() =>{
             <AnimeIntroductionDisplay title={"リコリコ"} introduction={"さかなー"} />
             <hr />
             <Row>
-                <Col xs={12} className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <Col className="d-grid gap-2 d-md-flex justify-content-md-end">
                     <Button variant="primary" onClick={onClickMap}>MAPを見る</Button> <Button variant="secondary" onClick={onClickRegister}>登録</Button>
                 </Col>
             </Row>
