@@ -15,3 +15,5 @@ export const placeList = [
     { place_id: 2, name: "東京スカイツリー", comment: "バランス", title: "リコリス・リコイル" },
     { place_id: 3, name: "錦糸公園", comment: "出会いの場", title: "リコリス・リコイル" },
 ];
+
+export const animeTitle = "リコリス・リコイル";

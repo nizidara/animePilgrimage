@@ -21,17 +21,23 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
             <Card>
                 <Card.Body>
                         <Row>
-                            <Col sm={1}>
+                            <Col xs="auto" sm="auto">
                                     <BsImage size={80} />
                             </Col>
-                            <Col sm={11}>
-                                    <Card.Title className="d-flex justify-content-between">{name} <Button variant="outline-primary" className="float-right" onClick={onClickAnime}>#{title}</Button></Card.Title>
+                            <Col>
+                                    <Card.Title>{name}</Card.Title> 
                                     <Card.Text>
                                         {comment}
                                     </Card.Text>
+                                    
                             </Col>
                         </Row>
                 </Card.Body>
+                <Card.Footer>
+                    <div className="d-flex justify-content-end">
+                        <Button variant="link" onClick={onClickAnime} size="sm">#{title}</Button>
+                    </div>
+                </Card.Footer>
             </Card>
             
         </>
