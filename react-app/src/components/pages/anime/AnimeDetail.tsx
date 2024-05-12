@@ -19,14 +19,14 @@ export const AnimeDetail: FC = memo(() =>{
                     <h2>{animeTitle}</h2>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end align-items-center">
-                <Button variant="secondary" onClick={onClickEdit}>修正</Button>
+                <Button variant="warning" onClick={onClickEdit}>修正</Button>
                 </Col>
             </Row>
             <AnimeIntroductionDisplay title={"リコリコ"} introduction={"さかなー"} />
             <hr />
 
             <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={onClickMap} className="mx-2">MAPを見る</Button> <Button variant="secondary" onClick={onClickRegister}>登録</Button>
+                <Button variant="primary" onClick={onClickMap} className="mx-2">MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
             </div> 
             <ListGroup>
                 {placeList.map(place => (
