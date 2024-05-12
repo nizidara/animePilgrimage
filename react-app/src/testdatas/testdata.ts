@@ -4,6 +4,8 @@ export const animeList = [
         { anime_id: "A03", title: "青ブタ", introduction: "翔子さん！" },
 ];
 
+export const animeTitle = "リコリス・リコイル";
+
 export const regionList = [
     { region_id: 'R01', region_name:'北海道'},
     { region_id: 'R02', region_name:'東京'},
@@ -16,4 +18,23 @@ export const placeList = [
     { place_id: 3, name: "錦糸公園", comment: "出会いの場", title: "リコリス・リコイル" },
 ];
 
-export const animeTitle = "リコリス・リコイル";
+export const placeData = {
+    name: "すみだ水族館",
+    animeTitle: "リコリス・リコイル",
+    comment: "さかな～ ちんあなごー"
+};
+
+export const commentList = [
+    { comment_id: 1, comment_date: new Date(2023, 1, 2, 11, 12), user_name: 'John', comment: 'This is my first tweet!' },
+    { comment_id: 2, comment_date: new Date(2024, 3, 12, 1, 12), user_name: 'Alice', comment: 'Hello Twitter World!' },
+    { comment_id: 3, comment_date: new Date(2024, 5, 22, 11, 12), user_name: 'Bob', comment: 'I love React Bootstrap!' },
+    { comment_id: 4, comment_date: new Date(2024, 6, 1, 11, 1), user_name: 'Bob', comment: 'I love React Bootstrap!' },
+    { comment_id: 5, comment_date: new Date(2025, 1, 2, 12, 12), user_name: 'Bob', comment: 'I love React Bootstrap!' },
+    { comment_id: 6, comment_date: new Date(2025, 1, 2, 11, 12), user_name: 'Bob', comment: 'I love React Bootstrap!' },
+];
+
+export const faq = [
+    {question: "Q1.hogehoge1", answer: "A1.fugafuga"},
+    {question: "Q2.hogehoge2", answer: "A2.fugafuga"},
+    {question: "Q3.hogehoge3", answer: "A3.fugafuga"}
+];
