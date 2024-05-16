@@ -6,7 +6,7 @@ import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { CommentForm } from "../../organisms/form/CommentForm";
 import { CommentCard } from "../../organisms/card/CommentCard";
 import { useNavigate } from "react-router-dom";
-import { commentList, placeData} from "../../../testdatas/testdata";
+import { commentList, photoDataList, placeData} from "../../../testdatas/testdata";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -29,7 +29,14 @@ export const PlaceDetail: FC = memo(() =>{
             <DisplayMap />
 
             <PlaceSummaryCard name={placeData.name} title={placeData.animeTitle} comment={placeData.comment} />
-            <PhotoCard title={placeData.animeTitle} name={placeData.name} />
+            <ListGroup horizontal>
+                {photoDataList.map(photo => (
+                    <ListGroup.Item key={photo.src}>
+                        <PhotoCard title={photo.animeTitle} name={photo.name} src={photo.src} />
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+            
             <CommentForm />
             <ListGroup>
                 {commentList.map(comment => (

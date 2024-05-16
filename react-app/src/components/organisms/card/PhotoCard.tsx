@@ -1,15 +1,15 @@
-import { ChangeEvent, Dispatch, FC, MouseEvent, SetStateAction, memo, useRef, useState } from "react"
-import { Button, Overlay, Popover } from "react-bootstrap";
+import { FC, MouseEvent, memo, useRef, useState } from "react"
+import { Image, Overlay, Popover } from "react-bootstrap";
 import { photoData } from "../../../type/api/place";
 
 
 export const PhotoCard: FC<photoData> = memo((props) => {
-    const {title, name} = props;
+    const {title, name, src} = props;
     const [show, setShow] = useState(false);
     const [target, setTarget] = useState<HTMLElement | null>(null);
     const ref = useRef<HTMLDivElement>(null);
 
-    const handleClick = (event:MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event:MouseEvent<HTMLImageElement>) => {
         setShow(!show);
         setTarget(event.target as HTMLElement);
     };
@@ -17,7 +17,7 @@ export const PhotoCard: FC<photoData> = memo((props) => {
     return (
         <>
             <div ref={ref}>
-            <Button onClick={handleClick}>写真カードです</Button>
+            <Image src={src} rounded onClick={handleClick}/>
 
             <Overlay
                 show={show}

@@ -24,6 +24,13 @@ export const placeData = {
     comment: "さかな～ ちんあなごー"
 };
 
+export const photoDataList = [
+    {name: "すみだ水族館", animeTitle: "リコリス・リコイル", src: "https://placehold.jp/150x150.png"},
+    {name: "すみだ水族館", animeTitle: "リコリス・リコイル", src: "https://placehold.jp/3d4070/ffffff/150x150.png"},
+    {name: "すみだ水族館", animeTitle: "リコリス・リコイル", src: "https://placehold.jp/703e45/ffffff/150x150.png"},
+];
+
+
 export const commentList = [
     { comment_id: 1, comment_date: new Date(2023, 1, 2, 11, 12), user_name: 'John', comment: 'This is my first tweet!' },
     { comment_id: 2, comment_date: new Date(2024, 3, 12, 1, 12), user_name: 'Alice', comment: 'Hello Twitter World!' },

@@ -12,4 +12,5 @@ export type registerPlace ={
 export type photoData = {
     title: string;
     name: string;
+    src: string;
 }
