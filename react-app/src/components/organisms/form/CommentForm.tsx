@@ -35,7 +35,7 @@ export const CommentForm: FC = memo(() => {
                         <Form.Group controlId="commentformPhoto" className="mb-3">
                             <Form.Label>
                                 <OverlayTrigger placement="bottom" overlay={<Tooltip id="media-uploat-tip">画像アップロード</Tooltip>}>
-                                    <a className="btn"><BsImage /></a>
+                                    <a className="img"><BsImage /></a>
                                 </OverlayTrigger>
                             </Form.Label>
                             <Form.Control type="file" hidden/>
