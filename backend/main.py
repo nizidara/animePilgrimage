@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import contact
+from routers import contact, anime, place
 from properties.properties import origins
 
 app = FastAPI()
 app.include_router(contact.router)
+app.include_router(anime.router)
+app.include_router(place.router)
+
 
 app.add_middleware(
     CORSMiddleware,
