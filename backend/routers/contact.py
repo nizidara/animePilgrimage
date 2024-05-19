@@ -21,3 +21,18 @@ async def send_contact(contents_body: contact_schema.sendContents, db: AsyncSess
 async def get_contact(db: AsyncSession = Depends(get_db)):
     results = await contact_crud.get_contact(db)
     return results
+
+## get contact detail
+@router.get("/contact/{contact_id}", response_model=contact_schema.ContactResponse)
+async def detail_contact(contact_id: int):
+    return contact_schema.ContactResponse(contact_id=contact_id, contanct_date="2024-04-19 12:34:56", name="Takina", email="contact@nizidara.com", title="sakana-", contents="hoge", status=0, user_id=None)
+
+## check contact and update status
+@router.put("/contact/{contact_id}", response_model=contact_schema.ContactResponse)
+async def check_contact(contact_id: int, contact_body: contact_schema.ContactCreate):
+    return contact_schema.ContactResponse(contact_id=contact_id, **contact_body.model_dump())
+
+## check contact and update status
+@router.delete("/contact/{contact_id}")
+async def delete_contact():
+    pass
