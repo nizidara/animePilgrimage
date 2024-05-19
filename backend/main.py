@@ -6,10 +6,11 @@ from properties.properties import origins
 
 app = FastAPI(title="App")
 anime_app = FastAPI(title="App(/anime)")
+place_app = FastAPI(title="App(/place)")
 
 app.include_router(contact.router)
 anime_app.include_router(anime.router)
-app.include_router(place.router)
+place_app.include_router(place.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,12 +28,22 @@ anime_app.add_middleware(
     allow_headers=["*"],
 )
 
+place_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/hello")
 async def hello():
     return {"message": "hello world!"}
 
 app.mount("/anime", anime_app)
-APP_PATH_LIST = ["", "/anime"]
+app.mount("/place", place_app)
+
+APP_PATH_LIST = ["", "/anime", "/place"]
 
 # Swagger間のリンクを作成
 def _make_app_docs_link_html(app_path: str, app_path_list: list[str]) -> str:
@@ -46,3 +57,4 @@ def _make_app_docs_link_html(app_path: str, app_path_list: list[str]) -> str:
 
 app.description = _make_app_docs_link_html("", APP_PATH_LIST)
 anime_app.description = _make_app_docs_link_html("/anime", APP_PATH_LIST)
+place_app.description = _make_app_docs_link_html("/place", APP_PATH_LIST)
