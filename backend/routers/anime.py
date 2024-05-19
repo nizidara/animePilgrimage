@@ -43,12 +43,12 @@ async def disable_anime(anime_id: int):
 # update anime.title or anime.introduction for edit function
 @router.put("/edit/anime/{anime_id}", response_model=anime_schema.AnimeResponse)
 async def approve_edit_anime(anime_id: int, anime_body: anime_schema.AnimeBase):
-    return anime_schema.AnimeResponse(anime_id=anime_id, title=anime_body.title, kana="リコリス・リコイル", introduction=anime_body.introduction, flag=1)
+    return anime_schema.AnimeResponse(anime_id=anime_id, **anime_body.model_dump(), kana="リコリス・リコイル", flag=1)
 
 # update anime info excluding anime_id 
 @router.put("/admin/edit/anime/{anime_id}", response_model=anime_schema.AnimeResponse)
 async def admin_edit_anime(anime_id: int, anime_body: anime_schema.AnimeCreate):
-    return anime_schema.AnimeResponse(anime_id=anime_id, title=anime_body.title, kana=anime_body.kana, introduction=anime_body.introduction, flag=anime_body.flag)
+    return anime_schema.AnimeResponse(anime_id=anime_id, **anime_body.model_dump())
 
 # delete anime info from DB
 @router.delete("/anime/{anime_id}")
