@@ -57,5 +57,5 @@ async def delete_anime(anime_id: int):
 
 # delete request anime from DB
 @router.delete("/edit/anime/{request_anime_id}")
-async def delete_anime(request_anime_id: int):
+async def delete_request_anime(request_anime_id: int):
     pass
