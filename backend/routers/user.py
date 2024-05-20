@@ -3,7 +3,7 @@ from typing import List
 
 import schemas.user as user_schema
 
-router = APIRouter()
+router = APIRouter(tags=["Users"])
 
 # get user for login
 @router.get("/user/login/", response_model=user_schema.UserLogin)

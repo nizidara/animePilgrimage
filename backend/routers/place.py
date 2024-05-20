@@ -3,7 +3,7 @@ from typing import List, Union
 
 import schemas.place as place_schema
 
-router = APIRouter()
+router = APIRouter(tags=["Places"])
 
 # get place info detail
 @router.get("/place/", response_model=place_schema.PlaceResponse)

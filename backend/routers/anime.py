@@ -3,7 +3,7 @@ from typing import List
 
 import schemas.anime as anime_schema
 
-router = APIRouter()
+router = APIRouter(tags=["Anime"])
 
 # get anime info list(sort by kana)
 @router.get("/anime", response_model=List[anime_schema.AnimeResponse])

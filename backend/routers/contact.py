@@ -7,7 +7,7 @@ import schemas.contact as contact_schema
 import models.contact as contact_model
 from database.db import engine, get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Contacts"])
 
 contact_model.Base.metadata.create_all(bind=engine)
 

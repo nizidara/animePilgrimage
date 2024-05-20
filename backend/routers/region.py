@@ -3,7 +3,7 @@ from typing import List
 
 import schemas.region as region_schema
 
-router = APIRouter()
+router = APIRouter(tags=["Regions"])
 
 # get region name
 @router.get("/region/", response_model=region_schema.RegionResponse)

@@ -3,7 +3,7 @@ from typing import List
 
 import schemas.comment as comment_schema
 
-router = APIRouter()
+router = APIRouter(tags=["Comments"])
 
 # get comment detail
 @router.get("/comment/", response_model=comment_schema.CommentResponse)
