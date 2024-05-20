@@ -6,13 +6,15 @@ import schemas.comment as comment_schema
 router = APIRouter()
 
 # get comment detail
-@router.get("/comment/{comment_id}", response_model=comment_schema.CommentResponse)
+@router.get("/comment/", response_model=comment_schema.CommentResponse)
 async def detail_comment(comment_id: str):
     return comment_schema.CommentResponse(comment_id=comment_id, comment="さかなーちんあなご～", comment_date="2023-07-12 11:22:33", range_id=123, place_id="place_id", user_id=None)
 
-# get comment List of place
-@router.get("/comment/place/{place_id}", response_model=List[comment_schema.CommentResponse])
-async def list_comment_of_place(place_id: str):
+# get comment List
+@router.get("/comment/list/", response_model=List[comment_schema.CommentResponse])
+async def list_comment_of_place(place_id: str = None):
+    if place_id is None:
+        place_id = 1
     return [comment_schema.CommentResponse(comment_id="123", comment="さかなーちんあなご～", comment_date="2023-07-12 11:22:33", range_id=123, place_id=place_id, user_id=None)]
 
 # post comment

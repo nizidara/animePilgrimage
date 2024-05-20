@@ -23,7 +23,7 @@ async def get_contact(db: AsyncSession = Depends(get_db)):
     return results
 
 ## get contact detail
-@router.get("/contact/{contact_id}", response_model=contact_schema.ContactResponse)
+@router.get("/contact/", response_model=contact_schema.ContactResponse)
 async def detail_contact(contact_id: int):
     return contact_schema.ContactResponse(contact_id=contact_id, contanct_date="2024-04-19 12:34:56", name="Takina", email="contact@nizidara.com", title="sakana-", contents="hoge", status=0, user_id=None)
 

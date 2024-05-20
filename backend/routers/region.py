@@ -6,7 +6,7 @@ import schemas.region as region_schema
 router = APIRouter()
 
 # get region name
-@router.get("/region/{region_id}", response_model=region_schema.RegionResponse)
+@router.get("/region/", response_model=region_schema.RegionResponse)
 async def region_name(region_id: int):
     return region_schema.RegionResponse(region_id=region_id, region_name="東京都")
 

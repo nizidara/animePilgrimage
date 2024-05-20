@@ -11,12 +11,12 @@ async def list_anime():
     return [anime_schema.AnimeResponse(anime_id=1, title="リコリス・リコイル", kana="リコリス・リコイル", introduction="さかなー", flag=2)]
 
 # get anime info detail
-@router.get("/anime/{anime_id}", response_model=anime_schema.AnimeResponse)
+@router.get("/anime/", response_model=anime_schema.AnimeResponse)
 async def detail_anime(anime_id: int):
     return anime_schema.AnimeResponse(anime_id=anime_id, title="リコリス・リコイル", kana="リコリス・リコイル", introduction="ちんあなご～", flag=0)
 
 # get anime info by title
-@router.get("/anime/title/{title}", response_model=anime_schema.AnimeResponse)
+@router.get("/anime/title/", response_model=anime_schema.AnimeResponse)
 async def get_anime_by_title(title: str):
     return anime_schema.AnimeResponse(anime_id=1, title=title, kana="リコリス・リコイル", introduction="さかなー", flag=2)
 
@@ -30,15 +30,10 @@ async def create_anime(anime_body: anime_schema.AnimeCreate):
 async def create_edit_anime(anime_body: anime_schema.AnimeEditCreate):
     return anime_schema.AnimeEditResponse(request_anime_id=1, **anime_body.model_dump())
 
-# update anime.flag = 1 for display
+# update anime.flag = 1 for display or anime.flag = 0 for not display
 @router.put("/anime/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def approve_anime(anime_id: int):
-    return anime_schema.AnimeResponse(anime_id=anime_id, title="リコリス・リコイル", kana="リコリス・リコイル", introduction="ちんあなご～", flag=1)
-
-# update anime.flag = 0 for not display
-@router.put("/anime/disable/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def disable_anime(anime_id: int):
-    return anime_schema.AnimeResponse(anime_id=anime_id, title="リコリス・リコイル", kana="リコリス・リコイル", introduction="ちんあなご～", flag=0)
+async def update_anime_flag(anime_id: int, flag: int):
+    return anime_schema.AnimeResponse(anime_id=anime_id, title="リコリス・リコイル", kana="リコリス・リコイル", introduction="ちんあなご～", flag=flag)
 
 # update anime.title or anime.introduction for edit function
 @router.put("/edit/anime/{anime_id}", response_model=anime_schema.AnimeResponse)
