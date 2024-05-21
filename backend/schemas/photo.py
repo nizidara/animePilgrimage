@@ -5,7 +5,7 @@ from typing import Optional
 class PhotoBase(BaseModel):
     file_name: str
 
-class AnimeIconCreate(BaseModel):
+class AnimeIconCreate(PhotoBase):
     anime_id: int
 
     class Config:
@@ -59,7 +59,7 @@ class RealPhotoCreate(PlacePhotoCreateBase):
     class Config:
         orm_mode = True
 
-class RealPhotoCreate(RealPhotoCreate):
+class RealPhotoResponse(RealPhotoCreate):
     real_photo_id: str
     
     class Config:

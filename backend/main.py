@@ -1,17 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import contact, anime, place, comment, region, user
+from routers import contact, anime, place, comment, region, user, photo
 from properties.properties import origins
 
 app = FastAPI(title="App")
 
-app.include_router(contact.router)
-app.include_router(region.router)
-app.include_router(user.router)
 app.include_router(anime.router)
 app.include_router(place.router)
 app.include_router(comment.router)
+app.include_router(photo.router)
+app.include_router(region.router)
+app.include_router(contact.router)
+app.include_router(user.router)
 
 app.add_middleware(
     CORSMiddleware,
