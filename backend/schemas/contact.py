@@ -23,7 +23,7 @@ class ContactBase(BaseModel):
     contents: str
 
 class ContactCreate(ContactBase):
-    contanct_date: datetime
+    contact_date: datetime
     status: int
     user_id: Optional[str]
 
@@ -32,3 +32,6 @@ class ContactCreate(ContactBase):
 
 class ContactResponse(ContactCreate):
     contact_id: int
+
+    class Config:
+        orm_mode = True

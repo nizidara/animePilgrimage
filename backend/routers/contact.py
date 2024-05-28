@@ -7,10 +7,13 @@ import schemas.contact as contact_schema
 import models.contact as contact_model
 from database.db import engine, get_db
 
+from datetime import datetime
+
 router = APIRouter(prefix="/contacts", tags=["contacts"])
 
 contact_model.Base.metadata.create_all(bind=engine)
 
+"""
 #送信
 @router.post("", response_model=contact_schema.responseContents)
 async def send_contact(contents_body: contact_schema.sendContents, db: AsyncSession = Depends(get_db)):
@@ -21,6 +24,17 @@ async def send_contact(contents_body: contact_schema.sendContents, db: AsyncSess
 async def get_contact(db: AsyncSession = Depends(get_db)):
     results = await contact_crud.get_contact(db)
     return results
+"""
+
+#送信
+@router.post("", response_model=contact_schema.ContactResponse)
+async def send_contact(contents_body: contact_schema.ContactCreate, db: AsyncSession = Depends(get_db)):
+    return await contact_crud.create_contact(db, contents_body)
+
+#一覧取得
+@router.get("", response_model=List[contact_schema.ContactResponse])
+async def get_contact(db: AsyncSession = Depends(get_db)):
+    return await contact_crud.get_contact(db)
 
 ## get contact detail
 @router.get("/{contact_id}", response_model=contact_schema.ContactResponse)
