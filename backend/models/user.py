@@ -29,6 +29,8 @@ class User(Base):
 
     user_attribute = relationship("UserAttribute", back_populates="users")
 
+    created_places = relationship("Place", foreign_keys="[Place.created_user_id]", back_populates="created_user")
+    edited_places = relationship("Place", foreign_keys="[Place.edited_user_id]", back_populates="edited_user")
     comments = relationship("Comment", back_populates="user")
     real_photos = relationship("RealPhoto", back_populates="user")
     anime_photos = relationship("AnimePhoto", back_populates="user")
@@ -39,10 +41,6 @@ class User(Base):
     reset_users = relationship("ResetUser", back_populates="user")
     favorite_anime = relationship("FavoriteAnime", back_populates="user")
     archives = relationship("Archive", back_populates="user")
-    
-    # 要確認
-    #place_create_users = relationship("Place", back_populates="user")
-    #place_edit_users = relationship("Place", back_populates="user")
 
     __table_args__ = (
         UniqueConstraint('login_id', name='file_name_UNIQUE'),

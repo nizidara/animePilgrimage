@@ -31,6 +31,8 @@ class Place(Base):
 
     region = relationship("Region", back_populates="places")
     anime = relationship("Anime", back_populates="places")
+    created_user = relationship("User", foreign_keys="[Place.created_user_id]", back_populates="created_places")
+    edited_user = relationship("User", foreign_keys="[Place.edited_user_id]", back_populates="edited_places")
 
     anime_photos = relationship("AnimePhoto", back_populates="place")
     place_icons = relationship("PlaceIcon", back_populates="place")
@@ -38,10 +40,6 @@ class Place(Base):
     real_photos = relationship("RealPhoto", back_populates="place")
     request_places = relationship("RequestPlace", back_populates="place")
     archives = relationship("Archive", back_populates="place")
-
-    # 要確認
-    #created_user = relationship("User", foreign_keys=[created_user_id])
-    #edited_user = relationship("User", foreign_keys=[edited_user_id])
 
     __table_args__ = (
         {'comment': 'pilgrimage places table'}
