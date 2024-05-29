@@ -33,7 +33,7 @@ class User(Base):
     real_photos = relationship("RealPhoto", back_populates="user")
     anime_photos = relationship("AnimePhoto", back_populates="user")
     request_anime = relationship("RequestAnime", back_populates="user")
-    #request_places = relationship("RequestPlace", back_populates="user")
+    request_places = relationship("RequestPlace", back_populates="user")
     delete_comments = relationship("DeleteComment", back_populates="user")
     contacts = relationship("Contact", back_populates="user")
     reset_users = relationship("ResetUser", back_populates="user")

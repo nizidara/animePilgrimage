@@ -9,7 +9,7 @@ class Region(Base):
     region_name = Column(String(20), nullable=False, comment='this column is region name')
 
     places = relationship("Place", back_populates="region")
-    #request_places = relationship("RequestPlace", back_populates="region")
+    request_places = relationship("RequestPlace", back_populates="region")
 
     __table_args__ = (
         {'comment': 'regions name table'}
@@ -36,7 +36,7 @@ class Place(Base):
     place_icons = relationship("PlaceIcon", back_populates="place")
     comments = relationship("Comment", back_populates="place")
     real_photos = relationship("RealPhoto", back_populates="place")
-    #request_places = relationship("RequestPlace", back_populates="place")
+    request_places = relationship("RequestPlace", back_populates="place")
     archives = relationship("Archive", back_populates="place")
 
     # 要確認

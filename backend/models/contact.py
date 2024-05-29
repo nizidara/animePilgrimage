@@ -67,10 +67,10 @@ class RequestPlace(Base):
     contents = Column(Text, nullable=False)
     user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
 
-    #place = relationship("Place", back_populates="request_palces")
-    #region = relationship("Region", back_populates="request_palces")
-    #anime = relationship("Anime", back_populates="request_palces")
-    #user = relationship("User", back_populates="request_palces")
+    place = relationship("Place", back_populates="request_places")
+    region = relationship("Region", back_populates="request_places")
+    anime = relationship("Anime", back_populates="request_places")
+    user = relationship("User", back_populates="request_places")
 
     __table_args__ = (
         {'comment': 'edit or delete requests table for places table'}

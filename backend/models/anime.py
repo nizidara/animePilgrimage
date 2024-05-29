@@ -15,7 +15,7 @@ class Anime(Base):
     places = relationship("Place", back_populates="anime")
     favorite_anime = relationship("FavoriteAnime", back_populates="anime")
     request_anime = relationship("RequestAnime", back_populates="anime")
-    #request_places = relationship("RequestPlace", back_populates="anime")
+    request_places = relationship("RequestPlace", back_populates="anime")
     
     __table_args__ = (
         UniqueConstraint('title', name='title_UNIQUE'),
