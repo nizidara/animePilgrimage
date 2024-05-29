@@ -2,8 +2,6 @@ from sqlalchemy import Column, String, Integer, CHAR, Date, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from database.db import Base
 
-
-
 class UserAttribute(Base):
     __tablename__ = 'user_attributes'
     
@@ -30,8 +28,21 @@ class User(Base):
     user_attribute_id = Column(Integer, ForeignKey('user_attributes.user_attribute_id', ondelete='NO ACTION', onupdate='CASCADE'), nullable=True, comment='FK')
 
     user_attribute = relationship("UserAttribute", back_populates="users")
-    reset_users = relationship("ResetUser", back_populates="user")
+
+    comments = relationship("Comment", back_populates="user")
+    real_photos = relationship("RealPhoto", back_populates="user")
+    anime_photos = relationship("AnimePhoto", back_populates="user")
+    request_anime = relationship("RequestAnime", back_populates="user")
+    #request_places = relationship("RequestPlace", back_populates="user")
+    delete_comments = relationship("DeleteComment", back_populates="user")
     contacts = relationship("Contact", back_populates="user")
+    reset_users = relationship("ResetUser", back_populates="user")
+    favorite_anime = relationship("FavoriteAnime", back_populates="user")
+    archives = relationship("Archive", back_populates="user")
+    
+    # 要確認
+    #place_create_users = relationship("Place", back_populates="user")
+    #place_edit_users = relationship("Place", back_populates="user")
 
     __table_args__ = (
         UniqueConstraint('login_id', name='file_name_UNIQUE'),
@@ -60,4 +71,31 @@ class ResetUser(Base):
             onupdate='CASCADE',
         ),
         {'comment': 'to reset password table'}
+    )
+
+class FavoriteAnime(Base):
+    __tablename__ = 'favorite_anime'
+    
+    user_id = Column(String(32), ForeignKey('users.user_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, comment='FK')
+    anime_id = Column(Integer, ForeignKey('anime.anime_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, comment='FK')
+
+    user = relationship("User", back_populates="favorite_anime")
+    anime = relationship("Anime", back_populates="favorite_anime")
+
+    __table_args__ = (
+        {'comment': 'this table is associative entity. it is used to be connected who likes which animation'}
+    )
+
+class Archive(Base):
+    __tablename__ = 'archives'
+    
+    user_id = Column(String(32), ForeignKey('users.user_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, comment='FK')
+    place_id = Column(String(32), ForeignKey('places.place_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, comment='FK')
+    flag = Column(SmallInteger, nullable=False, default=0, comment='if false = want to go, true = have been to')
+
+    user = relationship("User", back_populates="archives")
+    place = relationship("Place", back_populates="archives")
+
+    __table_args__ = (
+        {'comment': 'this table is associative entity. it is used to be connected who wants to go or has been to which spot'}
     )
