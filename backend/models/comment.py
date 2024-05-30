@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from database.db import Base
 
@@ -35,20 +35,18 @@ class Comment(Base):
         {'comment': 'anyone can post comment and photo which he has been to spot'}
     )
 
-class RealPhoto(Base):
-    __tablename__ = 'real_photos'
+class DeleteComment(Base):
+    __tablename__ = 'delete_comments'
     
-    real_photo_id = Column(String(32), primary_key=True, nullable=False, comment='this column is generated UUID')
-    file_name = Column(String(200), nullable=False, comment='real place photo file name')
-    place_id = Column(String(32), ForeignKey('places.place_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
+    delete_comment_id = Column(Integer, primary_key=True, autoincrement=True, comment='AUTO_INCREMENT')
+    comment_id = Column(String(32), ForeignKey('comments.comment_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
+    request_date = Column(DateTime, nullable=False, default='1970-01-01 00:00:00')
+    contents = Column(Text, nullable=False)
     user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
-    comment_id = Column(String(32), ForeignKey('comments.comment_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=True, comment='FK')
 
-    place = relationship("Place", back_populates="real_photos")
-    user = relationship("User", back_populates="real_photos")
-    comment = relationship("Comment", back_populates="real_photos")
+    comment = relationship("Comment", back_populates="delete_comments")
+    user = relationship("User", back_populates="delete_comments")
 
     __table_args__ = (
-        UniqueConstraint('file_name', name='file_name_UNIQUE'),
-        {'comment': 'to refer real photo img file name'}
+        {'comment': 'delete requests table for comments table'}
     )

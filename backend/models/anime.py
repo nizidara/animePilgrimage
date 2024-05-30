@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, SmallInteger, UniqueConstraint
+from sqlalchemy import Column, Integer, String, SmallInteger, UniqueConstraint, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from database.db import Base
 
@@ -20,4 +20,23 @@ class Anime(Base):
     __table_args__ = (
         UniqueConstraint('title', name='title_UNIQUE'),
         {'comment': 'anime title table'}
+    )
+
+class RequestAnime(Base):
+    __tablename__ = 'request_anime'
+    
+    request_anime_id = Column(Integer, primary_key=True, autoincrement=True, comment='AUTO_INCREMENT')
+    anime_id = Column(Integer, ForeignKey('anime.anime_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
+    request_date = Column(DateTime, nullable=False, default='1970-01-01 00:00:00')
+    request_type = Column(SmallInteger, nullable=False, default=0, comment='0:edit request, 1:delete request')
+    title = Column(String(50), nullable=False, comment='Sequels are dealt with same title but side stories are dealt with other title')
+    introduction = Column(String(200), nullable=True)
+    contents = Column(Text, nullable=False)
+    user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
+
+    anime = relationship("Anime", back_populates="request_anime")
+    user = relationship("User", back_populates="request_anime")
+
+    __table_args__ = (
+        {'comment': 'edit or delete requests table for anime table'}
     )

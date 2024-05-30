@@ -1,19 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, SmallInteger, Double, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, SmallInteger, Text, Float, Double
 from sqlalchemy.orm import relationship
 from database.db import Base
-
-class Region(Base):
-    __tablename__ = 'regions'
-    
-    region_id = Column(Integer, primary_key=True, nullable=False, comment='this column is region id if Japan is 000, prefectures are 001 to 047 and abroad is 100')
-    region_name = Column(String(20), nullable=False, comment='this column is region name')
-
-    places = relationship("Place", back_populates="region")
-    request_places = relationship("RequestPlace", back_populates="region")
-
-    __table_args__ = (
-        {'comment': 'regions name table'}
-    )
 
 class Place(Base):
     __tablename__ = 'places'
@@ -45,33 +32,27 @@ class Place(Base):
         {'comment': 'pilgrimage places table'}
     )
 
-class AnimePhoto(Base):
-    __tablename__ = 'anime_photos'
+class RequestPlace(Base):
+    __tablename__ = 'request_places'
     
-    anime_photo_id = Column(String(32), primary_key=True, nullable=False, comment='this column is generated UUID')
-    file_name = Column(String(200), nullable=False, comment='real place photo file name')
+    request_place_id = Column(Integer, primary_key=True, autoincrement=True, comment='AUTO_INCREMENT')
     place_id = Column(String(32), ForeignKey('places.place_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
+    request_date = Column(DateTime, nullable=False, default='1970-01-01 00:00:00')
+    request_type = Column(SmallInteger, nullable=False, default=0, comment='0:edit request, 1:delete request')
+    name = Column(String(30), nullable=False, comment='pilgimage place name')
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    comment = Column(String(200), nullable=True, comment='this column is used to describe a scene which appeared in anime and so on')
+    region_id = Column(Integer, ForeignKey('regions.region_id', ondelete='NO ACTION', onupdate='CASCADE'), nullable=False, default=0, comment='FK')
+    anime_id = Column(Integer, ForeignKey('anime.anime_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
+    contents = Column(Text, nullable=False)
     user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
 
-    place = relationship("Place", back_populates="anime_photos")
-    user = relationship("User", back_populates="anime_photos")
-
-    place_icons = relationship("PlaceIcon", back_populates="anime_photo")
-
-    __table_args__ = (
-        UniqueConstraint('file_name', name='file_name_UNIQUE'),
-        {'comment': 'to refer anime scene img file name'}
-    )
-
-class PlaceIcon(Base):
-    __tablename__ = 'place_icons'
-    
-    place_id = Column(String(32), ForeignKey('places.place_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, comment='FK')
-    anime_photo_id = Column(String(32), ForeignKey('anime_photos.anime_photo_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=True, comment='FK')
-
-    place = relationship("Place", back_populates="place_icons")
-    anime_photo = relationship("AnimePhoto", back_populates="place_icons")
+    place = relationship("Place", back_populates="request_places")
+    region = relationship("Region", back_populates="request_places")
+    anime = relationship("Anime", back_populates="request_places")
+    user = relationship("User", back_populates="request_places")
 
     __table_args__ = (
-        {'comment': 'to set place icon'}
+        {'comment': 'edit or delete requests table for places table'}
     )
