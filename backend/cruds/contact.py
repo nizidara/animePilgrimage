@@ -19,6 +19,7 @@ async def get_contact(db:AsyncSession) -> List[Tuple[contact_model.Testcontact]]
     return db.query(contact_model.Testcontact).all()
 """
 
+# create
 async def create_contact(
         db: AsyncSession, contact_create: contact_schema.ContactCreate
 ) -> contact_model.Contact:
@@ -29,5 +30,27 @@ async def create_contact(
 
     return contact
 
-async def get_contact(db:AsyncSession) -> List[Tuple[contact_model.Contact]]:
+# read list
+async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]]:
     return db.query(contact_model.Contact).all()
+
+# read detail
+async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model.Contact:
+    return db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+
+# update status
+async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_model.Contact:
+    contact = db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+    if contact:
+        contact.status = status
+        db.commit()
+        db.refresh(contact)
+    return contact
+
+# delete contact
+async def delete_contact(db: AsyncSession, contact_id: int) -> contact_model.Contact:
+    contact = db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+    if contact:
+        db.delete(contact)
+        db.commit()
+    return contact
