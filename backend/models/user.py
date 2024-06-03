@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, CHAR, Date, DateTime, ForeignKey, UniqueConstraint, Index, SmallInteger, ForeignKeyConstraint
+from sqlalchemy.dialects.mysql import VARBINARY
 from sqlalchemy.orm import relationship
 from database.db import Base
 
@@ -17,7 +18,7 @@ class UserAttribute(Base):
 class User(Base):
     __tablename__ = 'users'
     
-    user_id = Column(String(32), primary_key=True, nullable=False, comment='this column is generated UUID')
+    user_id = Column(VARBINARY(16), primary_key=True, nullable=False, comment='this column is generated UUID')
     user_name = Column(String(20), nullable=False, default='no name')
     login_id = Column(String(20), nullable=False, comment='UK, this column is used to login function.')
     email = Column(String(256), nullable=True)

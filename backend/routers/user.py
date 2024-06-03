@@ -1,9 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
 
 import schemas.user as user_schema
+import cruds.user as user_crud
+import models.user as user_model
+from database.db import engine, get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+user_model.Base.metadata.create_all(bind=engine)
 
 # get user for login
 @router.get("/login/", response_model=user_schema.UserLogin)
@@ -12,8 +19,32 @@ async def get_login_data(login_id: str):
 
 # get user detail
 @router.get("/{user_id}", response_model=user_schema.UserLoginResponse)
-async def user_detail(user_id: str):
-    return user_schema.UserLoginResponse(user_id=user_id, login_id="123", user_name="Nana", email=None, error_count=0, login_date="2024-04-12", flag=1, user_attribute_id=None)
+async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
+    user = await user_crud.get_user_detail(db=db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    user_id_str = str(uuid.UUID(bytes=user.user_id))
+
+    user_dict = user.__dict__
+    user_dict['user_id'] = user_id_str
+
+    return user_schema.UserLoginResponse(**user_dict)
+    
+# get users
+@router.get("", response_model=List[user_schema.UserLoginResponse])
+async def user_detail(db: AsyncSession = Depends(get_db)):
+    users = await user_crud.get_user_list(db=db)
+    if users is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    
+    user_responses = []
+    for user in users:
+        user_dict = user.__dict__
+        user_id_str = str(uuid.UUID(bytes=user_dict['user_id']))
+        user_dict['user_id'] = user_id_str
+        user_responses.append(user_schema.UserLoginResponse(**user_dict))
+
+    return user_responses
 
 # login
 @router.post("", response_model=bool)
