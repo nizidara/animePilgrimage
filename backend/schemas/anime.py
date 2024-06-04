@@ -5,7 +5,7 @@ from typing import Optional
 
 class AnimeBase(BaseModel):
     title: str
-    introduction: str
+    introduction: Optional[str]
 
 class AnimeCreate(AnimeBase):
     kana: str
