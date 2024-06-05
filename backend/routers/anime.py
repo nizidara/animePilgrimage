@@ -22,7 +22,7 @@ async def anime_detail(anime_id: int, db: AsyncSession = Depends(get_db)):
 # get anime info list(sort by kana)
 @router.get("/search/", response_model=List[anime_schema.AnimeResponse])
 async def anime_list(title: str = None, db: AsyncSession = Depends(get_db)):
-    anime_list = await anime_crud.get_anime_list(db)
+    anime_list = await anime_crud.get_anime_list(db=db)
     if anime_list is None:
         raise HTTPException(status_code=404, detail="Anime not found")
     return anime_list
@@ -52,8 +52,11 @@ async def approve_anime_edit(anime_id: int, anime_body: anime_schema.AnimeBase):
 
 # update anime info excluding anime_id 
 @router.put("/edit/admin/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def anime_edit_admin(anime_id: int, anime_body: anime_schema.AnimeCreate):
-    return anime_schema.AnimeResponse(anime_id=anime_id, **anime_body.model_dump())
+async def anime_edit_admin(anime_id: int, anime_body: anime_schema.AnimeCreate, db: AsyncSession = Depends(get_db)):
+    anime = await anime_crud.update_anime(db, anime_id=anime_id, anime_body=anime_body)
+    if anime is None:
+        raise HTTPException(status_code=404, detail="Anime not found")
+    return anime
 
 # delete anime info from DB
 @router.delete("/{anime_id}")

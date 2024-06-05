@@ -21,13 +21,23 @@ async def get_anime_detail(db: AsyncSession, anime_id: int) -> anime_model.Anime
 
 # read list
 async def get_anime_list(db:AsyncSession) -> List[Tuple[anime_model.Anime]]:
-    return db.query(anime_model.Anime).all()
+    return db.query(anime_model.Anime).order_by(anime_model.Anime.kana).all()
 
 # update flag
 async def update_anime_flag(db: AsyncSession, anime_id: int, flag: int) -> anime_model.Anime:
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     if anime:
         anime.flag = flag
+        db.commit()
+        db.refresh(anime)
+    return anime
+
+# update flag
+async def update_anime(db: AsyncSession, anime_id: int, anime_body: anime_schema.AnimeCreate) -> anime_model.Anime:
+    anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
+    if anime:
+        for key, value in anime_body.model_dump().items():
+            setattr(anime, key, value)
         db.commit()
         db.refresh(anime)
     return anime
