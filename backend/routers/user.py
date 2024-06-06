@@ -23,12 +23,8 @@ async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
     user = await user_crud.get_user_detail(db=db, user_id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="Contact not found")
-    user_id_str = str(uuid.UUID(bytes=user.user_id))
 
-    user_dict = user.__dict__
-    user_dict['user_id'] = user_id_str
-
-    return user_schema.UserLoginResponse(**user_dict)
+    return user
     
 # get users
 @router.get("", response_model=List[user_schema.UserLoginResponse])
@@ -36,15 +32,8 @@ async def user_detail(db: AsyncSession = Depends(get_db)):
     users = await user_crud.get_user_list(db=db)
     if users is None:
         raise HTTPException(status_code=404, detail="Contact not found")
-    
-    user_responses = []
-    for user in users:
-        user_dict = user.__dict__
-        user_id_str = str(uuid.UUID(bytes=user_dict['user_id']))
-        user_dict['user_id'] = user_id_str
-        user_responses.append(user_schema.UserLoginResponse(**user_dict))
 
-    return user_responses
+    return users
 
 # login
 @router.post("", response_model=bool)
