@@ -12,7 +12,7 @@ router = APIRouter(prefix="/anime", tags=["anime"])
 anime_model.Base.metadata.create_all(bind=engine)
 
 # get anime info detail
-@router.get("/{anime_id}", response_model=anime_schema.AnimeResponse)
+@router.get("/detail/{anime_id}", response_model=anime_schema.AnimeResponse)
 async def anime_detail(anime_id: int, db: AsyncSession = Depends(get_db)):
     anime = await anime_crud.get_anime_detail(db=db, anime_id=anime_id)
     if anime is None:
@@ -28,7 +28,7 @@ async def request_edit_anime_detail(request_anime_id: int, db: AsyncSession = De
     return result
 
 # get anime info list(sort by kana)
-@router.get("/search/", response_model=List[anime_schema.AnimeResponse])
+@router.get("/list/search", response_model=List[anime_schema.AnimeResponse])
 async def anime_list(title: str = None, db: AsyncSession = Depends(get_db)):
     anime_list = await anime_crud.get_anime_list(db=db)
     if anime_list is None:

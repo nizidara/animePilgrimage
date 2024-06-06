@@ -18,7 +18,7 @@ async def get_login_data(login_id: str):
     return user_schema.UserLogin(login_id=login_id, password="password")
 
 # get user detail
-@router.get("/{user_id}", response_model=user_schema.UserLoginResponse)
+@router.get("/detail/{user_id}", response_model=user_schema.UserLoginResponse)
 async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
     user = await user_crud.get_user_detail(db=db, user_id=user_id)
     if user is None:
@@ -27,7 +27,7 @@ async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
     return user
     
 # get users
-@router.get("", response_model=List[user_schema.UserLoginResponse])
+@router.get("/list", response_model=List[user_schema.UserLoginResponse])
 async def user_detail(db: AsyncSession = Depends(get_db)):
     users = await user_crud.get_user_list(db=db)
     if users is None:

@@ -16,12 +16,12 @@ async def get_place_icon(place_id: str):
     return photo_schema.PlacePhotoIconResponse(place_id=place_id, file_name="img123")
 
 # get animephoto list
-@router.get("/anime/{place_id}", response_model=List[photo_schema.AnimePhotoResponse])
+@router.get("/anime/list/{place_id}", response_model=List[photo_schema.AnimePhotoResponse])
 async def get_anime_photo_list(place_id: str):
     return [photo_schema.AnimePhotoResponse(anime_photo_id="1234", place_id=place_id, file_name="img123", user_id=None)]
 
 # get realphoto list
-@router.get("/reals/{place_id}", response_model=List[photo_schema.RealPhotoResponse])
+@router.get("/reals/list/{place_id}", response_model=List[photo_schema.RealPhotoResponse])
 async def get_real_photo_list(place_id: str, comment_id: str = None):
     return [photo_schema.RealPhotoResponse(real_photo_id="1234", place_id=place_id, file_name="img123", user_id=None, comment_id=comment_id)]
 

@@ -6,7 +6,7 @@ import schemas.comment as comment_schema
 router = APIRouter(prefix="/comments", tags=["comments"])
 
 # get comment detail
-@router.get("/{comment_id}", response_model=comment_schema.CommentResponse)
+@router.get("/detail/{comment_id}", response_model=comment_schema.CommentResponse)
 async def comment_detail(comment_id: str):
     return comment_schema.CommentResponse(comment_id=comment_id, comment="さかなーちんあなご～", comment_date="2023-07-12 11:22:33", range_id=123, place_id="place_id", user_id=None)
 

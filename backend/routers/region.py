@@ -12,7 +12,7 @@ router = APIRouter(prefix="/regions", tags=["regions"])
 region_model.Base.metadata.create_all(bind=engine)
 
 # get region name
-@router.get("/{region_id}", response_model=region_schema.RegionResponse)
+@router.get("/detail/{region_id}", response_model=region_schema.RegionResponse)
 async def region_name(region_id: int, db: AsyncSession = Depends(get_db)):
     region = await region_crud.get_region_name(db=db, region_id=region_id)
     if region is None:
@@ -20,7 +20,7 @@ async def region_name(region_id: int, db: AsyncSession = Depends(get_db)):
     return region
 
 # get region list
-@router.get("", response_model=List[region_schema.RegionResponse])
+@router.get("/list", response_model=List[region_schema.RegionResponse])
 async def region_list(db: AsyncSession = Depends(get_db)):
     regions = await region_crud.get_region_list(db=db)
     if regions is None:

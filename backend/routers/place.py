@@ -12,20 +12,17 @@ router = APIRouter(prefix="/places", tags=["places"])
 place_model.Base.metadata.create_all(bind=engine)
 
 # get place info detail
-@router.get("/{place_id}", response_model=place_schema.PlaceResponse)
+@router.get("/detail/{place_id}", response_model=place_schema.PlaceResponse)
 async def place_detail(place_id: str):
     return place_schema.PlaceResponse(place_id=place_id, anime_id=123, name="すみだ水族館", latitude=1.23, longitude=2.34, comment="さかなー", flag=1, region_id=123, created_user_id=None, edited_user_id=None)
 
 # get place list by name or anime title or region
-@router.get("/search", response_model=List[place_schema.PlaceResponse])
-async def place_list(name: str = None, anime_id: int = None, region_id: int = None):
-    if name is None:
-        name = "すみだ水族館"
-    if anime_id is None:
-        anime_id = 1
-    if region_id is None:
-        region_id = 1
-    return [place_schema.PlaceResponse(place_id="123", anime_id=anime_id, name=name, latitude=1.23, longitude=2.34, comment="さかなー", flag=1, region_id=region_id, created_user_id=None, edited_user_id=None)]
+@router.get("/list/search", response_model=List[place_schema.PlaceResponse])
+async def place_list(name: str = None, anime_id: int = None, region_id: int = None, db: AsyncSession = Depends(get_db)):
+    places = await place_crud.get_place_list(db=db, name=name, anime_id=anime_id, region_id=region_id)
+    if places is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return places
 
 # create place info
 @router.post("", response_model=place_schema.PlaceResponse)

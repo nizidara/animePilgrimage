@@ -24,23 +24,23 @@ async def get_contact(db: AsyncSession = Depends(get_db)):
     return results
 """
 
-# send contact
-@router.post("", response_model=contact_schema.ContactResponse)
-async def send_contact(contents_body: contact_schema.ContactCreate, db: AsyncSession = Depends(get_db)):
-    return await contact_crud.create_contact(db, contents_body)
-
-# get contact list
-@router.get("", response_model=List[contact_schema.ContactResponse])
-async def get_contact(db: AsyncSession = Depends(get_db)):
-    return await contact_crud.get_contact_list(db)
-
 ## get contact detail
-@router.get("/{contact_id}", response_model=contact_schema.ContactResponse)
+@router.get("/detail/{contact_id}", response_model=contact_schema.ContactResponse)
 async def contact_detail(contact_id: int, db: AsyncSession = Depends(get_db)):
     contact = await contact_crud.get_contact_detail(db, contact_id=contact_id) 
     if contact is None:
         raise HTTPException(status_code=404, detail="Contact not found")
     return contact
+
+# get contact list
+@router.get("/list", response_model=List[contact_schema.ContactResponse])
+async def get_contact(db: AsyncSession = Depends(get_db)):
+    return await contact_crud.get_contact_list(db)
+
+# send contact
+@router.post("", response_model=contact_schema.ContactResponse)
+async def send_contact(contents_body: contact_schema.ContactCreate, db: AsyncSession = Depends(get_db)):
+    return await contact_crud.create_contact(db, contents_body)
 
 ## check contact and update status
 @router.put("/{contact_id}", response_model=contact_schema.ContactResponse)
