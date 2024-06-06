@@ -13,9 +13,12 @@ place_model.Base.metadata.create_all(bind=engine)
 
 # get place info detail
 @router.get("/detail/{place_id}", response_model=place_schema.PlaceResponse)
-async def place_detail(place_id: str):
-    return place_schema.PlaceResponse(place_id=place_id, anime_id=123, name="すみだ水族館", latitude=1.23, longitude=2.34, comment="さかなー", flag=1, region_id=123, created_user_id=None, edited_user_id=None)
-
+async def place_detail(place_id: str, db: AsyncSession = Depends(get_db)):
+    place = await place_crud.get_place_detail(db, place_id=place_id) 
+    if place is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return place
+ 
 # get place list by name or anime title or region
 @router.get("/list/search", response_model=List[place_schema.PlaceResponse])
 async def place_list(name: str = None, anime_id: int = None, region_id: int = None, db: AsyncSession = Depends(get_db)):
@@ -36,8 +39,11 @@ async def create_place_request(place_body: place_schema.PlaceRequestCreate):
 
 # update place.flag = 1 for display, place.flag = 0 for not display
 @router.put("/{place_id}", response_model=place_schema.PlaceResponse)
-async def update_place_flag(place_id: str, flag: int):
-    return place_schema.PlaceResponse(place_id=place_id, anime_id=123, name="すみだ水族館", latitude=1.23, longitude=2.34, comment="さかなー", flag=flag, region_id=123, created_user_id=None, edited_user_id=None)
+async def update_place_flag(place_id: str, flag: int, db: AsyncSession = Depends(get_db)):
+    place = await place_crud.update_place_flag(db, place_id=place_id, flag=flag)
+    if place is None:
+        raise HTTPException(status_code=404, detail="Anime not found")
+    return place
 
 # update place info to approve edit request
 @router.put("/edit/{place_id}", response_model=place_schema.PlaceResponse)
@@ -51,8 +57,11 @@ async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceCreate):
 
 # delete anime info from DB
 @router.delete("/{place_id}")
-async def delete_place():
-    pass
+async def delete_place(place_id: str, db: AsyncSession = Depends(get_db)):
+    place = await place_crud.delete_place(db=db, place_id=place_id)
+    if place is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return {"message": "Contact deleted successfully"}
 
 # delete anime info from DB
 @router.delete("/edit/{request_place_id}")
