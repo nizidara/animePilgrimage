@@ -19,6 +19,14 @@ async def anime_detail(anime_id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Anime not found")
     return anime
 
+# get edit request anime info detail
+@router.get("/edit/{request_anime_id}", response_model=anime_schema.AnimeEditResponse)
+async def request_edit_anime_detail(request_anime_id: int, db: AsyncSession = Depends(get_db)):
+    result = await anime_crud.get_request_edit_anime_detail(db=db, request_anime_id=request_anime_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Request Edit Anime not found")
+    return result
+
 # get anime info list(sort by kana)
 @router.get("/search/", response_model=List[anime_schema.AnimeResponse])
 async def anime_list(title: str = None, db: AsyncSession = Depends(get_db)):
@@ -34,8 +42,8 @@ async def create_anime(anime_body: anime_schema.AnimeCreate, db: AsyncSession = 
 
 # create edit anime info request
 @router.post("/edit", response_model=anime_schema.AnimeEditResponse)
-async def create_anime_edit(anime_body: anime_schema.AnimeEditCreate):
-    return anime_schema.AnimeEditResponse(request_anime_id=1, **anime_body.model_dump())
+async def create_anime_edit(edit_body: anime_schema.AnimeEditCreate, db: AsyncSession = Depends(get_db)):
+    return await anime_crud.edit_request_anime(db, edit_body)
 
 # update anime.flag = 1 for display or anime.flag = 0 for not display
 @router.put("/{anime_id}", response_model=anime_schema.AnimeResponse)
@@ -68,5 +76,8 @@ async def delete_anime(anime_id: int, db: AsyncSession = Depends(get_db)):
 
 # delete request anime from DB
 @router.delete("/edit/{request_anime_id}")
-async def delete_anime_request(request_anime_id: int):
-    pass
+async def delete_anime_request(request_anime_id: int, db: AsyncSession = Depends(get_db)):
+    result = await anime_crud.delete_edit_request_anime(db=db, request_anime_id=request_anime_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Request Edit Anime not found")
+    return {"message": "Request Edit Anime deleted successfully"}

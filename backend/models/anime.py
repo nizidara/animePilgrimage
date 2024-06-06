@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, SmallInteger, UniqueConstraint, ForeignKey, DateTime, Text
+from sqlalchemy.dialects.mysql import VARBINARY
 from sqlalchemy.orm import relationship
 from database.db import Base
 
@@ -32,7 +33,7 @@ class RequestAnime(Base):
     title = Column(String(50), nullable=False, comment='Sequels are dealt with same title but side stories are dealt with other title')
     introduction = Column(String(200), nullable=True)
     contents = Column(Text, nullable=False)
-    user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
+    user_id = Column(VARBINARY(16), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
 
     anime = relationship("Anime", back_populates="request_anime")
     user = relationship("User", back_populates="request_anime")
