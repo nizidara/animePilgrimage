@@ -34,10 +34,12 @@ async def edit_request_anime(
 
     # convert UUID -> str
     if edit:
+        response_dict = edit.__dict__
         if edit.user_id is not None:
-            edit.user_id = str(uuid.UUID(bytes=edit.user_id))
+            response_dict['user_id'] = str(uuid.UUID(bytes=edit.user_id))
+        response = anime_schema.AnimeEditResponse(**response_dict)
 
-    return edit
+    return response
 
 # read anime detail
 async def get_anime_detail(db: AsyncSession, anime_id: int) -> anime_model.Anime:
@@ -55,10 +57,12 @@ async def get_request_edit_anime_detail(db: AsyncSession, request_anime_id: int)
 
     # convert UUID -> str
     if result:
+        response_dict = result.__dict__
         if result.user_id is not None:
-            result.user_id = str(uuid.UUID(bytes=result.user_id))
+            response_dict['user_id'] = str(uuid.UUID(bytes=result.user_id))
+        response = anime_schema.AnimeEditResponse(**response_dict)
 
-    return result
+    return response
 
 # update flag
 async def update_anime_flag(db: AsyncSession, anime_id: int, flag: int) -> anime_model.Anime:

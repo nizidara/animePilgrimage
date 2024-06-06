@@ -37,10 +37,12 @@ async def create_contact(
 
     # convert UUID -> str
     if contact:
+        response_dict = contact.__dict__
         if contact.user_id is not None:
-            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+            response_dict['user_id'] = str(uuid.UUID(bytes=contact.user_id))
+        response = contact_schema.ContactResponse(**response_dict)
 
-    return contact
+    return response
 
 # read list
 async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]]:
@@ -48,12 +50,15 @@ async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]
     contacts = db.query(contact_model.Contact).all()
     
     # convert UUID -> str
+    response_list = []
     if contacts:
         for contact in contacts:
+            response_dict = contact.__dict__
             if contact.user_id is not None:
-                contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+                response_dict['user_id'] = str(uuid.UUID(bytes=contact.user_id))
+            response_list.append(contact_schema.ContactResponse(**response_dict))
 
-    return contacts
+    return response_list
 
 # read detail
 async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model.Contact:
@@ -62,10 +67,12 @@ async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model
 
     # convert UUID -> str
     if contact:
+        response_dict = contact.__dict__
         if contact.user_id is not None:
-            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+            response_dict['user_id'] = str(uuid.UUID(bytes=contact.user_id))
+        response = contact_schema.ContactResponse(**response_dict)
 
-    return contact
+    return response
 
 # update status
 async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_model.Contact:
@@ -76,10 +83,12 @@ async def update_contact_status(db: AsyncSession, contact_id: int, status: int) 
         db.refresh(contact)
 
         # convert UUID -> str
+        response_dict = contact.__dict__
         if contact.user_id is not None:
-            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+            response_dict['user_id'] = str(uuid.UUID(bytes=contact.user_id))
+        response = contact_schema.ContactResponse(**response_dict)
 
-    return contact
+    return response
 
 # delete contact
 async def delete_contact(db: AsyncSession, contact_id: int) -> contact_model.Contact:
