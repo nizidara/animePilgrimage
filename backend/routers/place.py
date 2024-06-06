@@ -1,9 +1,15 @@
-from fastapi import APIRouter
-from typing import List, Union
+from fastapi import APIRouter, Depends, HTTPException
+from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
 
+import cruds.place as place_crud
 import schemas.place as place_schema
+import models.place as place_model
+from database.db import engine, get_db
 
 router = APIRouter(prefix="/places", tags=["places"])
+
+place_model.Base.metadata.create_all(bind=engine)
 
 # get place info detail
 @router.get("/{place_id}", response_model=place_schema.PlaceResponse)
@@ -23,8 +29,8 @@ async def place_list(name: str = None, anime_id: int = None, region_id: int = No
 
 # create place info
 @router.post("", response_model=place_schema.PlaceResponse)
-async def create_place(place_body: place_schema.PlaceCreate):
-    return place_schema.PlaceResponse(place_id="123", **place_body.model_dump())
+async def create_place(place_body: place_schema.PlaceCreate, db: AsyncSession = Depends(get_db)):
+    return await place_crud.create_place(db=db, place_body=place_body)
 
 # create edit or delete place info request
 @router.post("/request", response_model=place_schema.PlaceRequestResponse)
