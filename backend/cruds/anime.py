@@ -33,8 +33,9 @@ async def edit_request_anime(
     db.refresh(edit)
 
     # convert UUID -> str
-    if edit.user_id is not None:
-        edit.user_id = str(uuid.UUID(bytes=edit.user_id))
+    if edit:
+        if edit.user_id is not None:
+            edit.user_id = str(uuid.UUID(bytes=edit.user_id))
 
     return edit
 
@@ -53,8 +54,9 @@ async def get_request_edit_anime_detail(db: AsyncSession, request_anime_id: int)
     result = db.query(anime_model.RequestAnime).filter(anime_model.RequestAnime.request_anime_id == request_anime_id).first()
 
     # convert UUID -> str
-    if result.user_id is not None:
-        result.user_id = str(uuid.UUID(bytes=result.user_id))
+    if result:
+        if result.user_id is not None:
+            result.user_id = str(uuid.UUID(bytes=result.user_id))
 
     return result
 

@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Tuple
+import uuid
 
 import models.contact as contact_model
 import schemas.contact as contact_schema
@@ -23,20 +24,48 @@ async def get_contact(db:AsyncSession) -> List[Tuple[contact_model.Testcontact]]
 async def create_contact(
         db: AsyncSession, contact_create: contact_schema.ContactCreate
 ) -> contact_model.Contact:
-    contact = contact_model.Contact(**contact_create.model_dump())
+    # convert str -> UUID
+    contact_dict = contact_create.model_dump()
+    if contact_create.user_id is not None:
+        contact_dict['user_id'] = uuid.UUID(contact_create.user_id).bytes
+    contact = contact_model.Contact(**contact_dict)
+
+    # create
     db.add(contact)
     db.commit()
     db.refresh(contact)
+
+    # convert UUID -> str
+    if contact:
+        if contact.user_id is not None:
+            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
 
     return contact
 
 # read list
 async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]]:
-    return db.query(contact_model.Contact).all()
+    # get
+    contacts = db.query(contact_model.Contact).all()
+    
+    # convert UUID -> str
+    if contacts:
+        for contact in contacts:
+            if contact.user_id is not None:
+                contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+
+    return contacts
 
 # read detail
 async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model.Contact:
-    return db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+    # get
+    contact = db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+
+    # convert UUID -> str
+    if contact:
+        if contact.user_id is not None:
+            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+
+    return contact
 
 # update status
 async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_model.Contact:
@@ -45,6 +74,11 @@ async def update_contact_status(db: AsyncSession, contact_id: int, status: int) 
         contact.status = status
         db.commit()
         db.refresh(contact)
+
+        # convert UUID -> str
+        if contact.user_id is not None:
+            contact.user_id = str(uuid.UUID(bytes=contact.user_id))
+
     return contact
 
 # delete contact

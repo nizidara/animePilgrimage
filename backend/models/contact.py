@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, SmallInteger
+from sqlalchemy.dialects.mysql import VARBINARY
 from sqlalchemy.orm import relationship
 from database.db import Base
 import datetime
@@ -24,7 +25,7 @@ class Contact(Base):
     title = Column(String(100), nullable=False)
     contents = Column(String(10000), nullable=False)
     status = Column(SmallInteger, nullable=False, default=0, comment='0:not checked, 1: now checking, 2:done')
-    user_id = Column(String(32), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK, if null is non-member')
+    user_id = Column(VARBINARY(16), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK, if null is non-member')
 
     user = relationship("User", back_populates="contacts")
 
