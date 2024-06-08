@@ -37,6 +37,35 @@ async def create_place(
 
     return response
 
+# create request place
+async def create_request_place(
+        db: AsyncSession, place_body: place_schema.PlaceRequestCreate
+) -> place_schema.PlaceRequestResponse:
+    
+    # convert str -> UUID
+    if place_body:
+        place_dict = place_body.model_dump()
+        place_dict['place_id'] = uuid.UUID(place_body.place_id).bytes
+        if place_body.user_id is not None:
+            place_dict['user_id'] = uuid.UUID(place_body.user_id).bytes
+    
+    place = place_model.RequestPlace(**place_dict)
+    # create
+    db.add(place)
+    db.commit()
+    db.refresh(place)
+
+    # convert UUID -> str
+    response = None
+    if place:
+        response_dict = place.__dict__
+        response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
+        if place.user_id is not None:
+            response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
+        response = place_schema.PlaceRequestResponse(**response_dict)
+
+    return response
+
 # read list
 async def get_place_list(db:AsyncSession, name: str, anime_id: int, region_id: int) -> List[Tuple[place_schema.PlaceResponse]]:
     # get
@@ -74,6 +103,22 @@ async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.Plac
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
         response = place_schema.PlaceResponse(**response_dict)
+
+    return response
+
+# read request place detail
+async def get_request_place_detail(db: AsyncSession, request_place_id: int) -> place_schema.PlaceRequestResponse:
+    # get
+    place = db.query(place_model.RequestPlace).filter(place_model.RequestPlace.request_place_id == request_place_id).first()
+
+    # convert UUID -> str
+    response = None
+    if place:
+        response_dict = place.__dict__
+        response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
+        if place.user_id is not None:
+            response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
+        response = place_schema.PlaceRequestResponse(**response_dict)
 
     return response
 
@@ -141,6 +186,14 @@ async def delete_place(db: AsyncSession, place_id: str) -> place_model.Place:
     
     # delete
     place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_bytes).first()
+    if place:
+        db.delete(place)
+        db.commit()
+    return place
+
+# delete request place
+async def delete_request_place(db: AsyncSession, request_place_id: int) -> place_model.RequestPlace:
+    place = db.query(place_model.RequestPlace).filter(place_model.RequestPlace.request_place_id == request_place_id).first()
     if place:
         db.delete(place)
         db.commit()
