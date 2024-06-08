@@ -101,6 +101,39 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
 
     return response
 
+# update place(direct)
+async def update_place(db: AsyncSession, place_id: str, place_body: place_schema.PlaceCreate) -> place_schema.PlaceResponse:
+    # convert str -> UUID
+    place_id_bytes = uuid.UUID(place_id).bytes
+    place_dict = None
+    if place_body:
+        place_dict = place_body.model_dump()
+        if place_body.created_user_id is not None:
+            place_dict['created_user_id'] = uuid.UUID(place_body.created_user_id).bytes
+        if place_body.edited_user_id is not None:
+            place_dict['edited_user_id'] = uuid.UUID(place_body.edited_user_id).bytes
+    
+    # update
+    place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_bytes).first()
+    if place:
+        for key, value in place_dict.items():
+            setattr(place, key, value)
+        db.commit()
+        db.refresh(place)
+    
+    # convert UUID -> str
+    response = None
+    if place:
+        response_dict = place.__dict__
+        response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
+        if place.created_user_id is not None:
+            response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
+        if place.edited_user_id is not None:
+            response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
+        response = place_schema.PlaceResponse(**response_dict)
+
+    return response
+
 # delete place
 async def delete_place(db: AsyncSession, place_id: str) -> place_model.Place:
     # convert str -> UUID

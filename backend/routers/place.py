@@ -52,8 +52,11 @@ async def approve_place_edit(place_id: str, place_body: place_schema.PlaceCreate
 
 # update place info to approve edit request
 @router.put("/edit/admin/{place_id}", response_model=place_schema.PlaceResponse)
-async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceCreate):
-    return place_schema.PlaceResponse(place_id=place_id, **place_body.model_dump())
+async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceCreate, db: AsyncSession = Depends(get_db)):
+    place = await place_crud.update_place(db, place_id=place_id, place_body=place_body)
+    if place is None:
+        raise HTTPException(status_code=404, detail="Anime not found")
+    return place
 
 # delete anime info from DB
 @router.delete("/{place_id}")
