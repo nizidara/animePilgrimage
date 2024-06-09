@@ -18,6 +18,9 @@ class CommentCreate(CommentBase):
 class CommentResponse(CommentCreate):
     comment_id: str
 
+    class Config:
+        orm_mode = True
+
 class DeleteCommentCreate(BaseModel):
     comment_id: str
     request_date: datetime
