@@ -6,13 +6,13 @@ class PhotoBase(BaseModel):
     file_name: str
 
 class AnimeIconCreate(PhotoBase):
-    anime_id: int
+    file_name: Optional[str]
 
     class Config:
         orm_mode = True
 
 class AnimeIconResponse(AnimeIconCreate):
-    pass
+    anime_id: int
 
     class Config:
         orm_mode = True
