@@ -17,25 +17,21 @@ class AnimeIconResponse(AnimeIconCreate):
     class Config:
         orm_mode = True
 
-class PlacePhotoBase(PhotoBase):
+class PlacePhotoIconCreate(BaseModel):
+    anime_photo_id: str
+    place_id: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+class PlacePhotoIconResponse(PlacePhotoIconCreate):
     place_id: str
 
     class Config:
         orm_mode = True
 
-class PlacePhotoIconCreate(PlacePhotoBase):
-    pass
-
-    class Config:
-        orm_mode = True
-
-class PlacePhotoIconResponse(PlacePhotoBase):
-    pass
-
-    class Config:
-        orm_mode = True
-
-class PlacePhotoCreateBase(PlacePhotoBase):
+class PlacePhotoCreateBase(PhotoBase):
+    place_id: str
     user_id: Optional[str]
 
     class Config:
