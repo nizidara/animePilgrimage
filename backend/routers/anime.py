@@ -54,9 +54,12 @@ async def update_anime_flag(anime_id: int, flag: int, db: AsyncSession = Depends
     return anime
 
 # update anime.title or anime.introduction for edit function
-@router.put("/edit/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def approve_anime_edit(anime_id: int, anime_body: anime_schema.AnimeBase):
-    return anime_schema.AnimeResponse(anime_id=anime_id, **anime_body.model_dump(), kana="リコリス・リコイル", flag=1)
+@router.put("/edit/{request_anime_id}", response_model=anime_schema.AnimeResponse)
+async def approve_anime_edit(request_anime_id: int, db: AsyncSession = Depends(get_db)):
+    anime = await anime_crud.approve_edit_request_anime(db, request_anime_id=request_anime_id)
+    if anime is None:
+        raise HTTPException(status_code=404, detail="Anime not found")
+    return anime
 
 # update anime info excluding anime_id 
 @router.put("/edit/admin/{anime_id}", response_model=anime_schema.AnimeResponse)
