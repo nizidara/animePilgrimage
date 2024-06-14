@@ -6,7 +6,7 @@ import models.user as user_model
 import schemas.user as user_schema
 
 # read list
-async def get_user_list(db:AsyncSession) -> List[Tuple[user_model.User]]:
+async def get_user_list(db:AsyncSession) -> List[Tuple[user_schema.UserLoginResponse]]:
     # get
     users = db.query(user_model.User).all()
     
@@ -20,14 +20,15 @@ async def get_user_list(db:AsyncSession) -> List[Tuple[user_model.User]]:
     return response_list
 
 # read detail
-async def get_user_detail(db: AsyncSession, user_id: str) -> user_model.User:
+async def get_user_detail(db: AsyncSession, user_id: str) -> user_schema.UserLoginResponse:
     # convert str -> UUID
     user_id_bytes = uuid.UUID(user_id).bytes
 
     # get
     user = db.query(user_model.User).filter(user_model.User.user_id == user_id_bytes).first()
-
+    
     # convert UUID -> str
+    response = None
     if user is not None:
         response_dict = user.__dict__
         user.user_id = str(uuid.UUID(bytes=user.user_id))

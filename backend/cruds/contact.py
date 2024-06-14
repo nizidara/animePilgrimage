@@ -23,7 +23,7 @@ async def get_contact(db:AsyncSession) -> List[Tuple[contact_model.Testcontact]]
 # create
 async def create_contact(
         db: AsyncSession, contact_create: contact_schema.ContactCreate
-) -> contact_model.Contact:
+) -> contact_schema.ContactResponse:
     # convert str -> UUID
     contact_dict = contact_create.model_dump()
     if contact_create.user_id is not None:
@@ -36,6 +36,7 @@ async def create_contact(
     db.refresh(contact)
 
     # convert UUID -> str
+    response = None
     if contact:
         response_dict = contact.__dict__
         if contact.user_id is not None:
@@ -45,7 +46,7 @@ async def create_contact(
     return response
 
 # read list
-async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]]:
+async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_schema.ContactResponse]]:
     # get
     contacts = db.query(contact_model.Contact).all()
     
@@ -61,11 +62,12 @@ async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_model.Contact]
     return response_list
 
 # read detail
-async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model.Contact:
+async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_schema.ContactResponse:
     # get
     contact = db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
 
     # convert UUID -> str
+    response = None
     if contact:
         response_dict = contact.__dict__
         if contact.user_id is not None:
@@ -75,8 +77,9 @@ async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_model
     return response
 
 # update status
-async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_model.Contact:
+async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_schema.ContactResponse:
     contact = db.query(contact_model.Contact).filter(contact_model.Contact.contact_id == contact_id).first()
+    response = None
     if contact:
         contact.status = status
         db.commit()
