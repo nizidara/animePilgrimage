@@ -33,7 +33,7 @@ class AnimePhoto(Base):
     place = relationship("Place", back_populates="anime_photos")
     user = relationship("User", back_populates="anime_photos")
 
-    place_icons = relationship("PlaceIcon", back_populates="anime_photo")
+    place_icons = relationship("PlaceIcon", back_populates="anime_photo", cascade="all, delete")
 
     __table_args__ = (
         UniqueConstraint('file_name', name='file_name_UNIQUE'),

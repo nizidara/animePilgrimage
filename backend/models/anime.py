@@ -13,10 +13,10 @@ class Anime(Base):
     introduction = Column(String(200), nullable=True)
     flag = Column(SmallInteger, nullable=False, default=2, comment='flag = 0: Do not display, flag = 1: Display, flag = 2: Waiting approval')
 
-    places = relationship("Place", back_populates="anime")
-    favorite_anime = relationship("FavoriteAnime", back_populates="anime")
-    request_anime = relationship("RequestAnime", back_populates="anime")
-    request_places = relationship("RequestPlace", back_populates="anime")
+    places = relationship("Place", back_populates="anime", cascade="all, delete")
+    favorite_anime = relationship("FavoriteAnime", back_populates="anime", cascade="all, delete")
+    request_anime = relationship("RequestAnime", back_populates="anime", cascade="all, delete")
+    request_places = relationship("RequestPlace", back_populates="anime", cascade="all, delete")
     
     __table_args__ = (
         UniqueConstraint('title', name='title_UNIQUE'),

@@ -23,12 +23,12 @@ class Place(Base):
     created_user = relationship("User", foreign_keys="[Place.created_user_id]", back_populates="created_places")
     edited_user = relationship("User", foreign_keys="[Place.edited_user_id]", back_populates="edited_places")
 
-    anime_photos = relationship("AnimePhoto", back_populates="place")
-    place_icons = relationship("PlaceIcon", back_populates="place")
-    comments = relationship("Comment", back_populates="place")
-    real_photos = relationship("RealPhoto", back_populates="place")
+    anime_photos = relationship("AnimePhoto", back_populates="place", cascade="all, delete")
+    place_icons = relationship("PlaceIcon", back_populates="place", cascade="all, delete")
+    comments = relationship("Comment", back_populates="place", cascade="all, delete")
+    real_photos = relationship("RealPhoto", back_populates="place", cascade="all, delete")
     request_places = relationship("RequestPlace", back_populates="place", cascade="all, delete")
-    archives = relationship("Archive", back_populates="place")
+    archives = relationship("Archive", back_populates="place", cascade="all, delete")
 
     __table_args__ = (
         {'comment': 'pilgrimage places table'}

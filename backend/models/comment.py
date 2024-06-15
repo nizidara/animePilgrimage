@@ -30,8 +30,8 @@ class Comment(Base):
     place = relationship("Place", back_populates="comments")
     user = relationship("User", back_populates="comments")
 
-    real_photos = relationship("RealPhoto", back_populates="comment")
-    delete_comments = relationship("DeleteComment", back_populates="comment")
+    real_photos = relationship("RealPhoto", back_populates="comment", cascade="all, delete")
+    delete_comments = relationship("DeleteComment", back_populates="comment", cascade="all, delete")
 
     __table_args__ = (
         {'comment': 'anyone can post comment and photo which he has been to spot'}

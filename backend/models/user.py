@@ -39,9 +39,9 @@ class User(Base):
     request_places = relationship("RequestPlace", back_populates="user")
     delete_comments = relationship("DeleteComment", back_populates="user")
     contacts = relationship("Contact", back_populates="user")
-    reset_users = relationship("ResetUser", back_populates="user")
-    favorite_anime = relationship("FavoriteAnime", back_populates="user")
-    archives = relationship("Archive", back_populates="user")
+    reset_users = relationship("ResetUser", back_populates="user", cascade="all, delete")
+    favorite_anime = relationship("FavoriteAnime", back_populates="user", cascade="all, delete")
+    archives = relationship("Archive", back_populates="user", cascade="all, delete")
 
     __table_args__ = (
         UniqueConstraint('login_id', name='file_name_UNIQUE'),
