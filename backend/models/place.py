@@ -27,7 +27,7 @@ class Place(Base):
     place_icons = relationship("PlaceIcon", back_populates="place")
     comments = relationship("Comment", back_populates="place")
     real_photos = relationship("RealPhoto", back_populates="place")
-    request_places = relationship("RequestPlace", back_populates="place")
+    request_places = relationship("RequestPlace", back_populates="place", cascade="all, delete")
     archives = relationship("Archive", back_populates="place")
 
     __table_args__ = (

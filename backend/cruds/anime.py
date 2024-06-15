@@ -51,7 +51,7 @@ async def get_anime_list(db:AsyncSession) -> List[Tuple[anime_schema.AnimeRespon
     return db.query(anime_model.Anime).order_by(anime_model.Anime.kana).all()
 
 # read request edit anime detail
-async def get_request_edit_anime_detail(db: AsyncSession, request_anime_id: int) -> anime_schema.AnimeEditResponse:
+async def get_request_anime_detail(db: AsyncSession, request_anime_id: int) -> anime_schema.AnimeEditResponse:
 
     # read
     result = db.query(anime_model.RequestAnime).filter(anime_model.RequestAnime.request_anime_id == request_anime_id).first()
@@ -65,6 +65,22 @@ async def get_request_edit_anime_detail(db: AsyncSession, request_anime_id: int)
         response = anime_schema.AnimeEditResponse(**response_dict)
 
     return response
+
+# read request edit anime detail
+async def get_request_anime_list(db: AsyncSession) -> List[Tuple[anime_schema.AnimeEditResponse]]:
+    # read
+    results = db.query(anime_model.RequestAnime).all()
+
+    # convert UUID -> str
+    response_list = []
+    if results:
+        for result in results:
+            response_dict = result.__dict__
+            if result.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=result.user_id))
+            response_list.append(anime_schema.AnimeEditResponse(**response_dict))
+
+    return response_list
 
 # update flag
 async def update_anime_flag(db: AsyncSession, anime_id: int, flag: int) -> anime_schema.AnimeResponse:

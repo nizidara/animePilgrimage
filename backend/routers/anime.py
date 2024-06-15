@@ -22,7 +22,7 @@ async def anime_detail(anime_id: int, db: AsyncSession = Depends(get_db)):
 # get edit request anime info detail
 @router.get("/edit/{request_anime_id}", response_model=anime_schema.AnimeEditResponse)
 async def request_edit_anime_detail(request_anime_id: int, db: AsyncSession = Depends(get_db)):
-    result = await anime_crud.get_request_edit_anime_detail(db=db, request_anime_id=request_anime_id)
+    result = await anime_crud.get_request_anime_detail(db=db, request_anime_id=request_anime_id)
     if result is None:
         raise HTTPException(status_code=404, detail="Request Edit Anime not found")
     return result
@@ -33,6 +33,16 @@ async def anime_list(title: str = None, db: AsyncSession = Depends(get_db)):
     anime_list = await anime_crud.get_anime_list(db=db)
     if anime_list is None:
         raise HTTPException(status_code=404, detail="Anime not found")
+    return anime_list
+
+# get request anime list
+@router.get("/list/edit", response_model=List[anime_schema.AnimeEditResponse])
+async def edit_anime_list(db: AsyncSession = Depends(get_db)):
+
+    anime_list = await anime_crud.get_request_anime_list(db=db)
+
+    if anime_list is None:
+        raise HTTPException(status_code=404, detail="Request Anime not found")
     return anime_list
 
 # create anime info request

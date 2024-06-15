@@ -106,6 +106,23 @@ async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.Plac
 
     return response
 
+# read list
+async def get_request_place_list(db:AsyncSession) -> List[Tuple[place_schema.PlaceRequestResponse]]:
+    # get
+    places = db.query(place_model.RequestPlace).all()
+    
+    # convert UUID -> str
+    response_list = []
+    if places:
+        for place in places:
+            response_dict = place.__dict__
+            response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
+            if place.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
+            response_list.append(place_schema.PlaceRequestResponse(**response_dict))
+
+    return response_list
+
 # read request place detail
 async def get_request_place_detail(db: AsyncSession, request_place_id: int) -> place_schema.PlaceRequestResponse:
     # get
@@ -143,6 +160,50 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
         response = place_schema.PlaceResponse(**response_dict)
+
+    return response
+
+# approve request place
+async def approve_request_place(db: AsyncSession, request_place_id: int) -> place_schema.PlaceResponse:
+    request = db.query(place_model.RequestPlace).filter(place_model.RequestPlace.request_place_id == request_place_id).first()
+    response = None
+
+    if request:
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == request.place_id).first()
+        if place:
+            # edit
+            if request.request_type == 0:
+                # set edit user_id
+                place.edited_user_id = request.user_id
+
+                # update place info
+                place.name = request.name
+                place.latitude = request.latitude
+                place.longitude = request.longitude
+                place.comment = request.comment
+                place.region_id = request.region_id
+                db.commit()
+                db.refresh(place)
+
+                # delete request place
+                db.delete(request)
+                db.commit()
+
+            # delete
+            elif request.request_type == 1:
+                
+                # delete place
+                db.delete(place)
+                db.commit()
+    
+            # convert UUID -> str
+            response_dict = place.__dict__
+            response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
+            if place.created_user_id is not None:
+                response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
+            if place.edited_user_id is not None:
+                response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
+            response = place_schema.PlaceResponse(**response_dict)
 
     return response
 
