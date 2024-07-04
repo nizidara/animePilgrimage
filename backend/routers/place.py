@@ -37,7 +37,7 @@ async def request_place_detail(request_place_id: int, db: AsyncSession = Depends
 
 # get request place list
 @router.get("/request/list", response_model=List[place_schema.PlaceRequestResponse])
-async def place_list(db: AsyncSession = Depends(get_db)):
+async def request_place_list(db: AsyncSession = Depends(get_db)):
     places = await place_crud.get_request_place_list(db=db)
     if places is None:
         raise HTTPException(status_code=404, detail="Places not found")
