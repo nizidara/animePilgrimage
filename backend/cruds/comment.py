@@ -102,8 +102,25 @@ async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schem
 
     return response
 
+# read report comment list
+async def get_report_comment_list(db:AsyncSession) -> List[Tuple[comment_schema.DeleteCommentResponse]]:
+    # get
+    comments = db.query(comment_model.DeleteComment).all()
+    
+    # convert UUID -> str
+    response_list = []
+    if comments:
+        for comment in comments:
+            response_dict = comment.__dict__
+            response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
+            if comment.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
+            response_list.append(comment_schema.DeleteCommentResponse(**response_dict))
+
+    return response_list
+
 # read report comment detail
-async def get_report_comment_detail(db: AsyncSession, delete_comment_id: int) -> comment_schema.CommentResponse:
+async def get_report_comment_detail(db: AsyncSession, delete_comment_id: int) -> comment_schema.DeleteCommentResponse:
     # get
     comment = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
     
@@ -115,6 +132,30 @@ async def get_report_comment_detail(db: AsyncSession, delete_comment_id: int) ->
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
         response = comment_schema.DeleteCommentResponse(**response_dict)
+
+    return response
+
+# approve request place
+async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> comment_schema.CommentResponse:
+    request = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
+    response = None
+
+    if request:
+        # get
+        comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == request.comment_id).first()
+
+        if comment:
+            # delete comment (delete_comments DB is casecade on delete)
+            db.delete(comment)
+            db.commit()
+            
+            # convert UUID -> str
+            response_dict = comment.__dict__
+            response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
+            response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
+            if comment.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
+            response = comment_schema.CommentResponse(**response_dict)
 
     return response
 
@@ -131,7 +172,7 @@ async def delete_comment(db: AsyncSession, comment_id: str) -> comment_model.Com
     return comment
 
 # delete delete comment
-async def delete_comment(db: AsyncSession, delete_comment_id: str) -> comment_model.Comment:
+async def delete_comment(db: AsyncSession, delete_comment_id: str) -> comment_model.DeleteComment:
     # delete
     comment = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
     if comment:

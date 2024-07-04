@@ -29,11 +29,19 @@ async def comment_list(place_id: str = None, anime_id: int = None, db: AsyncSess
 
 # get report comment detail
 @router.get("/report/detail/{delete_comment_id}", response_model=comment_schema.DeleteCommentResponse)
-async def comment_detail(delete_comment_id: int, db: AsyncSession = Depends(get_db)):
+async def report_comment_detail(delete_comment_id: int, db: AsyncSession = Depends(get_db)):
     comment = await comment_crud.get_report_comment_detail(db=db, delete_comment_id=delete_comment_id) 
     if comment is None:
         raise HTTPException(status_code=404, detail="report comment not found")
     return comment
+
+# get report comment list
+@router.get("/report/list", response_model=List[comment_schema.DeleteCommentResponse])
+async def report_comment_detail(db: AsyncSession = Depends(get_db)):
+    comments = await comment_crud.get_report_comment_list(db=db) 
+    if comments is None:
+        raise HTTPException(status_code=404, detail="report comments not found")
+    return comments
 
 # post comment
 @router.post("/", response_model=comment_schema.CommentResponse)
@@ -44,6 +52,15 @@ async def create_comment(comment_body: comment_schema.CommentCreate, db: AsyncSe
 @router.post("/report", response_model=comment_schema.DeleteCommentResponse)
 async def create_comment_report(comment_body: comment_schema.DeleteCommentCreate, db: AsyncSession = Depends(get_db)):
     return await comment_crud.create_report_comment(db=db, comment_body=comment_body)
+
+
+# update place info to approve edit request
+@router.put("/report/{delete_comment_id}", response_model=comment_schema.CommentResponse)
+async def approve_report_comment(delete_comment_id: int, db: AsyncSession = Depends(get_db)):
+    comment = await comment_crud.approve_delete_comment(delete_comment_id=delete_comment_id ,db=db)
+    if comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return comment
 
 # delete comment from DB
 @router.delete("/{comment_id}")
