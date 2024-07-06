@@ -88,10 +88,12 @@ async def get_place_icon(db: AsyncSession, place_id: str) -> photo_schema.PlaceP
 
     # convert str -> UUID
     response = None
-    if icon:
+    if icon and icon.anime_photo_id is not None:
         response_dict = icon.__dict__
+        anime_photo_id_bytes = bytes(icon.anime_photo_id)
         response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
         response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
+        response_dict['file_name'] = str(db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first().file_name)
         response = photo_schema.PlacePhotoIconResponse(**response_dict)
     return response
 
@@ -180,6 +182,7 @@ async def update_place_icon(db: AsyncSession, place_icon_body: photo_schema.Plac
         response_dict = icon.__dict__
         response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
         response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
+        response_dict['file_name'] = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first().file_name
         response = photo_schema.PlacePhotoIconResponse(**response_dict)
     return response
 

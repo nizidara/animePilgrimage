@@ -26,6 +26,7 @@ class PlacePhotoIconCreate(BaseModel):
 
 class PlacePhotoIconResponse(PlacePhotoIconCreate):
     place_id: str
+    file_name: str
 
     class Config:
         orm_mode = True
