@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, memo, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useSendContact } from "../../../hooks/useSendContact";
-import { sendContents } from "../../../type/api/contact";
+import { useSendContact } from "../../../hooks/other/useSendContact";
+import { sendContactFormData } from "../../../type/api/contact";
 
 
 export const ContactForm: FC = memo(() => {
@@ -17,7 +17,7 @@ export const ContactForm: FC = memo(() => {
     const onChangeTitle = (e:ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
     const onChangeContents = (e:ChangeEvent<HTMLInputElement>) => setContents(e.target.value);
     
-    const sendContents = {name, email, title, contents} as sendContents;
+    const sendContents = {name, email, title, contents} as sendContactFormData;
     const onClickSend = () => send(sendContents);
 
     return (

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { responseSendContents, sendContents } from "../../type/api/contact";
+//import { responseSendContents, sendContents } from "../../type/api/contact";
 import { fastAPIURL } from "../../properties/properties";
 import { registerAnime } from "../../type/api/anime";
 
