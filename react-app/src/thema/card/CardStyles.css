@@ -1,0 +1,7 @@
+.clickable-card {
+    cursor: pointer;
+}
+  
+.clickable-card:hover {
+    background-color: #f8f9fa; /* ホバー時の背景色を変更（任意） */
+}

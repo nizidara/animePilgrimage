@@ -1,18 +1,41 @@
-import {memo, FC, useCallback} from "react";
-import { Button, Container } from "react-bootstrap";
+import {memo, FC, useCallback, useEffect, useState} from "react";
+import { Container } from "react-bootstrap";
 import { ContactDetailDisplay } from "../../organisms/display/ContactDetailDisplay";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useGetContactDetail } from "../../../hooks/contacts/useGetContactDetail";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
+
+const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+
 export const AdminContactDetail: FC = memo(() =>{
     const navigate = useNavigate();
     
     const onClickTop = useCallback(() => navigate("/admin/top"), [navigate]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
+    const query = useQuery();
+    const contactId = query.get('contact_id');
+    const { contact, loading, error } = useGetContactDetail(contactId);
+
+    if (loading) {
+        return <div></div>;
+    }
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+    
+    if (!contact) {
+        return <div>No contact found</div>;
+    }
+
     return (
         <Container>
-            <h2>Adminお問い合わせ内容詳細ページです．</h2>
-            {/* <ContactDetailDisplay id={111} name="hoge" email="hoge@hoge" title="hoge" contents="hogehoge" /> */}
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>
+            <h2>お問い合わせ内容詳細</h2>
+            <ContactDetailDisplay contact_id={contact.contact_id} name={contact.name} email={contact.email} title={contact.title} contents={contact.contents} contact_date={contact.contact_date} user_id={contact.user_id} status={contact.status} />
+            <BackAndNextButtons backName="戻る" nextName="TOPへ" onClickBack={onClickBack} onClickNext={onClickTop} />
         </Container>
     )
 });

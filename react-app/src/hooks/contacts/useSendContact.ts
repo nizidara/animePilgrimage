@@ -5,13 +5,13 @@ import { responseContactData, sendContactData, sendContactFormData} from "../../
 import { fastAPIURL } from "../../properties/properties";
 
 
-//お問い合わせ内容送信機能
+//post contact
 export const useSendContact = () => {
     const [responseData, setResponseData] = useState<responseContactData | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
 
-    //お問い合わせページの入力内容をpostし，responseに保存
+    //post
     const send = useCallback((formData : sendContactFormData) => {
         const sendData : sendContactData = {
             ...formData,
