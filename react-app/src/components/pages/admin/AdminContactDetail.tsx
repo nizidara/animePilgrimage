@@ -1,13 +1,10 @@
 import {memo, FC, useCallback, useEffect, useState} from "react";
 import { Container } from "react-bootstrap";
 import { ContactDetailDisplay } from "../../organisms/display/ContactDetailDisplay";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetContactDetail } from "../../../hooks/contacts/useGetContactDetail";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
-
-const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
+import { useQuery } from "../../../hooks/utilities/useQuery";
 
 export const AdminContactDetail: FC = memo(() =>{
     const navigate = useNavigate();

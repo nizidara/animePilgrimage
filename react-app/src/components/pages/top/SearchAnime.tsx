@@ -1,11 +1,19 @@
-import {memo, FC} from "react";
+import {memo, FC, useCallback} from "react";
 import { Container, ListGroup } from "react-bootstrap";
 import { SearchAnimeForm } from "../../organisms/form/SearchAnimeForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
-import { animeList } from "../../../testdatas/testdata";
+import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
+import { useNavigate } from "react-router-dom";
 
 export const SearchAnime: FC = memo(() =>{
+    const { animeList, loading, error } = useGetAnimeList();
+
+    const navigate = useNavigate();
+    const onClickDetail = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
+
+    if (loading) return <p>読み込み中...</p>;
+    if (error) return <p>エラー: {error}</p>;
 
     return (
         <Container>
@@ -15,7 +23,7 @@ export const SearchAnime: FC = memo(() =>{
             <ListGroup>
                 {animeList.map(anime => (
                     <ListGroup.Item key={anime.anime_id}>
-                        <AnimeSummaryCard title={anime.title} introduction={anime.introduction} />
+                        <AnimeSummaryCard anime_id={anime.anime_id} title={anime.title} introduction={anime.introduction} onClickDetail={onClickDetail}/>
                     </ListGroup.Item>
                 ))}
             </ListGroup>

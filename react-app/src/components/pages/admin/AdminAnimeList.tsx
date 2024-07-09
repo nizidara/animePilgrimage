@@ -14,7 +14,7 @@ export const AdminAnimeList: FC = memo(() =>{
             <ListGroup>
                 {animeList.map(anime => (
                     <ListGroup.Item key={anime.anime_id}>
-                        <AnimeSummaryCard title={anime.title} introduction={anime.introduction} />
+                        {/* <AnimeSummaryCard title={anime.title} introduction={anime.introduction} /> */}
                     </ListGroup.Item>
                 ))}
             </ListGroup>

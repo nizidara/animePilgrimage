@@ -2,8 +2,10 @@ import {memo, FC, useCallback} from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { animeTitle, placeList } from "../../../testdatas/testdata";
+import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
+import { useQuery } from "../../../hooks/utilities/useQuery";
 
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
@@ -12,17 +14,33 @@ export const AnimeDetail: FC = memo(() =>{
     const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
     const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
 
+    const query = useQuery();
+    const animeId = query.get('anime_id');
+    const { anime, loading, error } = useGetAnimeDetail(animeId);
+
+    if (loading) {
+        return <div></div>;
+    }
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+    
+    if (!anime) {
+        return <div>No contact found</div>;
+    }
+
     return (
         <Container>
             <Row className="mt-2 mb-2">
                 <Col xs={6}>
-                    <h2>{animeTitle}</h2>
+                    <h2>{anime.title}</h2>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end align-items-center">
                 <Button variant="warning" onClick={onClickEdit}>修正</Button>
                 </Col>
             </Row>
-            <AnimeIntroductionDisplay title={"リコリコ"} introduction={"さかなー"} />
+            <AnimeIntroductionDisplay title={anime.title} introduction={anime.introduction} />
             <hr />
 
             <div className="d-flex justify-content-end mb-2">

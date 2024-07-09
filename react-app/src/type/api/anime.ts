@@ -8,3 +8,11 @@ export type animeDetail = {
     title: string;
     introduction: string;
 }
+
+export type responseAnimeData = {
+    title: string;
+    introduction: string;
+    kana: string;
+    flag: number;
+    anime_id: number;
+}
