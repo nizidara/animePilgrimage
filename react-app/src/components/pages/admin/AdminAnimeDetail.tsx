@@ -1,32 +1,60 @@
-import {memo, FC, useCallback, useState} from "react";
+import {memo, FC, useCallback, useState, useEffect} from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { registerAnime } from "../../../type/api/anime";
+import { useQuery } from "../../../hooks/utilities/useQuery";
+import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
+import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
+
 export const AdminAnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
-    const location = useLocation();
 
-    const initialFormData = location.state?.formData || { title: '', kana: '', introduction: '' };
+    const query = useQuery();
+    const animeId = query.get('anime_id');
+    const { anime, loading, error } = useGetAnimeDetail(animeId);
+    
+    const [formData, setFormData] = useState<registerAnime>({title:'', kana:'', introduction:''});
 
-    const [formData, setFormData] = useState<registerAnime>(initialFormData);
+    useEffect(() => {
+        if(anime){
+            const {title, kana, introduction} = anime;
+            setFormData({title, kana, introduction})
+        }
+    },[anime])
 
-    const decide = useCallback((formData:registerAnime) => navigate("/admin/anime", {state: {formData}}), [navigate]);
+    const decide = useCallback((animeId: number, formData:registerAnime) => navigate(`/admin/anime?anime_id=${animeId}`, {state: {formData}}), [navigate]);
     
     const onClickTop = useCallback(() => navigate("/admin/top"), [navigate]);
-    const onClickDecide = () => decide(formData);
+    
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+    
+    if (!anime) {
+        return <div>No contact found</div>;
+    }
 
     const formChange = (data:registerAnime) => {
         setFormData(data); // フォームデータを更新
     };
 
+    const onClickDecide = () => decide(anime.anime_id, formData);
+
     return (
         <Container>
-            <h2>Adminアニメ詳細ページです．</h2>
+            <h2>アニメ情報編集</h2>
             <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData}/>
-            <Button variant="secondary" size="lg" onClick={onClickBack}>戻る</Button> <Button variant="primary" size="lg" onClick={onClickDecide}>確定</Button><br />
-            <Button variant="primary" size="lg" onClick={onClickTop}>TOPへ</Button>
+            <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
+            <div className="d-flex justify-content-center mt-2">
+                <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+            </div>
         </Container>
     )
 });
