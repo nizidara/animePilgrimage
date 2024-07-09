@@ -5,12 +5,16 @@ import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { useNavigate } from "react-router-dom";
 import { animeTitle, photoDataList, placeData, placeList } from "../../../testdatas/testdata";
+import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
 
     const onClickAnime = useCallback(() => navigate("/anime"), [navigate]);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place"), [navigate]);
+    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
+
+    const { placeList } = useGetPlaceList();
 
     return (
         <Container>
@@ -24,7 +28,7 @@ export const PlaceList: FC = memo(() =>{
             </Row>
 
             <DisplayMap />
-            <PlaceSummaryCard name={placeData.name} title={placeData.animeTitle} comment={placeData.comment} />
+            <PlaceSummaryCard name={placeData.name} title={placeData.animeTitle} comment={placeData.comment} anime_id={123} place_id="123"/>
             <ListGroup horizontal>
                 {photoDataList.map(photo => (
                     <ListGroup.Item key={photo.src}>
@@ -40,7 +44,7 @@ export const PlaceList: FC = memo(() =>{
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard name={place.name} title={place.title} comment={place.comment} />
+                        <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} onClickDetail={onClickDetail} anime_id={place.anime_id} place_id={place.place_id}/>
                     </ListGroup.Item>
                 ))}
             </ListGroup>

@@ -3,23 +3,44 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 import { BsImage } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
+import '../../../thema/card/CardStyles.css';
+
 type PlaceSummary = {
     name:string;
     title:string;
     comment:string;
+    anime_id:number;
+    onClickDetail?: (placeId: string) => void;
+    place_id: string;
 }
 
 export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
     const navigate = useNavigate();
 
-    const {name, title, comment} = props;
+    const {name, title, comment, anime_id, onClickDetail, place_id} = props;
 
-    const onClickAnime = useCallback(() => navigate("/anime"), [navigate]);
+    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
 
     return (
         <>
             <Card>
-                <Card.Body>
+                {onClickDetail ? (
+                    <Card.Body className="clickable-card" onClick={() => onClickDetail(place_id)}>
+                        <Row>
+                            <Col xs="auto" sm="auto">
+                                    <BsImage size={80} />
+                            </Col>
+                            <Col>
+                                    <Card.Title>{name}</Card.Title> 
+                                    <Card.Text>
+                                        {comment}
+                                    </Card.Text>
+                                    
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                ) : (
+                    <Card.Body>
                         <Row>
                             <Col xs="auto" sm="auto">
                                     <BsImage size={80} />
@@ -33,9 +54,10 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                             </Col>
                         </Row>
                 </Card.Body>
+                )}
                 <Card.Footer>
                     <div className="d-flex justify-content-end">
-                        <Button variant="link" onClick={onClickAnime} size="sm">#{title}</Button>
+                        <Button variant="link" onClick={() => onClickAnime(anime_id)} size="sm">#{title}</Button>
                     </div>
                 </Card.Footer>
             </Card>

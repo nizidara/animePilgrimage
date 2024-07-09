@@ -7,6 +7,8 @@ import { CommentForm } from "../../organisms/form/CommentForm";
 import { CommentCard } from "../../organisms/card/CommentCard";
 import { useNavigate } from "react-router-dom";
 import { commentList, photoDataList, placeData} from "../../../testdatas/testdata";
+import { useQuery } from "../../../hooks/utilities/useQuery";
+import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -15,11 +17,27 @@ export const PlaceDetail: FC = memo(() =>{
     const onClickEdit = useCallback(() => navigate("/edit_place"), [navigate]);
     const onClickDelete = useCallback(() => navigate("/delete_place"), [navigate]);
 
+    const query = useQuery();
+    const placeId = query.get('place_id');
+    const { place, loading, error } = useGetPlaceDetail(placeId);
+
+    if (loading) {
+        return <div>loading...</div>;
+    }
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+    
+    if (!place) {
+        return <div>place not found</div>;
+    }
+
     return (
         <Container>
             <Row className="mt-2 mb-2">
                 <Col xs={6}>
-                    <h2>{placeData.name}</h2>
+                    <h2>{place.name}</h2>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end align-items-center">
                     <Button variant="warning" onClick={onClickEdit} className="mx-2">修正</Button> <Button variant="danger" onClick={onClickDelete}>削除</Button>
@@ -28,7 +46,7 @@ export const PlaceDetail: FC = memo(() =>{
 
             <DisplayMap />
 
-            <PlaceSummaryCard name={placeData.name} title={placeData.animeTitle} comment={placeData.comment} />
+            <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id}/>
             <ListGroup horizontal>
                 {photoDataList.map(photo => (
                     <ListGroup.Item key={photo.src}>

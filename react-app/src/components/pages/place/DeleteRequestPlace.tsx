@@ -29,7 +29,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
             <h2>聖地削除リクエスト</h2>
             <p>削除理由を記載してください。</p>
 
-            <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
+            {/* <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" anime_id={123}/> */}
             <br />
             <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
 

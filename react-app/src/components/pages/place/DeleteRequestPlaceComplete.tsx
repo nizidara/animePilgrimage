@@ -18,7 +18,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
         <Container>
             <h2>削除リクエストを送信しました</h2>
 
-            <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" />
+            {/* <PlaceSummaryCard name="すみだ水族館" title="リコリコ" comment="さかな～ ちんあなご～" anime_id={123}/> */}
             <br />
             <DeletePlaceDetailDisplay contents={deletePlace.contents} />
 

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { placeList } from "../../../testdatas/testdata";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { useQuery } from "../../../hooks/utilities/useQuery";
+import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ export const AnimeDetail: FC = memo(() =>{
     const query = useQuery();
     const animeId = query.get('anime_id');
     const { anime, loading, error } = useGetAnimeDetail(animeId);
+    const { placeList } = useGetPlaceList();
 
     if (loading) {
         return <div></div>;
@@ -49,7 +51,7 @@ export const AnimeDetail: FC = memo(() =>{
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard name={place.name} title={place.title} comment={place.comment} />
+                        <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id}/>
                     </ListGroup.Item>
                 ))}
             </ListGroup>

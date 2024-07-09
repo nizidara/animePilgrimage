@@ -5,11 +5,19 @@ import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { placeList } from "../../../testdatas/testdata";
 import { useNavigate } from "react-router-dom";
+import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 
 export const SearchPlace: FC = memo(() =>{
+
+    const { placeList, loading, error } = useGetPlaceList();
+
     const navigate = useNavigate();
 
     const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
+    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
+
+    if (loading) return <p>読み込み中...</p>;
+    if (error) return <p>エラー: {error}</p>;
 
     return (
         <Container>
@@ -25,7 +33,7 @@ export const SearchPlace: FC = memo(() =>{
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard name={place.name} title={place.title} comment={place.comment} />
+                        <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} onClickDetail={onClickDetail} place_id={place.place_id}/>
                     </ListGroup.Item>
                 ))}
             </ListGroup>
