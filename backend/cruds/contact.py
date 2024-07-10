@@ -55,11 +55,11 @@ async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_schema.Contact
 async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_schema.ContactResponse:
     # get
     result = db.query(contact_model.Contact, user_model.User.user_name).outerjoin(user_model.User, contact_model.Contact.user_id == user_model.User.user_id).filter(contact_model.Contact.contact_id == contact_id).first()
-    contact, user_name = result
 
     # convert UUID -> str
     response = None
-    if contact:
+    if result:
+        contact, user_name = result
         response_dict = contact.__dict__
         if contact.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=contact.user_id))
@@ -71,10 +71,10 @@ async def get_contact_detail(db: AsyncSession, contact_id: int) -> contact_schem
 async def update_contact_status(db: AsyncSession, contact_id: int, status: int) -> contact_schema.ContactResponse:
     # get
     result = db.query(contact_model.Contact, user_model.User.user_name).outerjoin(user_model.User, contact_model.Contact.user_id == user_model.User.user_id).filter(contact_model.Contact.contact_id == contact_id).first()
-    contact, user_name = result
-
+    
     response = None
-    if contact:
+    if result:
+        contact, user_name = result
         contact.status = status
         db.commit()
         db.refresh(contact)
