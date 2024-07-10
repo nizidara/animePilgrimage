@@ -21,6 +21,10 @@ class PlaceCreate(PlaceBase):
 
 class PlaceResponse(PlaceCreate):
     place_id: str
+    region_name: str
+    anime_title: str
+    created_user_name: Optional[str] = "no name"
+    edited_user_name: Optional[str] = "no name"
 
     class Config:
         orm_mode = True
@@ -38,6 +42,9 @@ class PlaceRequestCreate(PlaceBase):
 
 class PlaceRequestResponse(PlaceRequestCreate):
     request_place_id: int
+    region_name: str
+    anime_title: str
+    user_name: Optional[str] = "no name"
 
     class Config:
         orm_mode = True
