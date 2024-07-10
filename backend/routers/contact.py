@@ -11,19 +11,6 @@ router = APIRouter(prefix="/contacts", tags=["contacts"])
 
 contact_model.Base.metadata.create_all(bind=engine)
 
-"""
-#送信
-@router.post("", response_model=contact_schema.responseContents)
-async def send_contact(contents_body: contact_schema.sendContents, db: AsyncSession = Depends(get_db)):
-    return await contact_crud.create_contact(db, contents_body)
-
-#一覧取得
-@router.get("", response_model=List[contact_schema.responseContents])
-async def get_contact(db: AsyncSession = Depends(get_db)):
-    results = await contact_crud.get_contact(db)
-    return results
-"""
-
 ## get contact detail
 @router.get("/detail/{contact_id}", response_model=contact_schema.ContactResponse)
 async def contact_detail(contact_id: int, db: AsyncSession = Depends(get_db)):
