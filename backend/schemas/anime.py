@@ -32,6 +32,7 @@ class AnimeEditCreate(AnimeBase):
 
 class AnimeEditResponse(AnimeEditCreate):
     request_anime_id: int
+    user_name: Optional[str] = "no name"
 
     class Config:
         orm_mode = True
