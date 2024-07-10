@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { commentList, photoDataList, placeData} from "../../../testdatas/testdata";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
+import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -20,6 +21,7 @@ export const PlaceDetail: FC = memo(() =>{
     const query = useQuery();
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
+    const { commentList } = useGetCommentList(placeId);
 
     if (loading) {
         return <div>loading...</div>;
@@ -59,7 +61,7 @@ export const PlaceDetail: FC = memo(() =>{
             <ListGroup>
                 {commentList.map(comment => (
                     <ListGroup.Item key={comment.comment_id}>
-                        <CommentCard user_name={comment.user_name} comment_date={comment.comment_date} comment={comment.comment} />
+                        <CommentCard user_name={comment.user_id} comment_date={comment.comment_date} comment={comment.comment} />
                     </ListGroup.Item>
                 ))}
             </ListGroup>
