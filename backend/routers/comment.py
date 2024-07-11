@@ -73,7 +73,7 @@ async def delete_comment(comment_id: str, db: AsyncSession = Depends(get_db)):
 # delete delete comment from DB
 @router.delete("/report/{delete_comment_id}")
 async def delete_comment_report(delete_comment_id: int, db: AsyncSession = Depends(get_db)):
-    comment = await comment_crud.delete_comment(db=db, delete_comment_id=delete_comment_id)
+    comment = await comment_crud.delete_delete_comment(db=db, delete_comment_id=delete_comment_id)
     if comment is None:
         raise HTTPException(status_code=404, detail="comment not found")
     return {"message": "comment deleted successfully"}

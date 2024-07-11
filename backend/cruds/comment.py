@@ -3,6 +3,8 @@ from typing import List, Tuple
 import uuid
 
 import models.comment as comment_model
+import models.user as user_model
+import models.place as place_model
 import schemas.comment as comment_schema
 
 # create comment
@@ -11,11 +13,16 @@ async def create_comment(
 ) -> comment_schema.CommentResponse:
     
     # convert str -> UUID
+    user_name = None
+    place = None
     if comment_body:
         comment_dict = comment_body.model_dump()
         comment_dict['place_id'] = uuid.UUID(comment_body.place_id).bytes
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == comment_dict['place_id']).first()
         if comment_body.user_id is not None:
             comment_dict['user_id'] = uuid.UUID(comment_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == comment_dict['user_id']).first()
+            user_name = user.user_name
     comment = comment_model.Comment(**comment_dict)
 
     # create
@@ -31,7 +38,7 @@ async def create_comment(
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.CommentResponse(**response_dict)
+        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name)
 
     return response
 
@@ -41,44 +48,52 @@ async def create_report_comment(
 ) -> comment_schema.DeleteCommentResponse:
     
     # convert str -> UUID
+    user_name = None
+    comment_comment = ""
     if comment_body:
-        comment_dict = comment_body.model_dump()
-        comment_dict['comment_id'] = uuid.UUID(comment_body.comment_id).bytes
+        delete_comment_dict = comment_body.model_dump()
+        delete_comment_dict['comment_id'] = uuid.UUID(comment_body.comment_id).bytes
+        comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == delete_comment_dict['comment_id'] ).first()
+        comment_comment = comment.comment
         if comment_body.user_id is not None:
-            comment_dict['user_id'] = uuid.UUID(comment_body.user_id).bytes
-    comment = comment_model.DeleteComment(**comment_dict)
+            delete_comment_dict['user_id'] = uuid.UUID(comment_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == delete_comment_dict['user_id']).first()
+            user_name = user.user_name
+    delete_comment = comment_model.DeleteComment(**delete_comment_dict)
 
     # create
-    db.add(comment)
+    db.add(delete_comment)
     db.commit()
-    db.refresh(comment)
+    db.refresh(delete_comment)
 
     # convert UUID -> str
     response = None
-    if comment:
-        response_dict = comment.__dict__
-        response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
-        if comment.user_id is not None:
-            response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.DeleteCommentResponse(**response_dict)
+    if delete_comment:
+        response_dict = delete_comment.__dict__
+        response_dict['comment_id'] = str(uuid.UUID(bytes=delete_comment.comment_id))
+        if delete_comment.user_id is not None:
+            response_dict['user_id'] = str(uuid.UUID(bytes=delete_comment.user_id))
+        response = comment_schema.DeleteCommentResponse(**response_dict, user_name=user_name, comment=comment_comment)
 
     return response
 
 # read list
 async def get_comment_list(db:AsyncSession, anime_id: int, place_id: str) -> List[Tuple[comment_schema.CommentResponse]]:
     # get
-    comments = db.query(comment_model.Comment).all()
+    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+        outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
+        outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).all()
     
     # convert UUID -> str
     response_list = []
-    if comments:
-        for comment in comments:
+    if results:
+        for comment, user_name, place in results:
             response_dict = comment.__dict__
             response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response_list.append(comment_schema.CommentResponse(**response_dict))
+            response_list.append(comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name))
 
     return response_list
 
@@ -86,65 +101,82 @@ async def get_comment_list(db:AsyncSession, anime_id: int, place_id: str) -> Lis
 async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schema.CommentResponse:
     # convert str -> UUID
     comment_id_bytes = uuid.UUID(comment_id).bytes
-
+ 
     # get
-    comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == comment_id_bytes).first()
+    result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+        outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
+        outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
+        filter(comment_model.Comment.comment_id == comment_id_bytes).first()
     
     # convert UUID -> str
     response = None
-    if comment:
+    if result:
+        comment, user_name, place = result
         response_dict = comment.__dict__
         response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.CommentResponse(**response_dict)
+        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name)
 
     return response
 
 # read report comment list
 async def get_report_comment_list(db:AsyncSession) -> List[Tuple[comment_schema.DeleteCommentResponse]]:
     # get
-    comments = db.query(comment_model.DeleteComment).all()
+    results = db.query(comment_model.DeleteComment, user_model.User.user_name, comment_model.Comment.comment).\
+        outerjoin(user_model.User, comment_model.DeleteComment.user_id == user_model.User.user_id).\
+        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).all()
     
     # convert UUID -> str
     response_list = []
-    if comments:
-        for comment in comments:
-            response_dict = comment.__dict__
-            response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
-            if comment.user_id is not None:
-                response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response_list.append(comment_schema.DeleteCommentResponse(**response_dict))
+    if results:
+        for delete_comment, user_name, comment in results:
+            response_dict = delete_comment.__dict__
+            response_dict['comment_id'] = str(uuid.UUID(bytes=delete_comment.comment_id))
+            if delete_comment.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=delete_comment.user_id))
+            response_list.append(comment_schema.DeleteCommentResponse(**response_dict, user_name=user_name, comment=comment))
 
     return response_list
 
 # read report comment detail
 async def get_report_comment_detail(db: AsyncSession, delete_comment_id: int) -> comment_schema.DeleteCommentResponse:
     # get
-    comment = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
+    result = db.query(comment_model.DeleteComment, user_model.User.user_name, comment_model.Comment.comment).\
+        outerjoin(user_model.User, comment_model.DeleteComment.user_id == user_model.User.user_id).\
+        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).\
+        filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
     
     # convert UUID -> str
     response = None
-    if comment:
-        response_dict = comment.__dict__
-        response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
-        if comment.user_id is not None:
-            response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.DeleteCommentResponse(**response_dict)
+    if result:
+        delete_comment, user_name, comment = result
+        response_dict = delete_comment.__dict__
+        response_dict['comment_id'] = str(uuid.UUID(bytes=delete_comment.comment_id))
+        if delete_comment.user_id is not None:
+            response_dict['user_id'] = str(uuid.UUID(bytes=delete_comment.user_id))
+        response = comment_schema.DeleteCommentResponse(**response_dict, user_name=user_name, comment=comment)
 
     return response
 
-# approve request place
+# approve delete comment request
 async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> comment_schema.CommentResponse:
+    #get
     request = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
+    
     response = None
-
     if request:
         # get
-        comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == request.comment_id).first()
+        result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+            outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
+            outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
+            filter(comment_model.Comment.comment_id == request.comment_id).first()
 
-        if comment:
+        if result:
+            comment, user_name, place = result
+            range_name = comment.range.range_name
+
             # delete comment (delete_comments DB is casecade on delete)
             db.delete(comment)
             db.commit()
@@ -155,7 +187,7 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response = comment_schema.CommentResponse(**response_dict)
+            response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=range_name)
 
     return response
 
@@ -172,7 +204,7 @@ async def delete_comment(db: AsyncSession, comment_id: str) -> comment_model.Com
     return comment
 
 # delete delete comment
-async def delete_comment(db: AsyncSession, delete_comment_id: str) -> comment_model.DeleteComment:
+async def delete_delete_comment(db: AsyncSession, delete_comment_id: int) -> comment_model.DeleteComment:
     # delete
     comment = db.query(comment_model.DeleteComment).filter(comment_model.DeleteComment.delete_comment_id == delete_comment_id).first()
     if comment:
