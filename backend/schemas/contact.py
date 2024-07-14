@@ -3,19 +3,6 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-
-class sendContents(BaseModel):
-    name: str
-    email: str
-    title: str
-    contents: str
-
-class responseContents(sendContents):
-    id: int
-
-    class Config:
-        orm_mode = True
-
 class ContactBase(BaseModel):
     name: str
     email: str
@@ -32,6 +19,7 @@ class ContactCreate(ContactBase):
 
 class ContactResponse(ContactCreate):
     contact_id: int
+    user_name: Optional[str] = "No Name"
 
     class Config:
         orm_mode = True

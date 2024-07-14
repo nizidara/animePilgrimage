@@ -3,6 +3,7 @@ from typing import List, Tuple
 import uuid
 
 import models.anime as anime_model
+import models.user as user_model
 import schemas.anime as anime_schema
 
 # create anime
@@ -23,8 +24,11 @@ async def edit_request_anime(
     
     # convert str -> UUID
     anime_edit_dict = anime_edit.model_dump()
+    user_name = None
     if anime_edit.user_id is not None:
         anime_edit_dict['user_id'] = uuid.UUID(anime_edit.user_id).bytes
+        user = db.query(user_model.User).filter(user_model.User.user_id == anime_edit_dict['user_id']).first()
+        user_name = user.user_name
     edit = anime_model.RequestAnime(**anime_edit_dict)
 
     # create
@@ -38,7 +42,7 @@ async def edit_request_anime(
         response_dict = edit.__dict__
         if edit.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=edit.user_id))
-        response = anime_schema.AnimeEditResponse(**response_dict)
+        response = anime_schema.AnimeEditResponse(**response_dict, user_name=user_name)
 
     return response
 
@@ -54,31 +58,32 @@ async def get_anime_list(db:AsyncSession) -> List[Tuple[anime_schema.AnimeRespon
 async def get_request_anime_detail(db: AsyncSession, request_anime_id: int) -> anime_schema.AnimeEditResponse:
 
     # read
-    result = db.query(anime_model.RequestAnime).filter(anime_model.RequestAnime.request_anime_id == request_anime_id).first()
+    result = db.query(anime_model.RequestAnime, user_model.User.user_name).outerjoin(user_model.User, anime_model.RequestAnime.user_id == user_model.User.user_id).filter(anime_model.RequestAnime.request_anime_id == request_anime_id).first()
 
     # convert UUID -> str
     response = None
     if result:
-        response_dict = result.__dict__
-        if result.user_id is not None:
-            response_dict['user_id'] = str(uuid.UUID(bytes=result.user_id))
-        response = anime_schema.AnimeEditResponse(**response_dict)
+        request_anime, user_name = result
+        response_dict = request_anime.__dict__
+        if request_anime.user_id is not None:
+            response_dict['user_id'] = str(uuid.UUID(bytes=request_anime.user_id))
+        response = anime_schema.AnimeEditResponse(**response_dict, user_name=user_name)
 
     return response
 
 # read request edit anime detail
 async def get_request_anime_list(db: AsyncSession) -> List[Tuple[anime_schema.AnimeEditResponse]]:
     # read
-    results = db.query(anime_model.RequestAnime).all()
+    results = db.query(anime_model.RequestAnime, user_model.User.user_name).outerjoin(user_model.User, anime_model.RequestAnime.user_id == user_model.User.user_id).all()
 
     # convert UUID -> str
     response_list = []
     if results:
-        for result in results:
-            response_dict = result.__dict__
-            if result.user_id is not None:
-                response_dict['user_id'] = str(uuid.UUID(bytes=result.user_id))
-            response_list.append(anime_schema.AnimeEditResponse(**response_dict))
+        for request_anime, user_name in results:
+            response_dict = request_anime.__dict__
+            if request_anime.user_id is not None:
+                response_dict['user_id'] = str(uuid.UUID(bytes=request_anime.user_id))
+            response_list.append(anime_schema.AnimeEditResponse(**response_dict, user_name=user_name))
 
     return response_list
 

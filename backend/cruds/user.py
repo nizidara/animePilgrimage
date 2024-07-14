@@ -15,7 +15,7 @@ async def get_user_list(db:AsyncSession) -> List[Tuple[user_schema.UserLoginResp
     for user in users:
         response_dict = user.__dict__
         response_dict['user_id'] = str(uuid.UUID(bytes=user.user_id))
-        response_list.append(user_schema.UserLoginResponse(**response_dict))
+        response_list.append(user_schema.UserLoginResponse(**response_dict, user_attribute_name=user.user_attribute.user_attribute_name if user.user_attribute else None))
         
     return response_list
 
@@ -32,7 +32,7 @@ async def get_user_detail(db: AsyncSession, user_id: str) -> user_schema.UserLog
     if user is not None:
         response_dict = user.__dict__
         user.user_id = str(uuid.UUID(bytes=user.user_id))
-        response = user_schema.UserLoginResponse(**response_dict)
+        response = user_schema.UserLoginResponse(**response_dict, user_attribute_name=user.user_attribute.user_attribute_name if user.user_attribute else None)
         
     return response
 

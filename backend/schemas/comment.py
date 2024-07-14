@@ -17,6 +17,11 @@ class CommentCreate(CommentBase):
 
 class CommentResponse(CommentCreate):
     comment_id: str
+    anime_id: int
+    anime_title: str
+    place_name: str
+    range_name: str
+    user_name: Optional[str] = "no name"
 
     class Config:
         orm_mode = True
@@ -29,6 +34,8 @@ class DeleteCommentCreate(BaseModel):
 
 class DeleteCommentResponse(DeleteCommentCreate):
     delete_comment_id: int
+    comment: str
+    user_name: Optional[str] ="no name"
 
     class Config:
         orm_mode = True
