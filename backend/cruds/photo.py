@@ -4,6 +4,8 @@ import uuid
 
 import models.anime as anime_model
 import models.photo as photo_model
+import models.place as place_model
+import models.user as user_model
 import schemas.photo as photo_schema
 
 # create anime photo
@@ -12,9 +14,14 @@ async def create_anime_photo(
 ) -> photo_schema.AnimePhotoResponse:
     
     # convert str -> UUID
+    place_name, anime_id, anime_title = None, None, None
     if photo_body:
         photo_dict = photo_body.model_dump()
         photo_dict['place_id'] = uuid.UUID(photo_body.place_id).bytes
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == photo_dict['place_id']).first()
+        place_name = place.name
+        anime_id = place.anime_id
+        anime_title = place.anime.title
         if photo_body.user_id is not None:
             photo_dict['user_id'] = uuid.UUID(photo_body.user_id).bytes
     photo = photo_model.AnimePhoto(**photo_dict)
@@ -32,7 +39,7 @@ async def create_anime_photo(
         response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
         if photo.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
-        response = photo_schema.AnimePhotoResponse(**response_dict)
+        response = photo_schema.AnimePhotoResponse(**response_dict, place_name=place_name, anime_id=anime_id, anime_title=anime_title)
 
     return response
 
@@ -42,11 +49,18 @@ async def create_real_photo(
 ) -> photo_schema.RealPhotoResponse:
     
     # convert str -> UUID
+    place_name, anime_id, anime_title, user_name = None, None, None, None
     if photo_body:
         photo_dict = photo_body.model_dump()
         photo_dict['place_id'] = uuid.UUID(photo_body.place_id).bytes
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == photo_dict['place_id']).first()
+        place_name = place.name
+        anime_id = place.anime_id
+        anime_title = place.anime.title
         if photo_body.user_id is not None:
             photo_dict['user_id'] = uuid.UUID(photo_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == photo_dict['user_id']).first()
+            user_name = user.user_name
         if photo_body.comment_id is not None:
             photo_dict['comment_id'] = uuid.UUID(photo_body.comment_id).bytes
     photo = photo_model.RealPhoto(**photo_dict)
@@ -66,7 +80,7 @@ async def create_real_photo(
             response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
         if photo.comment_id is not None:
             response_dict['comment_id'] = str(uuid.UUID(bytes=photo.comment_id))
-        response = photo_schema.RealPhotoResponse(**response_dict)
+        response = photo_schema.RealPhotoResponse(**response_dict, place_name=place_name, anime_id=anime_id, anime_title=anime_title, user_name=user_name)
 
     return response
 
@@ -84,17 +98,20 @@ async def get_place_icon(db: AsyncSession, place_id: str) -> photo_schema.PlaceP
     place_id_bytes = uuid.UUID(place_id).bytes
 
     # get
-    icon = db.query(photo_model.PlaceIcon).filter(photo_model.PlaceIcon.place_id == place_id_bytes).first()
+    # icon = db.query(photo_model.PlaceIcon).filter(photo_model.PlaceIcon.place_id == place_id_bytes).first()
+    results = db.query(photo_model.PlaceIcon, photo_model.AnimePhoto.file_name, place_model.Place.name).\
+        outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).\
+        outerjoin(place_model.Place, place_model.Place.place_id == photo_model.PlaceIcon.place_id).filter(photo_model.PlaceIcon.place_id == place_id_bytes).first()
 
     # convert str -> UUID
     response = None
-    if icon and icon.anime_photo_id is not None:
-        response_dict = icon.__dict__
-        anime_photo_id_bytes = bytes(icon.anime_photo_id)
-        response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
-        response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
-        response_dict['file_name'] = str(db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first().file_name)
-        response = photo_schema.PlacePhotoIconResponse(**response_dict)
+    if results:
+        icon, file_name, place_name = results
+        if icon and icon.anime_photo_id is not None:
+            response_dict = icon.__dict__
+            response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
+            response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
+            response = photo_schema.PlacePhotoIconResponse(**response_dict, file_name=file_name, place_name=place_name)
     return response
 
 # read anime photo list
@@ -103,18 +120,20 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str) -> List[Tuple[pho
     place_id_bytes = uuid.UUID(place_id).bytes
 
     # get
-    photos = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.place_id == place_id_bytes).all()
-    
+    results = db.query(photo_model.AnimePhoto, place_model.Place).\
+        outerjoin(place_model.Place, photo_model.AnimePhoto.place_id == place_model.Place.place_id).\
+        filter(photo_model.AnimePhoto.place_id == place_id_bytes).all()
+
     # convert UUID -> str
     response_list = []
-    if photos:
-        for photo in photos:
+    if results:
+        for photo, place in results:
             response_dict = photo.__dict__
             response_dict['anime_photo_id'] = str(uuid.UUID(bytes=photo.anime_photo_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
             if photo.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
-            response_list.append(photo_schema.AnimePhotoResponse(**response_dict))
+            response_list.append(photo_schema.AnimePhotoResponse(**response_dict, place_name=place.name, anime_id=place.anime_id, anime_title=place.anime.title))
 
     return response_list
 
@@ -124,12 +143,15 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: str = 
     place_id_bytes = uuid.UUID(place_id).bytes
 
     # get
-    photos = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.place_id == place_id_bytes).all()
+    results = db.query(photo_model.RealPhoto, user_model.User.user_name, place_model.Place).filter(photo_model.RealPhoto.place_id == place_id_bytes).\
+        outerjoin(user_model.User, user_model.User.user_id == photo_model.RealPhoto.user_id).\
+        outerjoin(place_model.Place, place_model.Place.place_id == photo_model.RealPhoto.place_id).\
+        filter(photo_model.RealPhoto.place_id == place_id_bytes).all()
     
     # convert UUID -> str
     response_list = []
-    if photos:
-        for photo in photos:
+    if results:
+        for photo, user_name, place in results:
             response_dict = photo.__dict__
             response_dict['real_photo_id'] = str(uuid.UUID(bytes=photo.real_photo_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
@@ -137,7 +159,7 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: str = 
                 response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
             if photo.comment_id is not None:
                 response_dict['comment_id'] = str(uuid.UUID(bytes=photo.comment_id))
-            response_list.append(photo_schema.RealPhotoResponse(**response_dict))
+            response_list.append(photo_schema.RealPhotoResponse(**response_dict, place_name=place.name, anime_id=place.anime_id, anime_title=place.anime.title, user_name=user_name))
 
     return response_list
 
@@ -178,12 +200,14 @@ async def update_place_icon(db: AsyncSession, place_icon_body: photo_schema.Plac
     
     # convert UUID -> str
     response = None
+    file_name, place_name = None, None
     if icon:
         response_dict = icon.__dict__
         response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
         response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
-        response_dict['file_name'] = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first().file_name
-        response = photo_schema.PlacePhotoIconResponse(**response_dict)
+        file_name = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == uuid.UUID(response_dict['anime_photo_id']).bytes).first().file_name
+        place_name = db.query(place_model.Place).filter(place_model.Place.place_id == uuid.UUID(response_dict['place_id']).bytes).first().name
+        response = photo_schema.PlacePhotoIconResponse(**response_dict, file_name=file_name, place_name=place_name)
     return response
 
 # delete anime photo
