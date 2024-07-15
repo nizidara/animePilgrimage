@@ -8,7 +8,7 @@ class PlaceBase(BaseModel):
     name: str
     latitude: float
     longitude: float
-    comment: Optional[str] = None
+    comment: Optional[str] = ""
 
 class PlaceCreate(PlaceBase):
     flag: int
