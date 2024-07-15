@@ -12,7 +12,7 @@ class ContactBase(BaseModel):
 class ContactCreate(ContactBase):
     contact_date: datetime
     status: int
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
     class Config:
         orm_mode = True

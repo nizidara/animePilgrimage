@@ -6,7 +6,7 @@ class PhotoBase(BaseModel):
     file_name: str
 
 class AnimeIconCreate(PhotoBase):
-    file_name: Optional[str]
+    file_name: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -20,7 +20,7 @@ class AnimeIconResponse(AnimeIconCreate):
 
 class PlacePhotoIconCreate(BaseModel):
     anime_photo_id: str
-    place_id: Optional[str]
+    place_id: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -35,7 +35,7 @@ class PlacePhotoIconResponse(PlacePhotoIconCreate):
 
 class PlacePhotoCreateBase(PhotoBase):
     place_id: str
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -56,7 +56,7 @@ class AnimePhotoResponse(AnimePhotoCreate):
         orm_mode = True
 
 class RealPhotoCreate(PlacePhotoCreateBase):
-    comment_id: Optional[str]
+    comment_id: Optional[str] = None
     
     class Config:
         orm_mode = True
