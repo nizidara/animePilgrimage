@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class CommentBase(BaseModel):
     comment: str
     comment_date: datetime
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
 class CommentCreate(CommentBase):
     range_id: int
@@ -30,7 +30,7 @@ class DeleteCommentCreate(BaseModel):
     comment_id: str
     request_date: datetime
     contents: str
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
 class DeleteCommentResponse(DeleteCommentCreate):
     delete_comment_id: int
