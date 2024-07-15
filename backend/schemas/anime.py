@@ -5,7 +5,7 @@ from typing import Optional
 
 class AnimeBase(BaseModel):
     title: str
-    introduction: Optional[str]
+    introduction: Optional[str] = None
 
 class AnimeCreate(AnimeBase):
     kana: str
@@ -25,7 +25,7 @@ class AnimeEditCreate(AnimeBase):
     request_date: datetime
     request_type: int
     contents: str
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
     class Config:
         orm_mode = True

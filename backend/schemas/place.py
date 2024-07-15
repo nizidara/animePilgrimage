@@ -8,13 +8,13 @@ class PlaceBase(BaseModel):
     name: str
     latitude: float
     longitude: float
-    comment: Optional[str]
+    comment: Optional[str] = None
 
 class PlaceCreate(PlaceBase):
     flag: int
     region_id: int
-    created_user_id: Optional[str]
-    edited_user_id: Optional[str]
+    created_user_id: Optional[str] = None
+    edited_user_id: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -35,7 +35,7 @@ class PlaceRequestCreate(PlaceBase):
     request_type: int
     region_id: int
     contents: str
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
     class Config:
         orm_mode = True
