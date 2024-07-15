@@ -6,7 +6,7 @@ class PhotoBase(BaseModel):
     file_name: str
 
 class AnimeIconCreate(PhotoBase):
-    file_name: Optional[str] = None
+    file_name: Optional[str] = ""
 
     class Config:
         orm_mode = True

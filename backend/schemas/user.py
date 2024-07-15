@@ -15,9 +15,9 @@ class UserLogin(UserBase):
 class UserLoginResponse(UserBase):
     user_id: str
     user_name: str
-    email: Optional[str] = None
+    email: Optional[str] = ""
     error_count: int
     login_date:date
-    flag: Optional[int] = None
-    user_attribute_id: Optional[int] = None
+    flag: Optional[int] = 0
+    user_attribute_id: Optional[int] = 0
     user_attribute_name: Optional[str] = "non-member"
