@@ -12,7 +12,7 @@ export type sendContactData = {
     contents: string;
     contact_date: string;
     status: number;
-    user_id: string | null;
+    user_id?: string;
 }
 
 export type responseContactData = {
@@ -22,6 +22,7 @@ export type responseContactData = {
     contents: string;
     contact_date: string;
     status: number;
-    user_id: string | null;
+    user_id?: string;
     contact_id: number;
+    user_name?: string;
 }

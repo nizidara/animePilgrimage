@@ -17,7 +17,7 @@ export const useSendContact = () => {
             ...formData,
             contact_date: new Date().toISOString(),
             status: 0,
-            user_id: null
+            user_id: undefined
         }
 
         axios.post(url + "/contacts", sendData).then((res) => {

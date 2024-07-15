@@ -26,4 +26,8 @@ export type responsePlaceData = {
     created_user_id: string;
     edited_user_id: string;
     place_id: string;
+    region_name: string;
+    anime_title: string;
+    created_user_name: string;
+    edited_user_name: string;
 }
