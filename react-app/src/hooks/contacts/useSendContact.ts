@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import { responseContactData, sendContactData, sendContactFormData} from "../../type/api/contact";
 import { fastAPIURL } from "../../properties/properties";
 
-
 //post contact
 export const useSendContact = () => {
     const [responseData, setResponseData] = useState<responseContactData | null>(null);
@@ -17,7 +16,8 @@ export const useSendContact = () => {
             ...formData,
             contact_date: new Date().toISOString(),
             status: 0,
-            user_id: undefined
+            //現時点ではuser_idはnull限定
+            user_id: null
         }
 
         axios.post(url + "/contacts", sendData).then((res) => {

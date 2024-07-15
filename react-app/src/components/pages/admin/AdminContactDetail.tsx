@@ -31,7 +31,17 @@ export const AdminContactDetail: FC = memo(() =>{
     return (
         <Container>
             <h2>お問い合わせ内容詳細</h2>
-            <ContactDetailDisplay contact_id={contact.contact_id} name={contact.name} email={contact.email} title={contact.title} contents={contact.contents} contact_date={contact.contact_date} user_id={contact.user_id} status={contact.status} />
+            <ContactDetailDisplay 
+                name={contact.name} 
+                email={contact.email} 
+                title={contact.title} 
+                contents={contact.contents} 
+                contact_date={contact.contact_date} 
+                status={contact.status}
+                contact_id={contact.contact_id} 
+                user_id={contact.user_id} 
+                user_name={contact.user_name}
+            />
             <BackAndNextButtons backName="戻る" nextName="TOPへ" onClickBack={onClickBack} onClickNext={onClickTop} />
         </Container>
     )

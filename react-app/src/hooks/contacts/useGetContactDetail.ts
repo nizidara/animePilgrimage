@@ -3,8 +3,6 @@ import { responseContactData } from "../../type/api/contact";
 import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
 
-
-
 export const useGetContactDetail = (contact_id: string | null) => {
   const [contact, setContact] = useState<responseContactData>();
   const [loading, setLoading] = useState(true);

@@ -10,16 +10,16 @@ type contactCards = responseContactData & {
 }
 
 export const ContactSummaryCard: FC<contactCards> = memo((props) => {
-    const {contact_id, status, contact_date, user_id, name, email, title, contents, onClickDetail} = props;
+    const {name, email, title, contact_date, status, contact_id, user_name, onClickDetail} = props;
 
     return (
         <>
             <Card className="clickable-card" onClick={() => onClickDetail(contact_id)}>
                 <Card.Header className="d-flex justify-content-between">
                     <div>
-                        {name} ({email})
+                        {name} ({email}) 
                     </div>
-                    <small className="text-muted"><DateTimeFormatter datetime={contact_date} /></small>
+                    <small className="text-muted">{user_name != null && user_name} <DateTimeFormatter datetime={contact_date} /></small>
                 </Card.Header>
                 <Card.Body className="d-flex justify-content-between">
                     <Card.Text>{title}</Card.Text> {status}

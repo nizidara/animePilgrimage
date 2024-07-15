@@ -1,20 +1,24 @@
 import { FC, memo } from "react"
 import { responseContactData } from "../../../type/api/contact";
+import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 
+type contactDetailData = Omit<responseContactData, 'status'> & {
+    status?: number | null;
+}
 
-export const ContactDetailDisplay: FC<responseContactData> = memo((props) => {
-    const {contact_id, status, contact_date, user_id, name, email, title, contents} = props;
+export const ContactDetailDisplay: FC<contactDetailData> = memo((props) => {
+    const {name, email, title, contents, contact_date, status, contact_id, user_id, user_name} = props;
 
     return (
         <>
-            <p>id:{contact_id}</p>
-            <p>contact_date:{contact_date}</p>
-            <p>userId:{user_id}</p>
-            <p>status:{status}</p>
+            <p>お問い合わせID:{contact_id}</p>
+            <p>お問い合わせ日時:<DateTimeFormatter datetime={contact_date} /></p>
+            {user_name != null && <p>ユーザー名:{user_name}({user_id})</p>}
+            {status != null && <p>お問い合わせ状況:{status}</p>}
             <p>名前：{name}さん</p>
             <p>メール：{email}</p>
             <p>タイトル：{title}</p>
-            <p>内容：{contents}</p>
+            <p>お問い合わせ内容：{contents}</p>
         </>
     )
 });

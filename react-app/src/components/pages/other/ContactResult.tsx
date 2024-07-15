@@ -15,8 +15,15 @@ export const ContactResult: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>お問い合わせ完了しました</h2>
-            <ContactDetailDisplay contact_id={responseData.contact_id} name={responseData.name} email={responseData.email} title={responseData.title} contents={responseData.contents} contact_date={responseData.contact_date} user_id={responseData.user_id} status={responseData.status} />
+            <h2>お問い合わせが完了しました</h2>
+            <ContactDetailDisplay 
+                contact_id={responseData.contact_id} 
+                name={responseData.name} 
+                email={responseData.email} 
+                title={responseData.title} 
+                contents={responseData.contents} 
+                contact_date={responseData.contact_date} 
+            />
 
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">

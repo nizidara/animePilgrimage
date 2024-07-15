@@ -10,8 +10,8 @@ export const AdminContactList: FC = memo(() =>{
     const navigate = useNavigate();
     const onClickDetail = useCallback((contactId: number) => navigate(`/admin/contact?contact_id=${contactId}`), [navigate]);
 
-    // if (loading) return <p>読み込み中...</p>;
-    // if (error) return <p>エラー: {error}</p>;
+    if (loading) return <p>読み込み中...</p>;
+    if (error) return <p>エラー: {error}</p>;
 
     return (
         <Container>
@@ -20,7 +20,18 @@ export const AdminContactList: FC = memo(() =>{
             <ListGroup>
                 {contacts.map(contact => (
                 <ListGroup.Item key={contact.contact_id}>
-                    <ContactSummaryCard contact_id={contact.contact_id} name={contact.name} email={contact.email} title={contact.title} contents={contact.contents} contact_date={contact.contact_date} user_id={contact.user_id} status={contact.status} onClickDetail={onClickDetail}/>
+                    <ContactSummaryCard 
+                        name={contact.name} 
+                        email={contact.email} 
+                        title={contact.title} 
+                        contents={contact.contents} 
+                        contact_date={contact.contact_date} 
+                        status={contact.status} 
+                        contact_id={contact.contact_id} 
+                        user_id={contact.user_id} 
+                        user_name={contact.user_name}
+                        onClickDetail={onClickDetail}
+                    />
                 </ListGroup.Item>
                 ))}
             </ListGroup>

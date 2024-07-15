@@ -5,24 +5,13 @@ export type sendContactFormData = {
     contents: string;
 }
 
-export type sendContactData = {
-    name: string;
-    email: string;
-    title: string;
-    contents: string;
+export type sendContactData = sendContactFormData & {
     contact_date: string;
     status: number;
-    user_id?: string;
+    user_id?: string | null;
 }
 
-export type responseContactData = {
-    name: string;
-    email: string;
-    title: string;
-    contents: string;
-    contact_date: string;
-    status: number;
-    user_id?: string;
+export type responseContactData = sendContactData & {
     contact_id: number;
-    user_name?: string;
+    user_name?: string | null;
 }
