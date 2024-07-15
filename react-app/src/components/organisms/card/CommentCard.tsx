@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 
 type Comment = {
-    user_name: string;
+    user_name?: string;
     comment_date: string;
     comment: string;
 }

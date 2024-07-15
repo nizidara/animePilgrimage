@@ -7,7 +7,7 @@ import '../../../thema/card/CardStyles.css';
 type AnimeSummary = {
     anime_id: number;
     title:string;
-    introduction:string;
+    introduction?:string;
     onClickDetail: (animeId: number) => void;
 }
 
