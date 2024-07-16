@@ -12,7 +12,7 @@ export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
     const onClickEdit = useCallback(() => navigate("/edit_anime"), [navigate]);
-    const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
+    const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
     const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
@@ -53,7 +53,7 @@ export const AnimeDetail: FC = memo(() =>{
             <hr />
 
             <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={onClickMap} className="mx-2">MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
+                <Button variant="primary" onClick={() => onClickMap(anime.anime_id)} className="mx-2">MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
             </div> 
             <ListGroup>
                 {placeList.map(place => (
