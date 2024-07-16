@@ -14,6 +14,7 @@ export const AnimeDetail: FC = memo(() =>{
     const onClickEdit = useCallback(() => navigate("/edit_anime"), [navigate]);
     const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
     const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
+    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     const query = useQuery();
     const animeId = query.get('anime_id');
@@ -57,7 +58,14 @@ export const AnimeDetail: FC = memo(() =>{
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id}/>
+                        <PlaceSummaryCard 
+                            name={place.name} 
+                            title={place.anime_title} 
+                            comment={place.comment} 
+                            anime_id={place.anime_id} 
+                            place_id={place.place_id}
+                            onClickDetail={onClickDetail}
+                        />
                     </ListGroup.Item>
                 ))}
             </ListGroup>

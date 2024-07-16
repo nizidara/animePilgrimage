@@ -20,14 +20,14 @@ export type responsePlaceData = {
     name: string;
     latitude: number;
     longitude:number;
-    comment: string;
+    comment?: string | null;
     flag: number;
     region_id: number;
-    created_user_id?: string;
-    edited_user_id?: string;
+    created_user_id?: string | null;
+    edited_user_id?: string | null;
     place_id: string;
     region_name: string;
     anime_title: string;
-    created_user_name?: string;
-    edited_user_name?: string;
+    created_user_name?: string | null;
+    edited_user_name?: string | null;
 }

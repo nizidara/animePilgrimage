@@ -48,7 +48,13 @@ export const PlaceDetail: FC = memo(() =>{
 
             <DisplayMap />
 
-            <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id}/>
+            <PlaceSummaryCard 
+                name={place.name} 
+                title={place.anime_title} 
+                comment={place.comment} 
+                anime_id={place.anime_id} 
+                place_id={place.place_id}
+            />
             <ListGroup horizontal>
                 {photoDataList.map(photo => (
                     <ListGroup.Item key={photo.src}>

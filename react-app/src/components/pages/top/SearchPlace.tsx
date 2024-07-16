@@ -33,7 +33,14 @@ export const SearchPlace: FC = memo(() =>{
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard name={place.name} title={String(place.anime_id)} comment={place.comment} anime_id={place.anime_id} onClickDetail={onClickDetail} place_id={place.place_id}/>
+                        <PlaceSummaryCard 
+                            name={place.name} 
+                            title={place.anime_title} 
+                            comment={place.comment} 
+                            anime_id={place.anime_id} 
+                            onClickDetail={onClickDetail} 
+                            place_id={place.place_id}
+                        />
                     </ListGroup.Item>
                 ))}
             </ListGroup>

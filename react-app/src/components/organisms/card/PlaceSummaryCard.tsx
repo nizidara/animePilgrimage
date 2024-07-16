@@ -8,7 +8,7 @@ import '../../../thema/card/CardStyles.css';
 type PlaceSummary = {
     name:string;
     title:string;
-    comment:string;
+    comment?:string | null;
     anime_id:number;
     onClickDetail?: (placeId: string) => void;
     place_id: string;
@@ -33,7 +33,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
                                     <Card.Text>
-                                        {comment}
+                                        {comment != null && comment}
                                     </Card.Text>
                                     
                             </Col>
@@ -48,7 +48,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
                                     <Card.Text>
-                                        {comment}
+                                        {comment != null && comment}
                                     </Card.Text>
                                     
                             </Col>
@@ -61,7 +61,6 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                     </div>
                 </Card.Footer>
             </Card>
-            
         </>
     )
 });
