@@ -23,7 +23,13 @@ export const SearchAnime: FC = memo(() =>{
             <ListGroup>
                 {animeList.map(anime => (
                     <ListGroup.Item key={anime.anime_id}>
-                        <AnimeSummaryCard anime_id={anime.anime_id} title={anime.title} introduction={anime.introduction} onClickDetail={onClickDetail}/>
+                        <AnimeSummaryCard 
+                            anime_id={anime.anime_id} 
+                            title={anime.title} 
+                            kana={anime.kana}
+                            flag={anime.flag}
+                            introduction={anime.introduction} 
+                            onClickDetail={onClickDetail}/>
                     </ListGroup.Item>
                 ))}
             </ListGroup>

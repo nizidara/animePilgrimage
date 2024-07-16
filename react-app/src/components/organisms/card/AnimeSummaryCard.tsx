@@ -3,15 +3,13 @@ import { Card, Col, Row } from "react-bootstrap";
 import { BsImage } from "react-icons/bs";
 
 import '../../../thema/card/CardStyles.css';
+import { responseAnimeData } from "../../../type/api/anime";
 
-type AnimeSummary = {
-    anime_id: number;
-    title:string;
-    introduction?:string;
+type AnimeSummaryData = responseAnimeData & {
     onClickDetail: (animeId: number) => void;
 }
 
-export const AnimeSummaryCard: FC<AnimeSummary> = memo((props) => {
+export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
     const {title, introduction, onClickDetail, anime_id} = props;
     
     return (

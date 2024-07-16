@@ -42,7 +42,13 @@ export const AnimeDetail: FC = memo(() =>{
                 <Button variant="warning" onClick={onClickEdit}>修正</Button>
                 </Col>
             </Row>
-            <AnimeIntroductionDisplay title={anime.title} introduction={anime.introduction} />
+            <AnimeIntroductionDisplay 
+                title={anime.title} 
+                introduction={anime.introduction} 
+                flag={anime.flag}
+                kana={anime.kana}
+                anime_id={anime.anime_id}
+            />
             <hr />
 
             <div className="d-flex justify-content-end mb-2">
