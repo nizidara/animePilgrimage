@@ -28,7 +28,7 @@ export const RegisterPlace: FC = memo(() =>{
         <Container>
             <div className="d-flex justify-content-between mt-2">
                 <h2>聖地登録</h2>
-                <Button variant="outline-primary" className="float-right" onClick={onClickRegisterAnime}>聖地申請はこちら</Button>
+                <Button variant="outline-primary" className="float-right" onClick={onClickRegisterAnime}>作品登録申請はこちら</Button>
             </div>
 
             <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
