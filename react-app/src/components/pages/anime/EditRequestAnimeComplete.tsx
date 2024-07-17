@@ -1,26 +1,32 @@
 import {memo, FC, useCallback} from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
-import { registerAnime } from "../../../type/api/anime";
+import { responseEditAnimeData } from "../../../type/api/anime";
+import { EditAnimeDetailDisplay } from "../../organisms/display/EditAnimeDetailDisplay";
 
 export const EditRequestAnimeComplete: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
-    const registerAnime = location.state.formData as registerAnime;
+    const responseData = location.state.responseData as responseEditAnimeData;
     
-    const onClickAnime = useCallback(() => navigate("/anime"), [navigate]);
+    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
     const onClickTop = useCallback(() => navigate("/"), [navigate]);
 
     return (
         <Container>
             <h2>修正リクエストが完了しました</h2>
-            <RegisterAnimeDetailDisplay title={registerAnime.title} kana={registerAnime.kana} introduction={registerAnime.introduction} />
+            <EditAnimeDetailDisplay 
+                title={responseData.title}
+                introduction={responseData.introduction}
+                contents={responseData.contents}
+                request_anime_id={responseData.request_anime_id}
+                request_date={responseData.request_date}
+            />
 
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">
-                    <Button variant="primary" onClick={onClickAnime}>アニメ情報に戻る</Button>
+                    <Button variant="primary" onClick={() => onClickAnime(responseData.anime_id)}>アニメ情報に戻る</Button>
                 </Col>
             </Row>
 

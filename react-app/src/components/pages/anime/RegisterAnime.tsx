@@ -1,9 +1,9 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useLocation, useNavigate } from "react-router-dom";
-import { registerAnime } from "../../../type/api/anime";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
+import { registerAnimeFormData } from "../../../type/form/anime";
 
 export const RegisterAnime: FC = memo(() =>{
     const navigate = useNavigate();
@@ -11,14 +11,14 @@ export const RegisterAnime: FC = memo(() =>{
 
     //formData
     const initialFormData = location.state?.formData || { title: '', kana: '', introduction: '' };
-    const [formData, setFormData] = useState<registerAnime>(initialFormData);
+    const [formData, setFormData] = useState<registerAnimeFormData>(initialFormData);
 
-    const formChange = (data:registerAnime) => {
+    const formChange = (data:registerAnimeFormData) => {
         setFormData(data);
     };
 
     //page transition
-    const send = useCallback((formData:registerAnime) => navigate("/register_anime/confirmation", {state: {formData}}), [navigate]);
+    const send = useCallback((formData:registerAnimeFormData) => navigate("/register_anime/confirmation", {state: {formData}}), [navigate]);
 
     const onClickNext = () => send(formData);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place"), [navigate]);

@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FC, memo } from "react"
 import { Form } from "react-bootstrap"
-import { registerAnime } from "../../../type/api/anime";
+import { registerAnimeFormData } from "../../../type/form/anime";
 
 type FormProps = {
-    onFormChange: (data: registerAnime) => void;
-    formData: registerAnime;
-    setFormData: React.Dispatch<React.SetStateAction<registerAnime>>;
+    onFormChange: (data: registerAnimeFormData) => void;
+    formData: registerAnimeFormData;
+    setFormData: React.Dispatch<React.SetStateAction<registerAnimeFormData>>;
 };
 
 export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData }) => {

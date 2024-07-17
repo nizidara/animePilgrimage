@@ -1,31 +1,45 @@
-import {memo, FC, useCallback, useState} from "react";
-import { Button, Container } from "react-bootstrap";
-import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
+import {memo, FC, useCallback, useState, useEffect} from "react";
+import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import { registerAnime } from "../../../type/api/anime";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
+import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
+import { EditAnimeForm } from "../../organisms/form/EditAnimeForm";
+import { editAnimeFormData } from "../../../type/form/anime";
 
 export const EditRequestAnime: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
-    const initialFormData = location.state?.formData || { title: '', kana: '', introduction: '' };
 
-    const [formData, setFormData] = useState<registerAnime>(initialFormData);
+    const animeId = location.state.animeId;
+    const { anime } = useGetAnimeDetail(animeId);
+
+    const initialFormData = location.state?.formData || { title: '', introduction: '', contents: ''};
+
+    const [formData, setFormData] = useState<editAnimeFormData>(initialFormData);
+
+    useEffect(() => {
+        if(anime){
+            const {title, introduction} = anime;
+            const contents = "";
+            setFormData({title, introduction, contents})
+        }
+        
+    },[anime])
     
-    const send = useCallback((formData:registerAnime) => navigate("/edit_anime/confirmation", {state: {formData}}), [navigate]);
+    const send = useCallback((formData:editAnimeFormData, animeId:number) => navigate("/edit_anime/confirmation", {state: {formData, animeId}}), [navigate]);
 
-    const onClickNext = () => send(formData);
+    const onClickNext = () => send(formData, animeId);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
-    const formChange = (data:registerAnime) => {
-        setFormData(data); // フォームデータを更新
+    const formChange = (data:editAnimeFormData) => {
+        setFormData(data);
     };
 
     return (
         <Container>
             <h2>作品修正リクエスト</h2>
-            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData}/>
+            <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData}/>
 
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>

@@ -11,7 +11,7 @@ import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const onClickEdit = useCallback(() => navigate("/edit_anime"), [navigate]);
+    const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
     const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
     const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
@@ -22,7 +22,7 @@ export const AnimeDetail: FC = memo(() =>{
     const { placeList } = useGetPlaceList();
 
     if (loading) {
-        return <div></div>;
+        return <div>loading...</div>;
     }
     
     if (error) {
@@ -30,7 +30,7 @@ export const AnimeDetail: FC = memo(() =>{
     }
     
     if (!anime) {
-        return <div>No contact found</div>;
+        return <div>No anime found</div>;
     }
 
     return (
@@ -40,7 +40,7 @@ export const AnimeDetail: FC = memo(() =>{
                     <h2>{anime.title}</h2>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end align-items-center">
-                <Button variant="warning" onClick={onClickEdit}>修正</Button>
+                <Button variant="warning" onClick={() => onClickEdit(anime.anime_id)}>修正</Button>
                 </Col>
             </Row>
             <AnimeIntroductionDisplay 
