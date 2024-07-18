@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { responseContactData, sendContactData, sendContactFormData} from "../../type/api/contact";
+import { responseContactData, sendContactData} from "../../type/api/contact";
 import { fastAPIURL } from "../../properties/properties";
+import { sendContactFormData } from "../../type/form/contact";
 
 //post contact
 export const useSendContact = () => {

@@ -1,9 +1,4 @@
-export type sendContactFormData = {
-    name: string;
-    email: string;
-    title: string;
-    contents: string;
-}
+import { sendContactFormData } from "../form/contact";
 
 export type sendContactData = sendContactFormData & {
     contact_date: string;
