@@ -1,12 +1,16 @@
-export type deletePlace ={
-    contents: string;
+import { editPlaceFormData, registerPlaceFormData } from "../form/place";
+
+export type registerPlaceData = registerPlaceFormData & {
+    flag: number;
+    created_user_id?: string | null;
+    edited_user_id?: string | null;
 }
 
-export type registerPlace ={
-    name: string;
-    animeId: number;
-    regionId: number;
-    comment: string;
+export type requestPlaceData = editPlaceFormData & {
+    place_id: string
+    request_date: string;
+    request_type: number;
+    user_id?: string | null;
 }
 
 export type photoData = {
@@ -15,19 +19,17 @@ export type photoData = {
     src: string;
 }
 
-export type responsePlaceData = {
-    anime_id: number;
-    name: string;
-    latitude: number;
-    longitude:number;
-    comment?: string | null;
-    flag: number;
-    region_id: number;
-    created_user_id?: string | null;
-    edited_user_id?: string | null;
+export type responsePlaceData = registerPlaceData & {
     place_id: string;
     region_name: string;
     anime_title: string;
     created_user_name?: string | null;
     edited_user_name?: string | null;
+}
+
+export type responseRequestPlaceData = requestPlaceData & {
+    request_place_id: number;
+    region_name: string;
+    anime_title: string;
+    user_name?: string | null;
 }

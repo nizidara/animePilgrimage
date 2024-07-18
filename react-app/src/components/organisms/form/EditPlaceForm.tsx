@@ -1,18 +1,17 @@
 import { ChangeEvent, FC, memo } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { Form } from "react-bootstrap";
-import { registerPlaceFormData } from "../../../type/form/place";
-import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
+import { editPlaceFormData } from "../../../type/form/place";
 
 type FormProps = {
-    onFormChange: (data: registerPlaceFormData) => void;
-    formData: registerPlaceFormData;
-    setFormData: React.Dispatch<React.SetStateAction<registerPlaceFormData>>;
+    onFormChange: (data: editPlaceFormData) => void;
+    formData: editPlaceFormData;
+    setFormData: React.Dispatch<React.SetStateAction<editPlaceFormData>>;
+    animeTitle: string;
 };
 
-export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData }) => {
-    const { animeList } = useGetAnimeList();
+export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, animeTitle }) => {
     const { regionList } = useGetRegionList();
     
     //入力フォーム更新
@@ -32,7 +31,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
     return (
         <>
             <Form>
-                <Form.Group className="mb-3" controlId="registerPlaceFormName">
+                <Form.Group className="mb-3" controlId="editPlaceFormName">
                     <Form.Label>聖地名※</Form.Label>
                     <Form.Control required type="text" name="name" defaultValue={formData.name} maxLength={30} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.name.length} / 30 </Form.Text>
@@ -40,19 +39,14 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
             </Form>
 
             <Form>
-                <Form.Group className="mb-3" controlId="registerPlaceSelectTitle">
-                    <Form.Label>作品名※</Form.Label>
-                    <Form.Select className="mb-3" name="anime_id" value={formData.anime_id} onChange={selectChange}>
-                        <option>作品名を選択してください</option>
-                        {animeList.map(anime => (
-                            <option key={anime.anime_id} value={anime.anime_id}>{anime.title}</option>
-                        ))}
-                    </Form.Select>
+                <Form.Group className="mb-3" controlId="editFormTitle">
+                    <Form.Label>作品名</Form.Label>
+                    <Form.Control disabled readOnly type="text" name="anime_id" defaultValue={animeTitle} />
                 </Form.Group>
             </Form>
             
             <Form>
-                <Form.Group className="mb-3" controlId="registerPlaceSelectRegion">
+                <Form.Group className="mb-3" controlId="editPlaceSelectRegion">
                     <Form.Label>都道府県名※</Form.Label>
                     <Form.Select className="mb-3" name="region_id" value={formData.region_id} onChange={selectChange}>
                         <option>都道府県を選択してください</option>
@@ -66,10 +60,18 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
             <SearchMap />
 
             <Form>
-                <Form.Group className="mb-3" controlId="registerPlaceFormComment">
+                <Form.Group className="mb-3" controlId="editPlaceFormComment">
                     <Form.Label>紹介コメント</Form.Label>
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
+                </Form.Group>
+            </Form>
+
+            <Form>
+                <Form.Group className="mb-3" controlId="editPlaceFormContents">
+                    <Form.Label>リクエスト理由（作品名の修正はこちらに記載してください）</Form.Label>
+                    <Form.Control required as="textarea" name="contents" defaultValue={formData.contents} maxLength={1000} onChange={handleChange} />
+                    <Form.Text className="text-muted">{formData.contents ? formData.contents.length : 0} / 1000 </Form.Text>
                 </Form.Group>
             </Form>
         </>

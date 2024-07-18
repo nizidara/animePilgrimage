@@ -13,7 +13,7 @@ export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place"), [navigate]);
+    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     const query = useQuery();

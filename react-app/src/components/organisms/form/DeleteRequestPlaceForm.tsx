@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, memo } from "react"
-import { deletePlace } from "../../../type/api/place";
 import { Form } from "react-bootstrap";
+import { deletePlaceFormData } from "../../../type/form/place";
 
 type FormProps = {
-    onFormChange: (data: deletePlace) => void;
-    formData: deletePlace;
-    setFormData: React.Dispatch<React.SetStateAction<deletePlace>>;
+    onFormChange: (data: deletePlaceFormData) => void;
+    formData: deletePlaceFormData;
+    setFormData: React.Dispatch<React.SetStateAction<deletePlaceFormData>>;
 };
 
 export const DeleteRequestPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData }) => {

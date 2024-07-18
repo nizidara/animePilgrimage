@@ -3,7 +3,6 @@ import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
-import { placeList } from "../../../testdatas/testdata";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
@@ -13,7 +12,7 @@ export const AnimeDetail: FC = memo(() =>{
 
     const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
     const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
-    const onClickRegister = useCallback(() => navigate("/register_place"), [navigate]);
+    const onClickRegister = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     const query = useQuery();

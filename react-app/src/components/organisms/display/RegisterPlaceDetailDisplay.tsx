@@ -1,18 +1,24 @@
 import { FC, memo } from "react"
 import { DisplayMap } from "../map/DisplayMap";
-import { registerPlace } from "../../../type/api/place";
+import { responsePlaceData } from "../../../type/api/place";
 
+type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id'> & {
+    anime_id?: number | null;
+    region_id?: number | null;
+    place_id?: string | null;
+    flag?: number | null;
+}
 
-export const RegisterPlaceDetailDisplay: FC<registerPlace> = memo((props) => {
-    const {name, animeId, regionId, comment} = props;
+export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((props) => {
+    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag} = props;
     
     return (
         <>
-            <div>登録聖地詳細表示</div>
-            <p>聖地名:{name}</p>
-            <p>アニメタイトルID:{animeId}</p>
-            <p>都道府県ID:{regionId}</p>
-            <DisplayMap />
+            <p>聖地名:{name}{place_id != null && <div>({place_id})</div>}</p>
+            {flag != null && <p>表示フラグ:{flag}</p>}
+            <p>アニメタイトル:{anime_title}</p>
+            <p>都道府県:{region_name}</p>
+            <DisplayMap />({latitude}, {longitude})
             <p>紹介コメント：{comment}</p>
         </>
     )

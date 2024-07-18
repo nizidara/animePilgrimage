@@ -15,8 +15,8 @@ import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
 export const PlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const onClickEdit = useCallback(() => navigate("/edit_place"), [navigate]);
-    const onClickDelete = useCallback(() => navigate("/delete_place"), [navigate]);
+    const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate]);
+    const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate]);
 
     const query = useQuery();
     const placeId = query.get('place_id');

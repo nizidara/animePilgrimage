@@ -1,28 +1,25 @@
 import { useEffect, useState } from "react"
 import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
-import { responseAnimeData } from "../../type/api/anime";
+import { responseRegionData } from "../../type/api/region";
 
-export const useGetAnimeDetail = (anime_id: string | number | null) => {
-  const [anime, setAnime] = useState<responseAnimeData>();
+export const useGetRegionDetail = (region_id: number) => {
+  const [region, setRegion] = useState<responseRegionData>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const url = fastAPIURL;
 
   useEffect(() => {
-    if(anime_id){
-        axios.get(url + "/anime/detail/" + anime_id)
+    axios.get(url + `/regions/detail/${region_id}`)
       .then(response => {
-        setAnime(response.data);
+        setRegion(response.data);
         setLoading(false);
       })
       .catch(error => {
         setError(error.message);
         setLoading(false);
       });
-    }
-    
   }, []);
 
-  return { anime, loading, error };
+  return { region, loading, error };
 };
