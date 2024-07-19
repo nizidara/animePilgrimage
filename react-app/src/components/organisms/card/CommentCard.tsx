@@ -1,32 +1,31 @@
 import { FC, memo, useCallback } from "react"
-import { Button, Card, ListGroup } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
+import { responseCommentData } from "../../../type/api/comment";
 
 type Comment = {
-    user_name?: string | null;
-    comment_date: string;
-    comment: string;
+    comment: responseCommentData;
+    buttonFlag: boolean;
 }
 
 export const CommentCard: FC<Comment> = memo((props) => {
     const navigate = useNavigate();
 
-    const onClickDeleteComment = useCallback(() => navigate("/delete_comment"), [navigate]);
-
-    const {user_name, comment_date, comment} = props
+    const {comment, buttonFlag} = props
+    const onClickDeleteComment = useCallback(() => navigate("/delete_comment", {state: {comment}}), [navigate]);
 
     return (
         <>
             <Card>
                 <Card.Header className="d-flex justify-content-between">
                     <div>
-                        <strong>{user_name}</strong> <DateTimeFormatter datetime={comment_date}/>
+                        <strong>{comment.user_name}</strong> <DateTimeFormatter datetime={comment.comment_date}/>
                     </div>
-                    <Button variant="danger" className="float-right" onClick={onClickDeleteComment}>削除</Button>
+                    {buttonFlag && <Button variant="danger" className="float-right" onClick={onClickDeleteComment}>削除</Button>}
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text>{comment}</Card.Text>
+                    <Card.Text>{comment.comment}</Card.Text>
                         {/* {tweet.image && <Card.Img src={tweet.image} alt="Tweet Image" />} */}
                  </Card.Body>
             </Card>

@@ -63,11 +63,11 @@ export const PlaceDetail: FC = memo(() =>{
                 ))}
             </ListGroup>
             
-            <CommentForm />
+            <CommentForm placeId={place.place_id} />
             <ListGroup>
                 {commentList.map(comment => (
                     <ListGroup.Item key={comment.comment_id}>
-                        <CommentCard user_name={comment.user_name} comment_date={comment.comment_date} comment={comment.comment} />
+                        <CommentCard comment={comment} buttonFlag={true} />
                     </ListGroup.Item>
                 ))}
             </ListGroup>

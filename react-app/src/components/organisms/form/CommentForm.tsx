@@ -1,22 +1,24 @@
-import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react"
+import { ChangeEvent, FC, memo, useState } from "react"
 import { Button, Col, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { BsImage } from "react-icons/bs";
+import { postCommentFormData } from "../../../type/form/comment";
+import { usePostComment } from "../../../hooks/comments/usePostComment";
 
+type commentFormData = {
+    placeId: string;
+}
 
-export const CommentForm: FC = memo(() => {
-    const navigate = useNavigate();
+export const CommentForm: FC<commentFormData> = memo((props) => {
+    const {placeId} = props
+    const {post} = usePostComment();
 
     const [comment, setComment] = useState('');
 
     const onChangeComment = (e:ChangeEvent<HTMLInputElement>) => setComment(e.target.value);
 
-    const formData = {comment};
+    const formData = {comment} as postCommentFormData
 
-    const onClickSend = useCallback(() => {
-        setComment('');
-        navigate("/place");
-    }, [navigate]);
+    const onClickSend = () => post(formData, placeId);
     
     return (
         <>
