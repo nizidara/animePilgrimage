@@ -22,7 +22,7 @@ export const usePostComment = () => {
             user_id: null
         }
 
-        axios.post(url + "/comments/", postData).then((res) => {
+        axios.post(url + "/comments", postData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

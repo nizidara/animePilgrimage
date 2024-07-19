@@ -10,7 +10,7 @@ export const useGetCommentList = (place_id: string | null) => {
   const url = fastAPIURL;
 
   useEffect(() => {
-    axios.get(url + "/comments/list/" + "?place_id=" + place_id)
+    axios.get(url + "/comments/list" + "?place_id=" + place_id)
       .then(response => {
         setCommentList(response.data);
         setLoading(false);
