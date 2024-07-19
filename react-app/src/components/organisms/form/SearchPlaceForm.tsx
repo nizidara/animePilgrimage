@@ -1,11 +1,12 @@
 import { ChangeEvent, FC, memo, useCallback, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { regionList } from "../../../testdatas/testdata";
+import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 
 
 export const SearchPlaceForm: FC = memo(() => {
     const navigate = useNavigate();
+    const { regionList } = useGetRegionList();
 
     const [name, setName] = useState('');
     const [regionId, setRegionId] = useState('');
