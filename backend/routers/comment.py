@@ -20,7 +20,7 @@ async def comment_detail(comment_id: str, db: AsyncSession = Depends(get_db)):
     return comment
 
 # get comment List
-@router.get("/list/", response_model=List[comment_schema.CommentResponse])
+@router.get("/list", response_model=List[comment_schema.CommentResponse])
 async def comment_list(place_id: str = None, anime_id: int = None, db: AsyncSession = Depends(get_db)):
     comments = await comment_crud.get_comment_list(db=db, anime_id=anime_id, place_id=place_id)
     if comments is None:
@@ -44,7 +44,7 @@ async def report_comment_detail(db: AsyncSession = Depends(get_db)):
     return comments
 
 # post comment
-@router.post("/", response_model=comment_schema.CommentResponse)
+@router.post("", response_model=comment_schema.CommentResponse)
 async def create_comment(comment_body: comment_schema.CommentCreate, db: AsyncSession = Depends(get_db)):
     return await comment_crud.create_comment(db=db, comment_body=comment_body)
 

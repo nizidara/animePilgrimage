@@ -13,7 +13,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 user_model.Base.metadata.create_all(bind=engine)
 
 # get user for login
-@router.get("/login/", response_model=user_schema.UserLogin)
+@router.get("/login", response_model=user_schema.UserLogin)
 async def get_login_data(login_id: str):
     return user_schema.UserLogin(login_id=login_id, password="password")
 
