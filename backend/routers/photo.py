@@ -62,7 +62,7 @@ async def update_anime_icon(anime_id: int, file_name: str, db: AsyncSession = De
     return icon
 
 # update or post place icon
-@router.put("/places/icons/", response_model=photo_schema.PlacePhotoIconResponse)
+@router.put("/places/icons", response_model=photo_schema.PlacePhotoIconResponse)
 async def update_place_icon(place_icon_body: photo_schema.PlacePhotoIconCreate, db: AsyncSession = Depends(get_db)):
     icon = await photo_crud.update_place_icon(db=db, place_icon_body=place_icon_body)
     if icon is None:
