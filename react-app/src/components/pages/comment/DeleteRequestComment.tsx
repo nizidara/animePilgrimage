@@ -34,7 +34,7 @@ export const DeleteRequestComment: FC = memo(() =>{
             <h2>コメント削除・通報申請</h2>
             <CommentCard comment={comment} buttonFlag={buttonFlag} />
             <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
-            <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
     )
 });
