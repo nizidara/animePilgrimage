@@ -16,6 +16,7 @@ class AnimeCreate(AnimeBase):
 
 class AnimeResponse(AnimeCreate):
     anime_id: int
+    file_name: Optional[str] =""
 
     class Config:
         orm_mode = True
