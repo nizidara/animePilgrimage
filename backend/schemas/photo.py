@@ -51,6 +51,7 @@ class AnimePhotoResponse(AnimePhotoCreate):
     place_name: str
     anime_id: int
     anime_title: str
+    user_name: Optional[str] = "no name"
 
     class Config:
         orm_mode = True
