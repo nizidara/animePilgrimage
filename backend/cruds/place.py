@@ -207,6 +207,8 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
 
         if result:
             place, created_user_name = result
+            region_name = None
+            anime_title = None
 
             # edit
             if request.request_type == 0:
@@ -226,8 +228,14 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 db.delete(request)
                 db.commit()
 
+                region_name = place.region.region_name
+                anime_title = place.anime.title
+
             # delete
             elif request.request_type == 1:
+                region_name = place.region.region_name
+                anime_title = place.anime.title
+
                 # delete place
                 db.delete(place)
                 db.commit()
@@ -242,7 +250,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
                 edited_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['edited_user_id']).bytes).first()
                 edited_user_name = edited_user.user_name
-            response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name)
+            response = place_schema.PlaceResponse(**response_dict, region_name=region_name, anime_title=anime_title, created_user_name=created_user_name, edited_user_name=edited_user_name)
 
     return response
 
