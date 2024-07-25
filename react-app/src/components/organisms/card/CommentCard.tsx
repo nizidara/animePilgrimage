@@ -26,6 +26,7 @@ export const CommentCard: FC<Comment> = memo((props) => {
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>{comment.comment}</Card.Text>
+                    <div>{comment.file_name}</div>
                         {/* {tweet.image && <Card.Img src={tweet.image} alt="Tweet Image" />} */}
                  </Card.Body>
             </Card>
