@@ -1,6 +1,5 @@
 import {memo, FC, useCallback} from "react";
 import { Container } from "react-bootstrap";
-import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -34,6 +33,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
                 place_id={place.place_id}
                 latitude={place.latitude}
                 longitude={place.longitude}
+                file_name={place.file_name}
                 contents={deletePlaceFormData.contents} 
             />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />

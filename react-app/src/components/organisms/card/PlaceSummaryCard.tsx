@@ -12,12 +12,13 @@ type PlaceSummary = {
     anime_id:number;
     onClickDetail?: (placeId: string) => void;
     place_id: string;
+    file_name?: string | null;
 }
 
 export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
     const navigate = useNavigate();
 
-    const {name, title, comment, anime_id, onClickDetail, place_id} = props;
+    const {name, title, comment, anime_id, onClickDetail, place_id, file_name} = props;
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
 
@@ -29,6 +30,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                         <Row>
                             <Col xs="auto" sm="auto">
                                     <BsImage size={80} />
+                                    <div>{file_name}</div>
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
@@ -44,6 +46,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                         <Row>
                             <Col xs="auto" sm="auto">
                                     <BsImage size={80} />
+                                    <div>{file_name}</div>
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 

@@ -34,7 +34,7 @@ export const PlaceDetail: FC = memo(() =>{
     if (!place) {
         return <div>place not found</div>;
     }
-
+    
     return (
         <Container>
             <Row className="mt-2 mb-2">
@@ -54,6 +54,7 @@ export const PlaceDetail: FC = memo(() =>{
                 comment={place.comment} 
                 anime_id={place.anime_id} 
                 place_id={place.place_id}
+                file_name={place.file_name}
             />
             <ListGroup horizontal>
                 {photoDataList.map(photo => (

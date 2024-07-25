@@ -1,9 +1,7 @@
 import {memo, FC, useCallback} from "react";
 import { Button, Container } from "react-bootstrap";
-import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
-import { deletePlaceFormData } from "../../../type/form/place";
 import { responseRequestPlaceData } from "../../../type/api/place";
 
 export const DeleteRequestPlaceComplete: FC = memo(() =>{

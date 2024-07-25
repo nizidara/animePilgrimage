@@ -24,6 +24,7 @@ export const AdminAnimeList: FC = memo(() =>{
                             kana={anime.kana}
                             flag={anime.flag}
                             introduction={anime.introduction} 
+                            file_name={anime.file_name}
                             onClickDetail={onClickDetail}/>
                     </ListGroup.Item>
                 ))}

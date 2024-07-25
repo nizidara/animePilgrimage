@@ -67,6 +67,7 @@ export const PlaceList: FC = memo(() =>{
                             onClickDetail={onClickDetail} 
                             anime_id={place.anime_id} 
                             place_id={place.place_id}
+                            file_name={place.file_name}
                         />
                     </ListGroup.Item>
                 ))}

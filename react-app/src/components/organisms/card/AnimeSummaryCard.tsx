@@ -10,7 +10,7 @@ type AnimeSummaryData = responseAnimeData & {
 }
 
 export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
-    const {title, introduction, onClickDetail, anime_id} = props;
+    const {title, introduction, onClickDetail, anime_id, file_name} = props;
     
     return (
         <>
@@ -19,6 +19,7 @@ export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
                         <Row>
                             <Col sm={1}>
                                     <BsImage size={80} />
+                                    <div>{file_name}</div>
                             </Col>
                             <Col sm={11}>
                                     <Card.Title>{title}</Card.Title>

@@ -48,6 +48,7 @@ export const AnimeDetail: FC = memo(() =>{
                 flag={anime.flag}
                 kana={anime.kana}
                 anime_id={anime.anime_id}
+                file_name={anime.file_name}
             />
             <hr />
 
@@ -64,6 +65,7 @@ export const AnimeDetail: FC = memo(() =>{
                             anime_id={place.anime_id} 
                             place_id={place.place_id}
                             onClickDetail={onClickDetail}
+                            file_name={place.file_name}
                         />
                     </ListGroup.Item>
                 ))}
