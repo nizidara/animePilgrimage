@@ -17,6 +17,7 @@ export type responseAnimeData = {
     kana: string;
     flag: number;
     anime_id: number;
+    file_name?: string | null
 }
 
 export type responseEditAnimeData = editAnimeData & {

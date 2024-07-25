@@ -29,6 +29,7 @@ export type responseAnimePhotoData = registerAnimePhotoData & {
     place_name: string;
     anime_id: number;
     anime_title: string;
+    user_name?: string | null;
 }
 
 export type responseRealPhotoData = registerRealPhotoData & {

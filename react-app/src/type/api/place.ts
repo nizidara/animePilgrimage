@@ -25,6 +25,7 @@ export type responsePlaceData = registerPlaceData & {
     anime_title: string;
     created_user_name?: string | null;
     edited_user_name?: string | null;
+    file_name?: string | null
 }
 
 export type responseRequestPlaceData = requestPlaceData & {
