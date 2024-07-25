@@ -25,6 +25,7 @@ class PlaceResponse(PlaceCreate):
     anime_title: str
     created_user_name: Optional[str] = "no name"
     edited_user_name: Optional[str] = "no name"
+    file_name: Optional[str] = ""
 
     class Config:
         orm_mode = True
