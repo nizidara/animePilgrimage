@@ -1,8 +1,8 @@
-import {memo, FC, useCallback} from "react";
+import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";

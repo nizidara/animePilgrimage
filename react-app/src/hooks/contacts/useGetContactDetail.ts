@@ -21,7 +21,7 @@ export const useGetContactDetail = (contact_id: string | null) => {
             setLoading(false);
         });
     }
-  }, []);
+  }, [contact_id]);
 
   return { contact, loading, error };
 };

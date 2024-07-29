@@ -19,7 +19,7 @@ export const useGetRegionDetail = (region_id: number) => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  }, [region_id]);
 
   return { region, loading, error };
 };

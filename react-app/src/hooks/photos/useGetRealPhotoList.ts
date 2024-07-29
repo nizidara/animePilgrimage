@@ -21,7 +21,7 @@ export const useGetRealPhotoList = (place_id: string | null) => {
             setLoading(false);
         });
     }
-  }, []);
+  }, [place_id]);
 
   return { realPhotoList, loading, error };
 };

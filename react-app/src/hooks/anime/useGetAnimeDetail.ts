@@ -22,7 +22,7 @@ export const useGetAnimeDetail = (anime_id: string | number | null) => {
       });
     }
     
-  }, []);
+  }, [anime_id]);
 
   return { anime, loading, error };
 };

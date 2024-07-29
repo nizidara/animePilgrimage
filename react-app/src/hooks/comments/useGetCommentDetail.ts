@@ -19,7 +19,7 @@ export const useGetCommenDetail = (comment_id: string | null) => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  }, [comment_id]);
 
   return { comment, loading, error };
 };

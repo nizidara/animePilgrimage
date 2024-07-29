@@ -21,7 +21,7 @@ export const useGetAnimeIcon = (anime_id: number | string | null) => {
             setLoading(false);
         });
     }
-  }, []);
+  }, [anime_id]);
 
   return { animeIcon, loading, error };
 };

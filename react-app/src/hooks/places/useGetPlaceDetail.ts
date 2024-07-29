@@ -19,7 +19,7 @@ export const useGetPlaceDetail = (place_id: string | null) => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  }, [place_id]);
 
   return { place, loading, error };
 };

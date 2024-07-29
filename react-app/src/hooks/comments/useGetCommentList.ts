@@ -19,7 +19,7 @@ export const useGetCommentList = (place_id: string | null) => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  }, [place_id]);
 
   return { commentList, loading, error };
 };

@@ -21,7 +21,7 @@ export const useGetAnimePhotoList = (place_id: string | null) => {
             setLoading(false);
         });
     }
-  }, []);
+  }, [place_id]);
 
   return { animePhotoList, loading, error };
 };

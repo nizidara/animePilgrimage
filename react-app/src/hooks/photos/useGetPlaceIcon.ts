@@ -21,7 +21,7 @@ export const useGetPlaceIcon = (place_id: string | null) => {
             setLoading(false);
         });
     }
-  }, []);
+  }, [place_id]);
 
   return { placeIcon, loading, error };
 };
