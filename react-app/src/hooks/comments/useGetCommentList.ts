@@ -9,17 +9,21 @@ export const useGetCommentList = (place_id: string | null) => {
   const [error, setError] = useState<string | null>(null);
   const url = fastAPIURL;
 
-  useEffect(() => {
+  const fetchComments = () => {
     axios.get(url + "/comments/list" + "?place_id=" + place_id)
-      .then(response => {
-        setCommentList(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error.message);
-        setLoading(false);
-      });
-  }, [place_id]);
+        .then(response => {
+          setCommentList(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(error.message);
+          setLoading(false);
+        });
+  };
 
-  return { commentList, loading, error };
+  useEffect(() => {
+    fetchComments();
+  }, [])
+
+  return { commentList, loading, error, fetchComments };
 };

@@ -21,7 +21,7 @@ export const PlaceDetail: FC = memo(() =>{
     const query = useQuery();
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
-    const { commentList } = useGetCommentList(placeId);
+    const { commentList, fetchComments } = useGetCommentList(placeId);
 
     if (loading) {
         return <div>loading...</div>;
@@ -64,7 +64,7 @@ export const PlaceDetail: FC = memo(() =>{
                 ))}
             </ListGroup>
             
-            <CommentForm placeId={place.place_id} />
+            <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
             <ListGroup>
                 {commentList.map(comment => (
                     <ListGroup.Item key={comment.comment_id}>

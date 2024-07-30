@@ -6,10 +6,11 @@ import { usePostComment } from "../../../hooks/comments/usePostComment";
 
 type commentFormData = {
     placeId: string;
+    onCommentPosted: () => void;
 }
 
 export const CommentForm: FC<commentFormData> = memo((props) => {
-    const {placeId} = props
+    const {placeId, onCommentPosted} = props
     const {post} = usePostComment();
 
     const [comment, setComment] = useState('');
@@ -18,7 +19,11 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
 
     const formData = {comment} as postCommentFormData
 
-    const onClickSend = () => post(formData, placeId);
+    const onClickSend = () => {
+        post(formData, placeId);
+        onCommentPosted();
+        setComment('');
+      };
     
     return (
         <>
