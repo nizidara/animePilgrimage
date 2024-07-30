@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, memo, RefObject } from "react"
+import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { Form } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -30,9 +30,15 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         onFormChange({ ...formData, [name]: value });
     };
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    };
+
     return (
         <>
-            <Form ref={formRef}>
+            <Form ref={formRef} onKeyDown={handleKeyDown}>
                 <Form.Group className="mb-3" controlId="registerPlaceFormName">
                     <Form.Label>聖地名※</Form.Label>
                     <Form.Control required type="text" name="name" defaultValue={formData.name} maxLength={30} onChange={handleChange} />
