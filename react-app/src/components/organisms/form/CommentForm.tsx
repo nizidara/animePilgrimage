@@ -50,7 +50,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     </Col>
 
                     <Col xs="auto" className="d-flex justify-content-end align-items-center">
-                        <Button variant="primary" onClick={onClickSend}>投稿</Button>
+                        {formData.comment.length > 0 ? <Button variant="primary" onClick={onClickSend}>投稿</Button> : <Button variant="primary" disabled>投稿</Button>}
                     </Col>
                 </Row>
                 

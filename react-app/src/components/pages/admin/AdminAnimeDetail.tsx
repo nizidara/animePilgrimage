@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect} from "react";
+import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     
     const [formData, setFormData] = useState<registerAnimeFormData>({title:'', kana:'', introduction:''});
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if(anime){
@@ -44,12 +45,19 @@ export const AdminAnimeDetail: FC = memo(() =>{
         setFormData(data);
     };
 
-    const onClickDecide = () => edit(formData, animeId);
+    const onClickDecide = () => {
+        if (formRef.current) {
+            formRef.current.reportValidity();
+            if (formRef.current.checkValidity()) {
+                edit(formData, animeId);
+            }
+        }
+    }
 
     return (
         <Container>
             <h2>アニメ情報編集</h2>
-            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData}/>
+            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">
                 <Button variant="primary" onClick={onClickTop}>TOPへ</Button>

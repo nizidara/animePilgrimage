@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, memo, useState } from "react"
+import { ChangeEvent, FC, FormEvent, memo, useState } from "react"
 import { Button, Form } from "react-bootstrap";
 import { useSendContact } from "../../../hooks/contacts/useSendContact";
 import { sendContactFormData } from "../../../type/form/contact";
@@ -18,19 +18,22 @@ export const ContactForm: FC = memo(() => {
     const onChangeContents = (e:ChangeEvent<HTMLInputElement>) => setContents(e.target.value);
     
     const sendContents = {name, email, title, contents} as sendContactFormData;
-    const onClickSend = () => send(sendContents);
+    const onClickSend = (e: FormEvent) => {
+        e.preventDefault();
+        send(sendContents);
+    }
 
     return (
         <>
-            <Form>
+            <Form onSubmit={onClickSend}>
                 <Form.Group className="mb-3" controlId="contactFormName">
-                    <Form.Label>名前</Form.Label>
-                    <Form.Control value={name} maxLength={20} onChange={onChangeName} />
+                    <Form.Label>名前※</Form.Label>
+                    <Form.Control value={name} maxLength={20} onChange={onChangeName} required />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="contactFormEmail">
-                    <Form.Label>メールアドレス</Form.Label>
-                    <Form.Control type="email" placeholder="aaa@example.com" maxLength={256} value={email} onChange={onChangeEmail}/>
+                    <Form.Label>メールアドレス※</Form.Label>
+                    <Form.Control type="email" placeholder="aaa@example.com" maxLength={256} value={email} onChange={onChangeEmail} required />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="contactFormTitle">
@@ -39,11 +42,11 @@ export const ContactForm: FC = memo(() => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="contactFormContents">
-                    <Form.Label>メッセージ本文</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents}/>
+                    <Form.Label>メッセージ本文※</Form.Label>
+                    <Form.Control as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents} required/>
                 </Form.Group>
                 <div className="d-grid gap-2">
-                    <Button variant="primary" size="lg" onClick={onClickSend}>送信</Button>
+                    <Button variant="primary" type="submit">送信</Button>
                 </div>
             </Form>
             

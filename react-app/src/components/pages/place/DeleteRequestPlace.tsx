@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState} from "react";
+import {memo, FC, useCallback, useState, useRef} from "react";
 import { Button, Container } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeleteRequestPlaceForm } from "../../organisms/form/DeleteRequestPlaceForm";
@@ -18,6 +18,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
     //formData
     const initialFormData = location.state?.formData || { contents: ''};
     const [formData, setFormData] = useState<deletePlaceFormData>(initialFormData);
+    const formRef = useRef<HTMLFormElement>(null);
 
     const formChange = (data:deletePlaceFormData) => {
         setFormData(data); // フォームデータを更新
@@ -39,14 +40,21 @@ export const DeleteRequestPlace: FC = memo(() =>{
         return <div>place not found</div>;
     }
 
-    const onClickNext = () => send(formData, place);
+    const onClickNext = () => {
+        if (formRef.current) {
+            formRef.current.reportValidity();
+            if (formRef.current.checkValidity()) {
+                send(formData, place);
+            }
+        }
+    }
 
     return (
         <Container>
             <h2>聖地削除リクエスト</h2>
             <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} file_name={place.file_name}/>
             <br />
-            <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
+            <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
 
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>

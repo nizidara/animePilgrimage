@@ -1,4 +1,4 @@
-import {memo, FC, useState, useCallback} from "react";
+import {memo, FC, useState, useCallback, useRef} from "react";
 import { Container } from "react-bootstrap";
 import { DeleteRequestCommentForm } from "../../organisms/form/DeleteRequestCommentForm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,20 +20,28 @@ export const DeleteRequestComment: FC = memo(() =>{
 
     //formData
     const [formData, setFormData] = useState<deleteCommentFormData>({ contents: ''});
+    const formRef = useRef<HTMLFormElement>(null);
 
     const formChange = (data:deleteCommentFormData) => {
         setFormData(data); // updateFormData
     };
 
     //page transition
-    const onClickSend = () => post(formData, commentId);
+    const onClickSend = () => {
+        if (formRef.current) {
+            formRef.current.reportValidity();
+            if (formRef.current.checkValidity()) {
+                post(formData, commentId);
+            }
+        }
+    }
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
     return (
         <Container>
             <h2>コメント削除・通報申請</h2>
             <CommentCard comment={comment} buttonFlag={buttonFlag} />
-            <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
+            <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
     )

@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect} from "react";
+import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const {edit} = useAdminEditPlace();
 
     const [formData, setFormData] = useState<registerPlaceFormData>({name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0});
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if(place){
@@ -45,12 +46,19 @@ export const AdminPlaceDetail: FC = memo(() =>{
         setFormData(data); // フォームデータを更新
     };
 
-    const onClickDecide = () => edit(formData, place.place_id, place.created_user_id);
+    const onClickDecide = () => {
+        if (formRef.current) {
+            formRef.current.reportValidity();
+            if (formRef.current.checkValidity()) {
+                edit(formData, place.place_id, place.created_user_id);
+            }
+        }
+    }
 
     return (
         <Container>
             <h2>聖地情報編集</h2>
-            <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} />
+            <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">
                 <Button variant="primary" onClick={onClickTop}>TOPへ</Button>

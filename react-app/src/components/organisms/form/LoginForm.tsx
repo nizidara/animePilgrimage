@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, memo, useCallback, useState } from "react"
+import { ChangeEvent, FC, FormEvent, memo, useCallback, useState } from "react"
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../type/api/user";
@@ -15,23 +15,26 @@ export const LoginForm: FC = memo(() => {
 
     const login = useCallback((formData:login) => navigate("/", {state: {formData}}), [navigate]);
     const formData = {loginId, password} as login;
-    const onClickLogin = () => login(formData);
+    const onClickLogin = (e: FormEvent) => {
+        e.preventDefault();
+        login(formData);
+    }
 
     return (
         <>
-            <Form>
+            <Form onSubmit={onClickLogin}>
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
-                    <Form.Control value={loginId} onChange={onChangeLoginId} />
+                    <Form.Control required value={loginId} onChange={onChangeLoginId} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="loginFormPassword">
                     <Form.Label>パスワード</Form.Label>
-                    <Form.Control type="password" value={password} onChange={onChangePassword}/>
+                    <Form.Control required type="password" value={password} onChange={onChangePassword}/>
                 </Form.Group>
 
                 <div className="d-grid gap-2">
-                <Button variant="primary" size="lg" onClick={onClickLogin}>ログイン</Button>
+                <Button variant="primary" type="submit">ログイン</Button>
                 </div>
             </Form>
             
