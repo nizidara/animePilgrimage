@@ -1,20 +1,36 @@
-import { ChangeEvent, FC, memo, useCallback, useState } from "react"
+import { ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
+type FormProps = {
+    onSearch: (title: string) => void;
+};
 
-export const SearchAnimeForm: FC = memo(() => {
-    const navigate = useNavigate();
-
+export const SearchAnimeForm: FC<FormProps> = memo(({onSearch}) => {
     const [title, setTitle] = useState('');
 
-    const onChangeTitle = (e:ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+    const onChangeTitle = (e:ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value);
 
-    const onClickSearch = useCallback(() => navigate("/search/anime"), [navigate]);
+        //form value empty
+        if(e.target.value === ''){
+            onSearch('');
+        }
+    }
+
+    //push Enter
+    const onSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        onSearch(title);
+    };
+
+    //Click Search Button
+    const onClickSearch = () => {
+        onSearch(title);
+    };
     
     return (
         <>
-            <Form>
+            <Form onSubmit={onSubmit}>
                 <Form.Group as={Row} className="mb-3 d-flex justify-content-between mt-2" controlId="SearchAnimeFormTitle">
                     <Col>
                         <Form.Control type="search" value={title} placeholder="アニメタイトル絞り込み" onChange={onChangeTitle} />

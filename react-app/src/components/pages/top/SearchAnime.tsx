@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import {memo, FC, useCallback, useState, useEffect} from "react";
 import { Container, ListGroup } from "react-bootstrap";
 import { SearchAnimeForm } from "../../organisms/form/SearchAnimeForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
@@ -8,9 +8,23 @@ import { useNavigate } from "react-router-dom";
 
 export const SearchAnime: FC = memo(() =>{
     const { animeList, loading, error } = useGetAnimeList();
+    const [filteredAnimeList, setFilteredAnimeList] = useState(animeList);
+
+    useEffect(() => {
+        if (animeList) {
+            setFilteredAnimeList(animeList);
+        }
+    }, [animeList]);
+
+    const handleSearch = useCallback((title: string) => {
+        if(animeList){
+            setFilteredAnimeList(animeList.filter(anime => anime.title.includes(title)));
+        }
+    }, [animeList]);
 
     const navigate = useNavigate();
     const onClickDetail = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
+    
 
     if (loading) return <p>読み込み中...</p>;
     if (error) return <p>エラー: {error}</p>;
@@ -18,10 +32,10 @@ export const SearchAnime: FC = memo(() =>{
     return (
         <Container>
             <h1>アニメタイトル検索</h1>
-            <SearchAnimeForm />
+            <SearchAnimeForm onSearch={handleSearch} />
             <SwitchSearchLink flag={0} />
             <ListGroup>
-                {animeList.map(anime => (
+                {filteredAnimeList.map(anime => (
                     <ListGroup.Item key={anime.anime_id}>
                         <AnimeSummaryCard 
                             anime_id={anime.anime_id} 
