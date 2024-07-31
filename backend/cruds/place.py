@@ -85,14 +85,7 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
     # get
     Created_User = aliased(user_model.User)
     Edited_User = aliased(user_model.User)
-
-    # results = db.query(place_model.Place, Created_User.user_name.label('created_user_name'), Edited_User.user_name.label('edited_user_name'), photo_model.PlaceIcon, photo_model.AnimePhoto.file_name).\
-    #     outerjoin(Created_User, place_model.Place.created_user_id == Created_User.user_id).\
-    #     outerjoin(Edited_User, place_model.Place.edited_user_id == Edited_User.user_id).\
-    #     outerjoin(photo_model.PlaceIcon, place_model.Place.place_id == photo_model.PlaceIcon.place_id).\
-    #     outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).all()
-
-    # get    
+ 
     query = select(place_model.Place, Created_User.user_name.label('created_user_name'), Edited_User.user_name.label('edited_user_name'), photo_model.PlaceIcon, photo_model.AnimePhoto.file_name).\
         outerjoin(Created_User, place_model.Place.created_user_id == Created_User.user_id).\
         outerjoin(Edited_User, place_model.Place.edited_user_id == Edited_User.user_id).\
