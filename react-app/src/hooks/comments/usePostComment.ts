@@ -12,7 +12,7 @@ export const usePostComment = () => {
     const url = fastAPIURL;
 
     //post
-    const post = useCallback((formData : postCommentFormData, placeId : string) => {
+    const post = useCallback((formData : postCommentFormData, placeId : string, onCommentPosted: () => void) => {
         const postData : postCommentData = {
             ...formData,
             comment_date: new Date().toISOString(),
@@ -24,6 +24,7 @@ export const usePostComment = () => {
 
         axios.post(url + "/comments", postData).then((res) => {
             setResponseData(res.data);
+            onCommentPosted();
         })
     }, [setResponseData])
 

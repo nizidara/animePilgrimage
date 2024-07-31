@@ -20,8 +20,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
     const formData = {comment} as postCommentFormData
 
     const onClickSend = () => {
-        post(formData, placeId);
-        onCommentPosted();
+        post(formData, placeId, onCommentPosted);
         setComment('');
       };
     
@@ -50,7 +49,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     </Col>
 
                     <Col xs="auto" className="d-flex justify-content-end align-items-center">
-                        <Button variant="primary" disabled={!formData.comment} >投稿</Button>
+                        <Button variant="primary" disabled={!formData.comment} onClick={onClickSend} >投稿</Button>
                     </Col>
                 </Row>
                 
