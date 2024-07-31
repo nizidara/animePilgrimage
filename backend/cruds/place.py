@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from sqlalchemy.orm import aliased
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import uuid
 
 import cruds.photo as photo_crud
@@ -80,16 +81,37 @@ async def create_request_place(
     return response
 
 # read list
-async def get_place_list(db:AsyncSession, name: str, anime_id: int, region_id: int) -> List[Tuple[place_schema.PlaceResponse]]:
+async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: Optional[int] = None, region_id: Optional[int] = None) -> List[Tuple[place_schema.PlaceResponse]]:
     # get
     Created_User = aliased(user_model.User)
     Edited_User = aliased(user_model.User)
 
-    results = db.query(place_model.Place, Created_User.user_name.label('created_user_name'), Edited_User.user_name.label('edited_user_name'), photo_model.PlaceIcon, photo_model.AnimePhoto.file_name).\
+    # results = db.query(place_model.Place, Created_User.user_name.label('created_user_name'), Edited_User.user_name.label('edited_user_name'), photo_model.PlaceIcon, photo_model.AnimePhoto.file_name).\
+    #     outerjoin(Created_User, place_model.Place.created_user_id == Created_User.user_id).\
+    #     outerjoin(Edited_User, place_model.Place.edited_user_id == Edited_User.user_id).\
+    #     outerjoin(photo_model.PlaceIcon, place_model.Place.place_id == photo_model.PlaceIcon.place_id).\
+    #     outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).all()
+
+    # get    
+    query = select(place_model.Place, Created_User.user_name.label('created_user_name'), Edited_User.user_name.label('edited_user_name'), photo_model.PlaceIcon, photo_model.AnimePhoto.file_name).\
         outerjoin(Created_User, place_model.Place.created_user_id == Created_User.user_id).\
         outerjoin(Edited_User, place_model.Place.edited_user_id == Edited_User.user_id).\
         outerjoin(photo_model.PlaceIcon, place_model.Place.place_id == photo_model.PlaceIcon.place_id).\
-        outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).all()
+        outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id)
+    
+    # filter by anime_id:
+    if anime_id is not None:
+        query = query.where(place_model.Place.anime_id == anime_id)
+
+    # filter by region_id
+    if region_id is not None:
+        query = query.where(place_model.Place.region_id == region_id)
+
+    # filter by name
+    if name is not None:
+        query = query.where(place_model.Place.name.like(f'%{name}%'))
+
+    results = db.execute(query).all()
     
     # convert UUID -> str
     response_list = []
