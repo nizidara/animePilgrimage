@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Tuple
+from sqlalchemy.future import select
+from typing import List, Tuple, Optional
 import uuid
 
 import models.comment as comment_model
@@ -79,13 +80,25 @@ async def create_report_comment(
     return response
 
 # read list
-async def get_comment_list(db:AsyncSession, anime_id: int, place_id: str) -> List[Tuple[comment_schema.CommentResponse]]:
-    # get
-    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
+async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, place_id: Optional[str] = None) -> List[Tuple[comment_schema.CommentResponse]]:
+    # get    
+    query = select(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
-        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).all()
+        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id)
     
+    # filter by anime_id:
+    if anime_id is not None:
+        query = query.where(place_model.Place.anime_id == anime_id)
+
+    # filter by place_id
+    if place_id is not None:
+        # convert str -> UUID
+        place_id_bytes = uuid.UUID(place_id).bytes
+        query = query.where(comment_model.Comment.place_id == place_id_bytes)
+
+    results = db.execute(query).all()
+
     # convert UUID -> str
     response_list = []
     if results:
