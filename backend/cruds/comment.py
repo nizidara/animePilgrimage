@@ -5,6 +5,7 @@ import uuid
 import models.comment as comment_model
 import models.user as user_model
 import models.place as place_model
+import models.photo as photo_model
 import schemas.comment as comment_schema
 
 # create comment
@@ -80,20 +81,21 @@ async def create_report_comment(
 # read list
 async def get_comment_list(db:AsyncSession, anime_id: int, place_id: str) -> List[Tuple[comment_schema.CommentResponse]]:
     # get
-    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
-        outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).all()
+        outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
+        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).all()
     
     # convert UUID -> str
     response_list = []
     if results:
-        for comment, user_name, place in results:
+        for comment, user_name, place, file_name in results:
             response_dict = comment.__dict__
             response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response_list.append(comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name))
+            response_list.append(comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_name=file_name))
 
     return response_list
 
@@ -103,21 +105,22 @@ async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schem
     comment_id_bytes = uuid.UUID(comment_id).bytes
  
     # get
-    result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+    result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
+        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
         filter(comment_model.Comment.comment_id == comment_id_bytes).first()
     
     # convert UUID -> str
     response = None
     if result:
-        comment, user_name, place = result
+        comment, user_name, place, file_name = result
         response_dict = comment.__dict__
         response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name)
+        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_name=file_name)
 
     return response
 
