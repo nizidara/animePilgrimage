@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Tuple
+from sqlalchemy.future import select
+from typing import List, Tuple, Optional
 import uuid
 
 import models.anime as anime_model
@@ -100,7 +101,6 @@ async def get_place_icon(db: AsyncSession, place_id: str) -> photo_schema.PlaceP
     place_id_bytes = uuid.UUID(place_id).bytes
 
     # get
-    # icon = db.query(photo_model.PlaceIcon).filter(photo_model.PlaceIcon.place_id == place_id_bytes).first()
     results = db.query(photo_model.PlaceIcon, photo_model.AnimePhoto.file_name, place_model.Place.name).\
         outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == photo_model.PlaceIcon.place_id).filter(photo_model.PlaceIcon.place_id == place_id_bytes).first()
@@ -141,15 +141,23 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str) -> List[Tuple[pho
     return response_list
 
 # read real photo list
-async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: str = None) -> List[Tuple[photo_schema.RealPhotoResponse]]:
+async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Optional[str] = None) -> List[Tuple[photo_schema.RealPhotoResponse]]:
     # convert UUID -> str
     place_id_bytes = uuid.UUID(place_id).bytes
 
-    # get
-    results = db.query(photo_model.RealPhoto, user_model.User.user_name, place_model.Place).filter(photo_model.RealPhoto.place_id == place_id_bytes).\
+    # get    
+    query = select(photo_model.RealPhoto, user_model.User.user_name, place_model.Place).\
         outerjoin(user_model.User, user_model.User.user_id == photo_model.RealPhoto.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == photo_model.RealPhoto.place_id).\
-        filter(photo_model.RealPhoto.place_id == place_id_bytes).all()
+        filter(photo_model.RealPhoto.place_id == place_id_bytes)
+    
+    # filter by anime_id:
+    if comment_id is not None:
+        # convert str -> UUID
+        comment_id_bytes = uuid.UUID(comment_id).bytes
+        query = query.where(photo_model.RealPhoto.comment_id == comment_id_bytes)
+
+    results = db.execute(query).all()
     
     # convert UUID -> str
     response_list = []
