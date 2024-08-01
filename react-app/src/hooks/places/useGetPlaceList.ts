@@ -3,14 +3,18 @@ import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
 import { responsePlaceData } from "../../type/api/place";
 
-export const useGetPlaceList = () => {
+export const useGetPlaceList = (name?: string | null, anime_id?: string | null, region_id?: string | null) => {
   const [placeList, setPlaceList] = useState<responsePlaceData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const url = fastAPIURL;
 
   useEffect(() => {
-    axios.get(url + "/places/list/search")
+    const queryName = name ? `&name=${name}` : '';
+    const queryAnimeId = anime_id ? `&anime_id=${anime_id}` : '';
+    const queryRegionId = region_id ? `&region_id=${region_id}` : '';
+
+    axios.get(url + "/places/list/search?" + queryName + queryAnimeId + queryRegionId)
       .then(response => {
         setPlaceList(response.data);
         setLoading(false);
@@ -19,7 +23,7 @@ export const useGetPlaceList = () => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  }, [name, anime_id, region_id]);
 
   return { placeList, loading, error };
 };

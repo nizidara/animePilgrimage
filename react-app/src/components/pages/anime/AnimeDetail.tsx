@@ -18,7 +18,7 @@ export const AnimeDetail: FC = memo(() =>{
     const query = useQuery();
     const animeId = query.get('anime_id');
     const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList();
+    const { placeList } = useGetPlaceList(undefined, animeId, undefined);
 
     if (loading) {
         return <div>loading...</div>;

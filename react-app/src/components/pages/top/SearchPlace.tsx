@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import {memo, FC, useCallback, useState} from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
@@ -8,13 +8,20 @@ import { useNavigate } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 
 export const SearchPlace: FC = memo(() =>{
+    const [name, setName] = useState<string>();
+    const [regionId, setRegionId] = useState<string>();
 
-    const { placeList, loading, error } = useGetPlaceList();
+    const { placeList, loading, error } = useGetPlaceList(name, undefined, regionId);
 
     const navigate = useNavigate();
 
-    const onClickMap = useCallback(() => navigate("/place/list"), [navigate]);
+    const onClickMap = useCallback((name?:string | null, regionId?:string | null) => navigate("/place/list", {state: {name, regionId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
+
+    const handleSearch = useCallback((searchName: string, searchRegionId: string) => {
+        setName(searchName);
+        setRegionId(searchRegionId);
+      }, []);
 
     if (loading) return <p>読み込み中...</p>;
     if (error) return <p>エラー: {error}</p>;
@@ -23,12 +30,12 @@ export const SearchPlace: FC = memo(() =>{
         <Container>
             <h1>聖地検索</h1>
             
-            <SearchPlaceForm />
+            <SearchPlaceForm onSearch={handleSearch} />
 
             <SwitchSearchLink flag={1} />
 
             <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={onClickMap}>一覧をMAPで表示</Button>
+                <Button variant="primary" onClick={() => onClickMap(name, regionId)}>一覧をMAPで表示</Button>
             </div>
             <ListGroup>
                 {placeList.map(place => (

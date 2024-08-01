@@ -3,7 +3,7 @@ import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { PhotoCard } from "../../organisms/card/PhotoCard";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { photoDataList, placeData, placeList } from "../../../testdatas/testdata";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useQuery } from "../../../hooks/utilities/useQuery";
@@ -11,16 +11,20 @@ import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
+    
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     const query = useQuery();
+    const location = useLocation();
     const animeId = query.get('anime_id');
+    const name = location.state?.name ? location.state.name : null;
+    const regionId = location.state?.regionId ? location.state.regionId : null;
 
     const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList();
+    const { placeList } = useGetPlaceList(name, animeId, regionId);
 
     if(animeId){
         if (loading) {
