@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -22,7 +22,7 @@ class CommentResponse(CommentCreate):
     place_name: str
     range_name: str
     user_name: Optional[str] = "no name"
-    file_name: Optional[str] = ""
+    file_names: List[str] = []
 
     class Config:
         orm_mode = True
