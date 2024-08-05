@@ -20,7 +20,7 @@ export type responseCommentData = postCommentData & {
     place_name: string;
     range_name: string;
     user_name?: string | null;
-    file_name?: string | null;
+    file_names?: string[] | null;
 }
 
 export type responseDeleteCommentData = deleteCommentData & {

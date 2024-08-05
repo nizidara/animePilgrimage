@@ -14,7 +14,7 @@ export const CommentCard: FC<Comment> = memo((props) => {
 
     const {comment, buttonFlag} = props
     const onClickDeleteComment = useCallback(() => navigate("/delete_comment", {state: {comment}}), [navigate]);
-
+    
     return (
         <>
             <Card>
@@ -26,7 +26,11 @@ export const CommentCard: FC<Comment> = memo((props) => {
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>{comment.comment}</Card.Text>
-                    <div>{comment.file_name}</div>
+                    <div>
+                        {comment.file_names && comment.file_names.map((file, index) => (
+                            <div key={index}>{file}</div>
+                        ))}
+                    </div>
                         {/* {tweet.image && <Card.Img src={tweet.image} alt="Tweet Image" />} */}
                  </Card.Body>
             </Card>
