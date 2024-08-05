@@ -38,7 +38,9 @@ async def create_contact(
 # read list
 async def get_contact_list(db:AsyncSession) -> List[Tuple[contact_schema.ContactResponse]]:
     # get
-    results = db.query(contact_model.Contact, user_model.User.user_name).outerjoin(user_model.User, contact_model.Contact.user_id == user_model.User.user_id).all()
+    results = db.query(contact_model.Contact, user_model.User.user_name).\
+        outerjoin(user_model.User, contact_model.Contact.user_id == user_model.User.user_id).\
+        order_by(contact_model.Contact.contact_date.desc()).all()
     
     # convert UUID -> str
     response_list = []

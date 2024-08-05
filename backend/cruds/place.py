@@ -104,6 +104,9 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
     if name is not None:
         query = query.where(place_model.Place.name.like(f'%{name}%'))
 
+    # sort by comment_date in descending order
+    query = query.order_by(place_model.Place.name)
+
     results = db.execute(query).all()
     
     # convert UUID -> str

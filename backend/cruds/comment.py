@@ -97,18 +97,47 @@ async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, plac
         place_id_bytes = uuid.UUID(place_id).bytes
         query = query.where(comment_model.Comment.place_id == place_id_bytes)
 
+    # sort by comment_date in descending order
+    query = query.order_by(comment_model.Comment.comment_date.desc())
+
     results = db.execute(query).all()
 
     # convert UUID -> str
     response_list = []
+    comment_dict = {}
     if results:
         for comment, user_name, place, file_name in results:
-            response_dict = comment.__dict__
-            response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
-            response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
-            if comment.user_id is not None:
-                response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response_list.append(comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_name=file_name))
+            # comment_id=str
+            if isinstance(comment.comment_id, str):
+                comment_id_str = comment.comment_id
+            # comment_id=byte
+            else:
+                comment_id_str = str(uuid.UUID(bytes=comment.comment_id))
+
+            if comment_id_str not in comment_dict:
+                response_dict = comment.__dict__
+                response_dict['comment_id'] = comment_id_str
+                response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
+                if comment.user_id is not None:
+                    response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
+                comment_dict[comment_id_str] = {
+                    'response': comment_schema.CommentResponse(
+                        **response_dict,
+                        anime_id=place.anime_id,
+                        anime_title=place.anime.title,
+                        place_name=place.name,
+                        user_name=user_name,
+                        range_name=comment.range.range_name,
+                        file_names=[]
+                    ),
+                    'file_names': []
+                }
+            if file_name:
+                comment_dict[comment_id_str]['file_names'].append(file_name)
+
+        for comment_id_str, value in comment_dict.items():
+            value['response'].file_names = value['file_names']
+            response_list.append(value['response'])
 
     return response_list
 
@@ -118,22 +147,24 @@ async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schem
     comment_id_bytes = uuid.UUID(comment_id).bytes
  
     # get
-    result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
+    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
         outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
-        filter(comment_model.Comment.comment_id == comment_id_bytes).first()
+        filter(comment_model.Comment.comment_id == comment_id_bytes).all()
     
     # convert UUID -> str
     response = None
-    if result:
-        comment, user_name, place, file_name = result
+    if results:
+        comment, user_name, place = results[0][:3]
+        file_names = [result[3] for result in results if result[3] is not None]
+
         response_dict = comment.__dict__
         response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_name=file_name)
+        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_names=file_names)
 
     return response
 
@@ -142,7 +173,8 @@ async def get_report_comment_list(db:AsyncSession) -> List[Tuple[comment_schema.
     # get
     results = db.query(comment_model.DeleteComment, user_model.User.user_name, comment_model.Comment.comment).\
         outerjoin(user_model.User, comment_model.DeleteComment.user_id == user_model.User.user_id).\
-        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).all()
+        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).\
+        order_by(comment_model.DeleteComment.request_date.desc()).all()
     
     # convert UUID -> str
     response_list = []
@@ -184,13 +216,15 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
     response = None
     if request:
         # get
-        result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+        results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
             outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
             outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
-            filter(comment_model.Comment.comment_id == request.comment_id).first()
+            outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
+            filter(comment_model.Comment.comment_id == request.comment_id).all()
 
-        if result:
-            comment, user_name, place = result
+        if results:
+            comment, user_name, place = results[0][:3]
+            file_names = [result[3] for result in results if result[3] is not None]
             range_name = comment.range.range_name
 
             # delete comment (delete_comments DB is casecade on delete)
@@ -203,7 +237,7 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=range_name)
+            response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=range_name, file_names=file_names)
 
     return response
 

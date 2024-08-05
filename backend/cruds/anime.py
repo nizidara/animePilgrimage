@@ -71,10 +71,12 @@ async def get_request_anime_detail(db: AsyncSession, request_anime_id: int) -> a
 
     return response
 
-# read request edit anime detail
+# read request edit anime list
 async def get_request_anime_list(db: AsyncSession) -> List[Tuple[anime_schema.AnimeEditResponse]]:
     # read
-    results = db.query(anime_model.RequestAnime, user_model.User.user_name).outerjoin(user_model.User, anime_model.RequestAnime.user_id == user_model.User.user_id).all()
+    results = db.query(anime_model.RequestAnime, user_model.User.user_name).\
+        outerjoin(user_model.User, anime_model.RequestAnime.user_id == user_model.User.user_id).\
+        order_by(anime_model.RequestAnime.request_date.desc()).all()
 
     # convert UUID -> str
     response_list = []
