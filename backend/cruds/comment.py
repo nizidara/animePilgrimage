@@ -173,7 +173,8 @@ async def get_report_comment_list(db:AsyncSession) -> List[Tuple[comment_schema.
     # get
     results = db.query(comment_model.DeleteComment, user_model.User.user_name, comment_model.Comment.comment).\
         outerjoin(user_model.User, comment_model.DeleteComment.user_id == user_model.User.user_id).\
-        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).all()
+        outerjoin(comment_model.Comment, comment_model.DeleteComment.comment_id == comment_model.Comment.comment_id).\
+        order_by(comment_model.DeleteComment.request_date.desc()).all()
     
     # convert UUID -> str
     response_list = []
