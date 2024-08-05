@@ -215,13 +215,15 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
     response = None
     if request:
         # get
-        result = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place).\
+        results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
             outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
             outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
-            filter(comment_model.Comment.comment_id == request.comment_id).first()
+            outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
+            filter(comment_model.Comment.comment_id == request.comment_id).all()
 
-        if result:
-            comment, user_name, place = result
+        if results:
+            comment, user_name, place = results[0][:3]
+            file_names = [result[3] for result in results if result[3] is not None]
             range_name = comment.range.range_name
 
             # delete comment (delete_comments DB is casecade on delete)
@@ -234,7 +236,7 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-            response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=range_name)
+            response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=range_name, file_names=file_names)
 
     return response
 
