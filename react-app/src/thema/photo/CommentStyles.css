@@ -1,0 +1,17 @@
+.square-image-crop {
+    width: 160px;
+    height: 160px;
+    object-fit: cover; /* This ensures the image covers the area while preserving aspect ratio */
+    object-position: center; /* Center the image */
+    padding: 2px; /* Adjust padding as necessary */
+    cursor: pointer; /* Add cursor to indicate the image is clickable */
+  }
+
+.square-image-padding {
+    width: 160px;
+    height: 160px;
+    object-fit: contain; /* This ensures the entire image fits within the area */
+    background-color: white; /* Set the background color to your preference */
+    padding: 5px; /* Adjust padding as necessary */
+    cursor: pointer; /* Add cursor to indicate the image is clickable */
+  }

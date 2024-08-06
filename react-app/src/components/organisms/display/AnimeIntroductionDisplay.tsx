@@ -1,7 +1,8 @@
 import { FC, memo } from "react"
 import { responseAnimeData } from "../../../type/api/anime";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Image, Row } from "react-bootstrap";
 import { BsImage } from "react-icons/bs";
+import { Icon } from "../../atoms/Icon";
 
 export const AnimeIntroductionDisplay: FC<responseAnimeData> = memo((props) => {
     const {introduction, file_name} = props;
@@ -12,8 +13,7 @@ export const AnimeIntroductionDisplay: FC<responseAnimeData> = memo((props) => {
                 <Card.Body>
                         <Row>
                             <Col xs="auto" sm="auto">
-                                    <BsImage size={80} />
-                                    <div>{file_name}</div>
+                                <Icon file_name={file_name} />
                             </Col>
                             <Col>
                                     <Card.Text>

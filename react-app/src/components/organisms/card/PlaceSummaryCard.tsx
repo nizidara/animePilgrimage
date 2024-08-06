@@ -1,9 +1,10 @@
 import { FC, memo, useCallback } from "react"
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Image, Row } from "react-bootstrap";
 import { BsImage } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 import '../../../thema/card/CardStyles.css';
+import { Icon } from "../../atoms/Icon";
 
 type PlaceSummary = {
     name:string;
@@ -29,8 +30,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                     <Card.Body className="clickable-card" onClick={() => onClickDetail(place_id)}>
                         <Row>
                             <Col xs="auto" sm="auto">
-                                    <BsImage size={80} />
-                                    <div>{file_name}</div>
+                                <Icon file_name={file_name} />
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
@@ -45,8 +45,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                     <Card.Body>
                         <Row>
                             <Col xs="auto" sm="auto">
-                                    <BsImage size={80} />
-                                    <div>{file_name}</div>
+                                <Icon file_name={file_name} />
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 

@@ -3,6 +3,7 @@ import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { responseCommentData } from "../../../type/api/comment";
+import { Photo } from "../../atoms/Photo";
 
 type Comment = {
     comment: responseCommentData;
@@ -26,12 +27,10 @@ export const CommentCard: FC<Comment> = memo((props) => {
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>{comment.comment}</Card.Text>
-                    <div>
-                        {comment.file_names && comment.file_names.map((file, index) => (
-                            <div key={index}>{file}</div>
-                        ))}
-                    </div>
-                        {/* {tweet.image && <Card.Img src={tweet.image} alt="Tweet Image" />} */}
+                    {comment.file_names && comment.file_names.map((file, index) => (
+                        <Photo key={index} file_name={file} />
+                        // <Card.Img key={index} src={file} alt={file} />
+                    ))}
                  </Card.Body>
             </Card>
         </>

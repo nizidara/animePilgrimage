@@ -1,0 +1,6 @@
+.icon-image-crop {
+    width: 80px;
+    height: 80px;
+    object-fit: cover; /* This ensures the image covers the area while preserving aspect ratio */
+    object-position: center; /* Center the image */
+  }

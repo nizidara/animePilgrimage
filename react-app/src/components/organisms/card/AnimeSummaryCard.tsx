@@ -1,9 +1,9 @@
 import { FC, memo } from "react"
 import { Card, Col, Row } from "react-bootstrap";
-import { BsImage } from "react-icons/bs";
 
 import '../../../thema/card/CardStyles.css';
 import { responseAnimeData } from "../../../type/api/anime";
+import { Icon } from "../../atoms/Icon";
 
 type AnimeSummaryData = responseAnimeData & {
     onClickDetail: (animeId: number) => void;
@@ -18,8 +18,7 @@ export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
                 <Card.Body>
                         <Row>
                             <Col sm={1}>
-                                    <BsImage size={80} />
-                                    <div>{file_name}</div>
+                                    <Icon file_name={file_name} />
                             </Col>
                             <Col sm={11}>
                                     <Card.Title>{title}</Card.Title>
