@@ -26,6 +26,7 @@ class PlaceResponse(PlaceCreate):
     created_user_name: Optional[str] = "no name"
     edited_user_name: Optional[str] = "no name"
     file_name: Optional[str] = ""
+    anime_icon: Optional[str] = ""
 
     class Config:
         orm_mode = True
