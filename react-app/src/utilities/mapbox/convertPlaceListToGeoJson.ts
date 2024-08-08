@@ -12,7 +12,7 @@ export const convertPlaceToFeature = (place: responsePlaceData): Features => {
             title: place.name,
             description: place.comment,
             place_id: place.place_id,
-            icon: place.file_name
+            icon: place.anime_icon
         }
     };
 };

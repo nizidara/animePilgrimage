@@ -9,7 +9,7 @@ import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
-import { BsX, BsXCircle } from "react-icons/bs";
+import { BsXCircle } from "react-icons/bs";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();

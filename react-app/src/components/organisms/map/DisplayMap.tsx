@@ -11,7 +11,6 @@ mapboxgl.accessToken = mapboxAccessToken;
 type DisplayMapProps = {
     geojson: GeoJson;
     onMarkerClick?: (placeId: string) => void;
-    file_name?: string;
 }
 
 export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
@@ -20,7 +19,7 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
     const [lng, setLng] = useState(139.8);
     const [lat, setLat] = useState(35.7);
     const [zoom, setZoom] = useState(7);
-    const { geojson, onMarkerClick, file_name } = props;
+    const { geojson, onMarkerClick } = props;
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
