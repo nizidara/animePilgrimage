@@ -1,9 +1,10 @@
 type FeaturesProperties = {
     title: string;
-    description: string;
+    description?: string | null;
+    place_id?: string | null;
 }
 
-type Features = {
+export type Features = {
     type: string;
     geometry: {
       type: string;

@@ -8,6 +8,8 @@ import { photoDataList, placeData, placeList } from "../../../testdatas/testdata
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
+import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
+import { BsX, BsXCircle } from "react-icons/bs";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
@@ -25,6 +27,19 @@ export const PlaceList: FC = memo(() =>{
 
     const { anime, loading, error } = useGetAnimeDetail(animeId);
     const { placeList } = useGetPlaceList(name, animeId, regionId);
+    const geojson = convertPlaceListToGeoJson(placeList);
+
+    const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+
+    const handleMarkerClick = (placeId: string) => {
+        setSelectedPlaceId(placeId);
+    };
+
+    const handleXClick = () => {
+        setSelectedPlaceId(null);
+    };
+
+    const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
 
     if(animeId){
         if (loading) {
@@ -35,7 +50,7 @@ export const PlaceList: FC = memo(() =>{
             return <div>Error: {error}</div>;
         }
     }
-    
+
     return (
         <Container>
             <Row className="mt-2 mb-2">
@@ -47,8 +62,21 @@ export const PlaceList: FC = memo(() =>{
                 </Col>
             </Row>
 
-            <DisplayMap />
-            <PlaceSummaryCard name={placeData.name} title={placeData.animeTitle} comment={placeData.comment} anime_id={123} place_id="123"/>
+            <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} />
+            {selectedPlace && (
+                <>
+                    <div className="d-flex justify-content-end mt-2">
+                        <BsXCircle onClick={handleXClick}/>
+                    </div> 
+                    <PlaceSummaryCard 
+                        name={selectedPlace.name} 
+                        title={selectedPlace.anime_title} 
+                        comment={selectedPlace.comment} 
+                        anime_id={selectedPlace.anime_id} 
+                        place_id={selectedPlace.place_id}
+                    />
+                </>
+            )}
             <ListGroup horizontal>
                 {photoDataList.map(photo => (
                     <ListGroup.Item key={photo.src}>

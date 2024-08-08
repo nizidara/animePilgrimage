@@ -10,6 +10,7 @@ import { commentList, photoDataList, placeData} from "../../../testdatas/testdat
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
+import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -34,6 +35,8 @@ export const PlaceDetail: FC = memo(() =>{
     if (!place) {
         return <div>place not found</div>;
     }
+
+    const geojson = convertPlaceListToGeoJson([place]);
     
     return (
         <Container>
@@ -46,7 +49,7 @@ export const PlaceDetail: FC = memo(() =>{
                 </Col>
             </Row>
 
-            <DisplayMap />
+            <DisplayMap geojson={geojson} />
 
             <PlaceSummaryCard 
                 name={place.name} 
