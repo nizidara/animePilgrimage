@@ -2,6 +2,7 @@ type FeaturesProperties = {
     title: string;
     description?: string | null;
     place_id?: string | null;
+    icon?: string | null;
 }
 
 export type Features = {

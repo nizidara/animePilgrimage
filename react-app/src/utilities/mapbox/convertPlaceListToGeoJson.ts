@@ -11,7 +11,8 @@ export const convertPlaceToFeature = (place: responsePlaceData): Features => {
         properties: {
             title: place.name,
             description: place.comment,
-            place_id: place.place_id
+            place_id: place.place_id,
+            icon: place.file_name
         }
     };
 };

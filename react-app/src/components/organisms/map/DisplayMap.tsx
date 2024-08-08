@@ -4,12 +4,14 @@ import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import '../../../thema/map/MapStyles.css';
 import { GeoJson } from "../../../type/externalAPI/mapbox";
 import { mapboxAccessToken } from "../../../properties/properties";
+import defaultMarkerIcon from '../../../thema/map/mapbox-icon.png';
 
 mapboxgl.accessToken = mapboxAccessToken;
 
 type DisplayMapProps = {
     geojson: GeoJson;
     onMarkerClick?: (placeId: string) => void;
+    file_name?: string;
 }
 
 export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
@@ -18,7 +20,7 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
     const [lng, setLng] = useState(139.8);
     const [lat, setLat] = useState(35.7);
     const [zoom, setZoom] = useState(7);
-    const { geojson, onMarkerClick } = props;
+    const { geojson, onMarkerClick, file_name } = props;
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -49,7 +51,7 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
         geojson.features.forEach(marker => {
             const el = document.createElement('div');
             el.className = 'marker';
-
+            el.style.backgroundImage = marker.properties.icon ? `url(${marker.properties.icon})` : `url(${defaultMarkerIcon})`;
             if (map.current) {
                 new mapboxgl.Marker(el)
                     .setLngLat(marker.geometry.coordinates) //緯度経度
