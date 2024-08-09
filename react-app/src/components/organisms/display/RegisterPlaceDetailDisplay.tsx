@@ -8,12 +8,13 @@ type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'an
     region_id?: number | null;
     place_id?: string | null;
     flag?: number | null;
+    anime_icon?: string | null;
 }
 
 export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((props) => {
-    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag} = props;
+    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag, anime_icon} = props;
 
-    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id})
+    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id, anime_icon})
     
     return (
         <>

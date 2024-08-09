@@ -12,12 +12,13 @@ type editPlaceDetailData = Omit<responseRequestPlaceData, 'place_id' | 'anime_id
     place_id?: string | null;
     anime_id?: number | null;
     region_id?: number | null;
+    anime_icon?: string | null;
 }
 
 export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
-    const {name, comment, latitude, longitude, anime_title, region_name, place_id, request_type, request_place_id, request_date, user_name, user_id, contents} = props;
+    const {name, comment, latitude, longitude, anime_title, region_name, place_id, request_type, request_place_id, request_date, user_name, user_id, contents, anime_icon} = props;
 
-    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id})
+    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id, anime_icon})
     
     return (
         <>

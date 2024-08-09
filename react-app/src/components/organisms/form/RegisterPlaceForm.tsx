@@ -30,6 +30,20 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         onFormChange({ ...formData, [name]: value });
     };
 
+    //緯度経度更新
+    const handleCoords = (latitude: number, longitude: number) => {
+        setFormData(prevData => ({
+            ...prevData,
+            latitude: latitude,  
+            longitude: longitude 
+        }));
+        onFormChange({
+            ...formData,
+            latitude: latitude,
+            longitude: longitude
+        });
+    };
+
     const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -65,7 +79,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap />
+                <SearchMap onSelectCoords={handleCoords} />
 
                 <Form.Group className="mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>

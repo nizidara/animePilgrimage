@@ -1,10 +1,10 @@
 import { FC, memo, useEffect, useRef, useState } from "react"
 import mapboxgl from 'mapbox-gl';
-import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import '../../../thema/map/MapStyles.css';
 import { GeoJson } from "../../../type/externalAPI/mapbox";
 import { mapboxAccessToken } from "../../../properties/properties";
 import defaultMarkerIcon from '../../../thema/map/mapbox-icon.png';
+import { useMapbox } from "../../../hooks/maps/useMapbox";
 
 mapboxgl.accessToken = mapboxAccessToken;
 
@@ -15,34 +15,20 @@ type DisplayMapProps = {
 
 export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
     const mapContainer = useRef<HTMLDivElement>(null);
-    const map = useRef<mapboxgl.Map | null>(null);
     const [lng, setLng] = useState(139.8);
     const [lat, setLat] = useState(35.7);
     const [zoom, setZoom] = useState(7);
     const { geojson, onMarkerClick } = props;
 
-    useEffect(() => {
-        if (map.current) return; // initialize map only once
-        map.current = new mapboxgl.Map({
-            container: mapContainer.current ?? "",
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [lng, lat],
-            zoom: zoom
-        });
-
-        const language = new MapboxLanguage();
-        map.current.addControl(language);
-    }, [lng, lat, zoom]);
-
-    useEffect(() => {
-        if (!map.current) return; // wait for map to initialize
-        map.current.on('move', () => {
-            if (map.current) {
-                setLng(Number(map.current.getCenter().lng.toFixed(4)));
-                setLat(Number(map.current.getCenter().lat.toFixed(4)));
-                setZoom(Number(map.current.getZoom().toFixed(2)));
-            }
-        });
+    const map = useMapbox({
+        containerRef: mapContainer,
+        center: [lng, lat],
+        zoom: zoom,
+        onMove: (newLng, newLat, newZoom) => {
+          setLng(newLng);
+          setLat(newLat);
+          setZoom(newZoom);
+        },
     });
 
     useEffect(() => {

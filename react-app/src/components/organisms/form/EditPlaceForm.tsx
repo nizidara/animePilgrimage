@@ -29,6 +29,20 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
         onFormChange({ ...formData, [name]: value });
     };
 
+    //緯度経度更新
+    const handleCoords = (latitude: number, longitude: number) => {
+        setFormData(prevData => ({
+            ...prevData,
+            latitude: latitude,  
+            longitude: longitude 
+        }));
+        onFormChange({
+            ...formData,
+            latitude: latitude,
+            longitude: longitude
+        });
+    };
+
     return (
         <>
             <Form ref={formRef}>
@@ -53,7 +67,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap />
+                <SearchMap onSelectCoords={handleCoords} />
 
                 <Form.Group className="mb-3" controlId="editPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>

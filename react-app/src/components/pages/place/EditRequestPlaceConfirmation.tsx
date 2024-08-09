@@ -39,6 +39,7 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
                 longitude={editPlaceFormData.longitude}
                 comment={editPlaceFormData.comment} 
                 contents={editPlaceFormData.contents}
+                anime_icon={anime?.file_name}
             />
 
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
