@@ -11,18 +11,19 @@ export const SearchMapBoxForm: FC<SearchMapboxFormProps> = memo((props) => {
     const {onSearch} = props;
     const { query, setQuery, handleSearch, loading, error } = useMapboxSearch();
 
-    const onClickSearch = () => {
+    const onClickSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         handleSearch(onSearch);
     };
     
     return (
         <>
             <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
             />
-            <button onClick={onClickSearch}>Search</button>
+            <Button onClick={onClickSearch}>Search</Button>
         </>
     );
 });
