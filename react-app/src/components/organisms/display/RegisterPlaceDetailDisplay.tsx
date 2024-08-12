@@ -22,7 +22,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
             {flag != null && <p>表示フラグ:{flag}</p>}
             <p>アニメタイトル:{anime_title}</p>
             <p>都道府県:{region_name}</p>
-            <DisplayMap geojson={geojson} />({latitude}, {longitude})
+            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />({latitude}, {longitude})
             <p>紹介コメント：{comment}</p>
         </>
     )

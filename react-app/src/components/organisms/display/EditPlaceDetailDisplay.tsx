@@ -28,7 +28,7 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
             <p>聖地名:{name}{place_id != null && <div>({place_id})</div>}</p>
             <p>アニメタイトル:{anime_title}</p>
             <p>都道府県:{region_name}</p>
-            <DisplayMap geojson={geojson} />({latitude}, {longitude})
+            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />({latitude}, {longitude})
             <p>紹介コメント：{comment}</p>
             <p>修正理由：{contents}</p>
         </>

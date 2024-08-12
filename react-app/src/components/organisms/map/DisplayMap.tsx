@@ -11,15 +11,16 @@ mapboxgl.accessToken = mapboxAccessToken;
 type DisplayMapProps = {
     geojson: GeoJson;
     onMarkerClick?: (placeId: string) => void;
+    coodinates: [number, number];
 }
 
 export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
     const mapContainer = useRef<HTMLDivElement>(null);
-    const [lng, setLng] = useState(139.8);
-    const [lat, setLat] = useState(35.7);
-    const [zoom, setZoom] = useState(7);
-    const { geojson, onMarkerClick } = props;
-
+    const { geojson, onMarkerClick, coodinates } = props;
+    const [lng, setLng] = useState(coodinates ? coodinates[0] : 139.8);
+    const [lat, setLat] = useState(coodinates ? coodinates[1] : 35.7);
+    const [zoom, setZoom] = useState(coodinates ? 12 : 7);
+    
     const map = useMapbox({
         containerRef: mapContainer,
         center: [lng, lat],

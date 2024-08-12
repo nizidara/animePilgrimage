@@ -49,7 +49,7 @@ export const PlaceDetail: FC = memo(() =>{
                 </Col>
             </Row>
 
-            <DisplayMap geojson={geojson} />
+            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
 
             <PlaceSummaryCard 
                 name={place.name} 

@@ -51,6 +51,8 @@ export const EditRequestPlace: FC = memo(() =>{
     }
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
+    console.log(formData)
+
     return (
         <Container>
             <h2>聖地修正リクエスト</h2>

@@ -50,7 +50,7 @@ export const PlaceList: FC = memo(() =>{
             return <div>Error: {error}</div>;
         }
     }
-
+    
     return (
         <Container>
             <Row className="mt-2 mb-2">
@@ -62,7 +62,7 @@ export const PlaceList: FC = memo(() =>{
                 </Col>
             </Row>
 
-            <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} />
+            {geojson.features.length !== 0 && <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]}/>}
             {selectedPlace && (
                 <>
                     <div className="d-flex justify-content-end mt-2">

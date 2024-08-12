@@ -27,7 +27,7 @@ export const DeletePlaceDetailDisplay: FC<deletePlaceDetailData> = memo((props) 
             {user_name != null && <p>ユーザー名:{user_name}({user_id})</p>}
             <PlaceSummaryCard name={name} title={anime_title} comment={comment} anime_id={anime_id} place_id={place_id} file_name={file_name}/>
             <div>({latitude}, {longitude})</div>
-            <DisplayMap geojson={geojson} />
+            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
             <p>削除申請理由</p>
             <p>{contents}</p>
         </>
