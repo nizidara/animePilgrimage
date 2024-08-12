@@ -79,7 +79,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap onSelectCoords={handleCoords} />
+                <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} />
 
                 <Form.Group className="mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>

@@ -67,7 +67,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap onSelectCoords={handleCoords} />
+                <SearchMap onSelectCoords={handleCoords} longitude={formData.longitude} latitude={formData.latitude} />
 
                 <Form.Group className="mb-3" controlId="editPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>
