@@ -1,5 +1,3 @@
-import mapboxgl from 'mapbox-gl';
-
 export const applyScale = (marker: mapboxgl.Marker) => {
     const element = marker.getElement();
     const originalTransform = element.style.transform.replace(/scale\(\d*\.?\d*\)/, ''); // 既存のscaleを削除

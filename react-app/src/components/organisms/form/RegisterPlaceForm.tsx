@@ -29,18 +29,17 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         setFormData(prevInputData => ({ ...prevInputData, [name]: value }));
         onFormChange({ ...formData, [name]: value });
     };
-
-    //緯度経度更新
+    
+    // 緯度経度更新
     const handleCoords = (latitude: number, longitude: number) => {
-        setFormData(prevData => ({
-            ...prevData,
-            latitude: latitude,  
-            longitude: longitude 
-        }));
-        onFormChange({
-            ...formData,
-            latitude: latitude,
-            longitude: longitude
+        setFormData(prevData => {
+            const updatedData = {
+                ...prevData,
+                latitude: latitude,
+                longitude: longitude,
+            };
+            onFormChange(updatedData);
+            return updatedData;
         });
     };
 

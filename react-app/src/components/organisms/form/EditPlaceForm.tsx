@@ -29,17 +29,16 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
         onFormChange({ ...formData, [name]: value });
     };
 
-    //緯度経度更新
+    // 緯度経度更新
     const handleCoords = (latitude: number, longitude: number) => {
-        setFormData(prevData => ({
-            ...prevData,
-            latitude: latitude,  
-            longitude: longitude 
-        }));
-        onFormChange({
-            ...formData,
-            latitude: latitude,
-            longitude: longitude
+        setFormData(prevData => {
+            const updatedData = {
+                ...prevData,
+                latitude: latitude,
+                longitude: longitude,
+            };
+            onFormChange(updatedData);
+            return updatedData;
         });
     };
 
