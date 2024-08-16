@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import {memo, FC, useCallback, useRef, useState, useEffect} from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -11,6 +11,7 @@ import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
+import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -23,6 +24,7 @@ export const PlaceDetail: FC = memo(() =>{
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
     const { commentList, fetchComments } = useGetCommentList(placeId);
+    const { realPhotoList } = useGetRealPhotoList(placeId);
 
     if (loading) {
         return <div>loading...</div>;
@@ -59,13 +61,8 @@ export const PlaceDetail: FC = memo(() =>{
                 place_id={place.place_id}
                 file_name={place.file_name}
             />
-            <ListGroup horizontal>
-                {photoDataList.map(photo => (
-                    <ListGroup.Item key={photo.src}>
-                        <PhotoCard title={photo.animeTitle} name={photo.name} src={photo.src} />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+            
+            <PhotoCard realPhotoList={realPhotoList} />
             
             <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
             <ListGroup>

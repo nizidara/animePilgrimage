@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState} from "react";
+import {memo, FC, useCallback, useState, useEffect} from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -10,11 +10,12 @@ import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
 import { BsXCircle } from "react-icons/bs";
+import { responseRealPhotoData } from "../../../type/api/photo";
+import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
     
-
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
@@ -30,7 +31,8 @@ export const PlaceList: FC = memo(() =>{
     const geojson = convertPlaceListToGeoJson(placeList);
 
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-
+    const [realPhotoList, setRealPhotoList] = useState<responseRealPhotoData[] | null>(null);
+ 
     const handleMarkerClick = (placeId: string) => {
         setSelectedPlaceId(placeId);
     };
@@ -40,6 +42,13 @@ export const PlaceList: FC = memo(() =>{
     };
 
     const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
+    const { realPhotoList: fetchedRealPhotoList } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null);
+
+    useEffect(() => {
+        if (selectedPlace && fetchedRealPhotoList) {
+            setRealPhotoList(fetchedRealPhotoList);
+        }
+    }, [selectedPlace, fetchedRealPhotoList]);
 
     if(animeId){
         if (loading) {
@@ -75,15 +84,9 @@ export const PlaceList: FC = memo(() =>{
                         anime_id={selectedPlace.anime_id} 
                         place_id={selectedPlace.place_id}
                     />
+                    {realPhotoList && <PhotoCard realPhotoList={realPhotoList} />}
                 </>
             )}
-            <ListGroup horizontal>
-                {photoDataList.map(photo => (
-                    <ListGroup.Item key={photo.src}>
-                        <PhotoCard title={photo.animeTitle} name={photo.name} src={photo.src} />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
             <hr />
             
             <div className="d-flex justify-content-end mb-2">
