@@ -53,7 +53,7 @@ export const AnimeDetail: FC = memo(() =>{
             <hr />
 
             <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={() => onClickMap(anime.anime_id)} className="mx-2">MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
+                <Button variant="primary" onClick={() => onClickMap(anime.anime_id)} className="mx-2" disabled={placeList.length === 0}>MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
             </div> 
             <ListGroup>
                 {placeList.map(place => (

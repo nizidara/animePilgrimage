@@ -35,7 +35,7 @@ export const SearchPlace: FC = memo(() =>{
             <SwitchSearchLink flag={1} />
 
             <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={() => onClickMap(name, regionId)}>一覧をMAPで表示</Button>
+                <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
             </div>
             <ListGroup>
                 {placeList.map(place => (
