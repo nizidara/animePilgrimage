@@ -76,7 +76,7 @@ async def create_request_place(
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
-        response = place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, user_name=user_name)
+        response = place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, anime_icon=place.anime.file_name, user_name=user_name)
 
     return response
 
@@ -166,7 +166,7 @@ async def get_request_place_list(db:AsyncSession) -> List[Tuple[place_schema.Pla
             response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
             if place.user_id is not None:
                 response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
-            response_list.append(place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, user_name=user_name))
+            response_list.append(place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, anime_icon=place.anime.file_name, user_name=user_name))
 
     return response_list
 
@@ -183,7 +183,7 @@ async def get_request_place_detail(db: AsyncSession, request_place_id: int) -> p
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=place.user_id))
-        response = place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, user_name=user_name)
+        response = place_schema.PlaceRequestResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, anime_icon=place.anime.file_name, user_name=user_name)
 
     return response
 
