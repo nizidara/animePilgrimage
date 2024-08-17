@@ -13,12 +13,13 @@ type deletePlaceDetailData = Omit<responseRequestPlaceData, 'region_id' | 'regio
     region_id?: number | null;
     region_name?: string | null;
     file_name?: string | null;
+    anime_icon?: string | null;
 }
 
 export const DeletePlaceDetailDisplay: FC<deletePlaceDetailData> = memo((props) => {
-    const {contents, name, anime_title, comment, anime_id, place_id, request_place_id, request_date, user_id, user_name, latitude, longitude, file_name} = props;
+    const {contents, name, anime_title, comment, anime_id, place_id, request_place_id, request_date, user_id, user_name, latitude, longitude, file_name, anime_icon} = props;
 
-    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id})
+    const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id, anime_icon})
     
     return (
         <>

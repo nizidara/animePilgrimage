@@ -27,6 +27,7 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
                 contents={responseData.contents}
                 request_date={responseData.request_date}
                 request_place_id={responseData.request_place_id}
+                anime_icon={responseData.anime_icon}
             />
             <center>
             <Button variant="primary" onClick={() => onClickPlace(responseData.place_id)} className="mt-2">聖地情報に戻る</Button><br />
