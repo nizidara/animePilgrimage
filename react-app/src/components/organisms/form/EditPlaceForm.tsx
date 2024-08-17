@@ -3,6 +3,8 @@ import { SearchMap } from "../map/SearchMap";
 import { Form } from "react-bootstrap";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 import { editPlaceFormData } from "../../../type/form/place";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../map/DummyMap";
 
 type FormProps = {
     onFormChange: (data: editPlaceFormData) => void;
@@ -66,7 +68,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap onSelectCoords={handleCoords} longitude={formData.longitude} latitude={formData.latitude} />
+                {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} longitude={formData.longitude} latitude={formData.latitude} /> : <DummyMap />}
 
                 <Form.Group className="mb-3" controlId="editPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>

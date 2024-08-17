@@ -4,6 +4,8 @@ import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { responseRequestPlaceData } from "../../../type/api/place";
 import { GeoJson } from "../../../type/externalAPI/mapbox";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../map/DummyMap";
 
 type editPlaceDetailData = Omit<responseRequestPlaceData, 'place_id' | 'anime_id' | 'region_id' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -28,7 +30,7 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
             <p>聖地名:{name}{place_id != null && <div>({place_id})</div>}</p>
             <p>アニメタイトル:{anime_title}</p>
             <p>都道府県:{region_name}</p>
-            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />({latitude}, {longitude})
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}({latitude}, {longitude})
             <p>紹介コメント：{comment}</p>
             <p>修正理由：{contents}</p>
         </>

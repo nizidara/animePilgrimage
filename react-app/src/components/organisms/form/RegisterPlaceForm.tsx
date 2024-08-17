@@ -4,6 +4,8 @@ import { Form } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../map/DummyMap";
 
 type FormProps = {
     onFormChange: (data: registerPlaceFormData) => void;
@@ -78,7 +80,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     </Form.Select>
                 </Form.Group>
 
-                <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} />
+                {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} /> : <DummyMap />}
 
                 <Form.Group className="mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>

@@ -12,6 +12,8 @@ import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { BsXCircle } from "react-icons/bs";
 import { responseRealPhotoData } from "../../../type/api/photo";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../../organisms/map/DummyMap";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
@@ -71,7 +73,11 @@ export const PlaceList: FC = memo(() =>{
                 </Col>
             </Row>
 
-            {geojson.features.length !== 0 && <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]}/>}
+            {geojson.features.length !== 0 && 
+                mapboxFlag ? 
+                    <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]}/>
+                    : <DummyMap />
+            }
             {selectedPlace && (
                 <>
                     <div className="d-flex justify-content-end mt-2">

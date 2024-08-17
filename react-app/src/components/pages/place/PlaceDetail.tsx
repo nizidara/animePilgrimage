@@ -12,6 +12,8 @@ import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../../organisms/map/DummyMap";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -51,7 +53,7 @@ export const PlaceDetail: FC = memo(() =>{
                 </Col>
             </Row>
 
-            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
 
             <PlaceSummaryCard 
                 name={place.name} 
