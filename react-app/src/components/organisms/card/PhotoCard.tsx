@@ -35,7 +35,7 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
     
     return (
         <>
-            {showArrows && (
+            {/* {showArrows && (
                 <Button 
                     variant="light" 
                     onClick={() => scroll("left")} 
@@ -43,7 +43,7 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
                 >
                     ←
                 </Button>
-            )}
+            )} */}
             <div className="photo-list-container flex-grow-1" ref={scrollRef}>
                 <ListGroup horizontal className="photo-list">
                     {realPhotoList.map(photo => (
@@ -53,7 +53,7 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
                     ))}
                 </ListGroup>
             </div>
-            {showArrows && (
+            {/* {showArrows && (
                 <Button 
                     variant="light" 
                     onClick={() => scroll("right")} 
@@ -61,7 +61,20 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
                 >
                     →
                 </Button>
-            )}
+            )} */}
+            {/* <ListGroup
+                className="list_menu"
+                horizontal
+                style={{
+                    overflowX: "scroll"
+                    }}
+            >
+                {realPhotoList.map(photo => (
+                        <ListGroup.Item key={photo.real_photo_id}>
+                            <Photo file_name={photo.file_name} />
+                        </ListGroup.Item>
+                    ))}
+            </ListGroup> */}
         </>
     )
 });
