@@ -46,6 +46,7 @@ class PlaceRequestResponse(PlaceRequestCreate):
     request_place_id: int
     region_name: str
     anime_title: str
+    anime_icon: Optional[str] = ""
     user_name: Optional[str] = "no name"
 
     class Config:
