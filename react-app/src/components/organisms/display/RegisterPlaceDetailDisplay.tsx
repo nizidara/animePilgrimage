@@ -2,6 +2,8 @@ import { FC, memo } from "react"
 import { DisplayMap } from "../map/DisplayMap";
 import { responsePlaceData } from "../../../type/api/place";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
+import { mapboxFlag } from "../../../properties/properties";
+import { DummyMap } from "../map/DummyMap";
 
 type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id'> & {
     anime_id?: number | null;
@@ -22,7 +24,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
             {flag != null && <p>表示フラグ:{flag}</p>}
             <p>アニメタイトル:{anime_title}</p>
             <p>都道府県:{region_name}</p>
-            <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />({latitude}, {longitude})
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}({latitude}, {longitude})
             <p>紹介コメント：{comment}</p>
         </>
     )

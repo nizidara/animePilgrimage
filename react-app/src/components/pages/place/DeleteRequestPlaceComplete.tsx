@@ -29,6 +29,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
                 contents={responseData.contents} 
                 request_place_id={responseData.request_place_id}
                 request_date={responseData.request_date}
+                anime_icon={responseData.anime_icon}
             />
 
             <center>

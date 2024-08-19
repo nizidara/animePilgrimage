@@ -35,6 +35,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
                 longitude={place.longitude}
                 file_name={place.file_name}
                 contents={deletePlaceFormData.contents} 
+                anime_icon={place.anime_icon}
             />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>

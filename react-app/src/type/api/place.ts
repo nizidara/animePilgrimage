@@ -33,5 +33,6 @@ export type responseRequestPlaceData = requestPlaceData & {
     request_place_id: number;
     region_name: string;
     anime_title: string;
+    anime_icon?: string | null;
     user_name?: string | null;
 }
