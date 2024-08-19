@@ -2,20 +2,34 @@ from typing import Optional, List
 from datetime import datetime
 
 from pydantic import BaseModel
+from fastapi import UploadFile, File, Form
 
 class CommentBase(BaseModel):
     comment: str
     comment_date: datetime
     user_id: Optional[str] = None
 
-class CommentCreate(CommentBase):
-    range_id: int
-    place_id: str
+# class CommentCreate(CommentBase):
+#     range_id: int
+#     place_id: str
+
+#     class Config:
+#         orm_mode = True
+
+class CommentCreate(BaseModel):
+    comment: str = Form(...)
+    comment_date: datetime = Form(...)
+    user_id: Optional[str] = Form(None)
+    range_id: int = Form(...)
+    place_id: str = Form(...)
+    #images: Optional[List[UploadFile]] = File(None) 
 
     class Config:
         orm_mode = True
 
-class CommentResponse(CommentCreate):
+class CommentResponse(CommentBase):
+    range_id: int
+    place_id: str
     comment_id: str
     anime_id: int
     anime_title: str
