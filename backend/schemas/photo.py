@@ -1,11 +1,8 @@
 from pydantic import BaseModel
 
-from typing import Optional
+from typing import Optional, List
 
-class PhotoBase(BaseModel):
-    file_name: str
-
-class AnimeIconCreate(PhotoBase):
+class AnimeIconCreate(BaseModel):
     file_name: Optional[str] = ""
 
     class Config:
@@ -33,15 +30,10 @@ class PlacePhotoIconResponse(PlacePhotoIconCreate):
     class Config:
         orm_mode = True
 
-class PlacePhotoCreateBase(PhotoBase):
+class AnimePhotoCreate(BaseModel):
+    file_name: str
     place_id: str
     user_id: Optional[str] = None
-
-    class Config:
-        orm_mode = True
-
-class AnimePhotoCreate(PlacePhotoCreateBase):
-    pass
 
     class Config:
         orm_mode = True
@@ -56,13 +48,20 @@ class AnimePhotoResponse(AnimePhotoCreate):
     class Config:
         orm_mode = True
 
-class RealPhotoCreate(PlacePhotoCreateBase):
+class RealPhotoCreate(BaseModel):
+    file_names: List[str]
+    place_id: str
     comment_id: Optional[str] = None
+    user_id: Optional[str] = None
     
     class Config:
         orm_mode = True
 
-class RealPhotoResponse(RealPhotoCreate):
+class RealPhotoResponse(BaseModel):
+    file_name: str
+    place_id: str
+    comment_id: Optional[str] = None
+    user_id: Optional[str] = None
     real_photo_id: str
     place_name: str
     anime_id: int
