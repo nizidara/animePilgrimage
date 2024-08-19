@@ -49,7 +49,7 @@ async def create_anime_photos(photo_body: photo_schema.AnimePhotoCreate, db: Asy
     return await photo_crud.create_anime_photo(db=db, photo_body=photo_body)
 
 # post real photo
-@router.post("/reals", response_model=photo_schema.RealPhotoResponse)
+@router.post("/reals", response_model=List[photo_schema.RealPhotoResponse])
 async def create_real_photos(photo_body: photo_schema.RealPhotoCreate, db: AsyncSession = Depends(get_db)):
     return await photo_crud.create_real_photo(db=db, photo_body=photo_body)
 
