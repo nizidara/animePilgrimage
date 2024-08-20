@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from fastapi import APIRouter, Depends, HTTPException, Form, File, UploadFile
+from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import schemas.comment as comment_schema
@@ -43,9 +43,14 @@ async def report_comment_detail(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="report comments not found")
     return comments
 
+def get_upload_files(files: Optional[List[UploadFile]] = File(None)):
+    if files is None:
+        return []
+    return files
+
 # post comment
 @router.post("", response_model=comment_schema.CommentResponse)
-async def create_comment(comment_body: comment_schema.CommentCreate, db: AsyncSession = Depends(get_db)):
+async def create_comment(comment_body: comment_schema.CommentCreate = Depends(comment_schema.CommentCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await comment_crud.create_comment(db=db, comment_body=comment_body)
 
 # create report comment
