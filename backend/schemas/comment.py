@@ -9,14 +9,10 @@ class CommentBase(BaseModel):
     comment_date: datetime
     user_id: Optional[str] = None
 
-class CommentCreate(BaseModel):
-    comment: str
-    comment_date: datetime
-    user_id: Optional[str]
+class CommentCreate(CommentBase):
     range_id: int
     place_id: str
-    #images: List[UploadFile]
-    images: Optional[List[UploadFile]]
+    images: List[UploadFile]
 
     @classmethod
     def as_form(
@@ -26,8 +22,7 @@ class CommentCreate(BaseModel):
         user_id: Optional[str] = Form(None),
         range_id: int = Form(...),
         place_id: str = Form(...),
-        #images: List[UploadFile] = File(None),
-        images: Optional[List[UploadFile]] = File(None),
+        images: List[UploadFile] = File([]),
     ):
         return cls(
             comment=comment,
