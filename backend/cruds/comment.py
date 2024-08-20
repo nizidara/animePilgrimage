@@ -2,12 +2,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Tuple, Optional
 import uuid
+from pathlib import Path
 
 import models.comment as comment_model
 import models.user as user_model
 import models.place as place_model
 import models.photo as photo_model
 import schemas.comment as comment_schema
+import cruds.photo as photo_crud
+import schemas.photo as photo_schema
 
 # create comment
 async def create_comment(
@@ -19,6 +22,7 @@ async def create_comment(
     place = None
     if comment_body:
         comment_dict = comment_body.model_dump()
+        comment_dict.pop("images", None)    # delete image field
         comment_dict['place_id'] = uuid.UUID(comment_body.place_id).bytes
         place = db.query(place_model.Place).filter(place_model.Place.place_id == comment_dict['place_id']).first()
         if comment_body.user_id is not None:
@@ -27,10 +31,38 @@ async def create_comment(
             user_name = user.user_name
     comment = comment_model.Comment(**comment_dict)
 
-    # create
+    # save images
+    saved_image_paths = []
+    if comment_body.images:
+        upload_directory = Path("uploads/images/")  # directory path
+        upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
+
+        for image in comment_body.images:
+            image_filename = f"{uuid.uuid4()}_{image.filename}"
+            image_path = upload_directory / image_filename
+
+            with image_path.open("wb") as buffer:
+                buffer.write(await image.read())
+            
+            saved_image_paths.append(str(image_path))
+
+    # create comment DB
     db.add(comment)
     db.commit()
     db.refresh(comment)
+
+    # create photo DB
+    file_names_response = []
+    if comment_body.images:
+        photo_body = photo_schema.RealPhotoCreate(
+            file_names=saved_image_paths,
+            place_id=comment_body.place_id,
+            comment_id=str(uuid.UUID(bytes=comment.comment_id)),
+            user_id=comment_body.user_id,
+        )
+        photo_response = await photo_crud.create_real_photo(db=db, photo_body=photo_body)
+        for photo in photo_response:
+            file_names_response.append(photo.file_name)
 
     # convert UUID -> str
     response = None
@@ -40,7 +72,7 @@ async def create_comment(
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
             response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name)
+        response = comment_schema.CommentResponse(**response_dict, anime_id=place.anime_id, anime_title=place.anime.title, place_name=place.name, user_name=user_name, range_name=comment.range.range_name, file_names=file_names_response)
 
     return response
 
