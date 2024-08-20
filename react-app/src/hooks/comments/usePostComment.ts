@@ -12,9 +12,9 @@ export const usePostComment = () => {
     const url = fastAPIURL;
 
     //post
-    const post = useCallback((formData : postCommentFormData, placeId : string, onCommentPosted: () => void) => {
+    const post = useCallback((comment: string, placeId : string, images: File[], onCommentPosted: () => void) => {
         const postData : postCommentData = {
-            ...formData,
+            comment: comment,
             comment_date: new Date().toISOString(),
             range_id: 0,    //now 0(public) only
             place_id: placeId,
@@ -22,10 +22,33 @@ export const usePostComment = () => {
             user_id: null
         }
 
+        const formData = new FormData();
+
+        Object.keys(postData).forEach((key) => {
+            const value = (postData as any)[key]; // 型アサーションを使用
+            if (value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+        });
+
+        // // 画像ファイル追加
+        // images.forEach((image, index) => {
+        //     formData.append(`image_${index}`, image);
+        // });
+
         axios.post(url + "/comments", postData).then((res) => {
             setResponseData(res.data);
             onCommentPosted();
         })
+
+        // axios.post(url + "/comments", formData, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // }).then((res) => {
+        //     setResponseData(res.data);
+        //     onCommentPosted();
+        // });
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移
