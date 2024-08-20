@@ -2,7 +2,6 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
-import { postCommentFormData } from "../../type/form/comment";
 import { postCommentData, responseCommentData } from "../../type/api/comment";
 
 //post comment
@@ -25,30 +24,24 @@ export const usePostComment = () => {
         const formData = new FormData();
 
         Object.keys(postData).forEach((key) => {
-            const value = (postData as any)[key]; // 型アサーションを使用
+            const value = (postData as any)[key];
             if (value !== null && value !== undefined) {
                 formData.append(key, value);
             }
         });
 
-        // // 画像ファイル追加
-        // images.forEach((image, index) => {
-        //     formData.append(`image_${index}`, image);
-        // });
+        images.forEach((image) => {
+            formData.append('images', image);
+        });
 
-        axios.post(url + "/comments", postData).then((res) => {
+        axios.post(url + "/comments", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then((res) => {
             setResponseData(res.data);
             onCommentPosted();
-        })
-
-        // axios.post(url + "/comments", formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data'
-        //     }
-        // }).then((res) => {
-        //     setResponseData(res.data);
-        //     onCommentPosted();
-        // });
+        });
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移
