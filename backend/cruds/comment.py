@@ -12,6 +12,8 @@ import schemas.comment as comment_schema
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
 
+from properties.properties import base_path, upload_directory
+
 # create comment
 async def create_comment(
         db: AsyncSession, comment_body: comment_schema.CommentCreate
@@ -34,8 +36,6 @@ async def create_comment(
     # save images
     saved_image_paths = []
     if comment_body.images:
-        base_path = Path("C:/Users/NanaiKouki/Desktop/blog/animePilgrimage/project/react-app/public/")  # base path
-        upload_directory = Path("uploads/images/")  # directory path
         # upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
 
         for image in comment_body.images:

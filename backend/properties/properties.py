@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 
+from pathlib import Path
+
 # import .env file
 load_dotenv()
 
@@ -12,7 +14,13 @@ database = os.getenv('DB_NAME')
 
 DB_URL = f"mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8"
 
-#frontend setting
+#frontend setting(dev)
 origins = [
     "http://localhost:3000",
 ]
+
+#image setting(dev)
+local_base_path = os.getenv('LOCAL_BASE_PATH')
+
+base_path = Path(local_base_path)  # base path
+upload_directory = Path("uploads/images/")  # directory path
