@@ -34,17 +34,19 @@ async def create_comment(
     # save images
     saved_image_paths = []
     if comment_body.images:
+        base_path = Path("C:/Users/NanaiKouki/Desktop/blog/animePilgrimage/project/react-app/public/")  # base path
         upload_directory = Path("uploads/images/")  # directory path
-        upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
+        # upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
 
         for image in comment_body.images:
             image_filename = f"{uuid.uuid4()}_{image.filename}"
-            image_path = upload_directory / image_filename
+            image_path = base_path / upload_directory / image_filename
+            save_path = upload_directory / image_filename
 
             with image_path.open("wb") as buffer:
                 buffer.write(await image.read())
             
-            saved_image_paths.append(str(image_path))
+            saved_image_paths.append(str(save_path))
 
     # create comment DB
     db.add(comment)
