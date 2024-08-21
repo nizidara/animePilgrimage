@@ -12,15 +12,28 @@ export const useRegisterAnime = () => {
     const url = fastAPIURL;
 
     //post
-    const register = useCallback((formData : registerAnimeFormData) => {
+    const register = useCallback((animeData : registerAnimeFormData) => {
         const registerData : registerAnimeData = {
-            ...formData,
+            ...animeData,
             flag: 2 //waiting approval only
         }
+
+        const formData = new FormData();
+
+        Object.keys(registerData).forEach((key) => {
+            const value = (registerData as any)[key];
+            if (value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+        });
 
         axios.post(url + "/anime", registerData).then((res) => {
             setResponseData(res.data);
         })
+
+        // axios.post(url + "/anime", formData).then((res) => {
+        //     setResponseData(res.data);
+        // })
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移

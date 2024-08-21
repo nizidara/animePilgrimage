@@ -2,6 +2,7 @@ export type registerAnimeFormData = {
     title: string;
     kana: string;
     introduction?: string | null;
+    icon?: File | null;
 }
 
 export type editAnimeFormData = {
