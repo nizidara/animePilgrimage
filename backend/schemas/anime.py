@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-from typing import Optional
+from typing import Optional, List
+from fastapi import UploadFile, File, Form
 
 class AnimeBase(BaseModel):
     title: str
@@ -10,11 +11,33 @@ class AnimeBase(BaseModel):
 class AnimeCreate(AnimeBase):
     kana: str
     flag: int
+    icon: UploadFile
+    #icon: Optional[UploadFile]
+
+    @classmethod
+    def as_form(
+        cls,
+        title: str = Form(...),
+        introduction: Optional[str] = Form(""),
+        kana: str = Form(...),
+        flag: int = Form(...),
+        icon: UploadFile = File(),
+        #icon: Optional[UploadFile] = File(None),
+    ):
+        return cls(
+            title=title,
+            introduction=introduction,
+            kana=kana,
+            flag=flag,
+            icon=icon
+        )
 
     class Config:
         orm_mode = True
 
-class AnimeResponse(AnimeCreate):
+class AnimeResponse(AnimeBase):
+    kana: str
+    flag: int
     anime_id: int
     file_name: Optional[str] =""
 
