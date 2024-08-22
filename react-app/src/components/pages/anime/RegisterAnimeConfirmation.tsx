@@ -24,11 +24,6 @@ export const RegisterAnimeConfirmation: FC = memo(() =>{
             <h2>新規アニメ登録申請 内容確認</h2>
             <p>登録する内容をご確認ください。</p>
             <RegisterAnimeDetailDisplay title={registerAnimeFormData.title} kana={registerAnimeFormData.kana} introduction={registerAnimeFormData.introduction} icon={registerAnimeFormData.icon} />
-            {/* <div className="d-flex flex-wrap">
-                <div className="position-relative m-1">
-                    <Image src={URL.createObjectURL(animeIcon)} thumbnail width={200} height={200} />
-                </div>
-            </div> */}
 
             <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
