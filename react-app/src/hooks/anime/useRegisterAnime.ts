@@ -27,13 +27,9 @@ export const useRegisterAnime = () => {
             }
         });
 
-        axios.post(url + "/anime", registerData).then((res) => {
+        axios.post(url + "/anime", formData).then((res) => {
             setResponseData(res.data);
         })
-
-        // axios.post(url + "/anime", formData).then((res) => {
-        //     setResponseData(res.data);
-        // })
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移
