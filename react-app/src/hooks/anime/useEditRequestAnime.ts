@@ -12,9 +12,9 @@ export const useEditRequestAnime = () => {
     const url = fastAPIURL;
 
     //post
-    const edit = useCallback((formData : editAnimeFormData, animeId : number) => {
+    const edit = useCallback((animeData : editAnimeFormData, animeId : number) => {
         const editData : editAnimeData = {
-            ...formData,
+            ...animeData,
             anime_id: animeId,
             request_date: new Date().toISOString(),
             request_type: 0,    //edit request only
@@ -22,7 +22,20 @@ export const useEditRequestAnime = () => {
             user_id: null
         }
 
-        axios.post(url + "/anime/edit", editData).then((res) => {
+        const formData = new FormData();
+
+        Object.keys(editData).forEach((key) => {
+            const value = (editData as any)[key];
+            if (value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+        });
+
+        // axios.post(url + "/anime/edit", editData).then((res) => {
+        //     setResponseData(res.data);
+        // })
+
+        axios.post(url + "/anime/edit", formData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

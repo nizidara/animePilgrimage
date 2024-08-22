@@ -18,23 +18,26 @@ export const EditRequestAnime: FC = memo(() =>{
     const [formData, setFormData] = useState<editAnimeFormData>(initialFormData);
     const formRef = useRef<HTMLFormElement>(null);
 
+    console.log(formData)
+
     useEffect(() => {
         if(anime){
             const title = anime.title;
             const introduction = location.state.formData?.introduction || anime.introduction;
             const contents = location.state.formData?.contents || '';
-            setFormData({title, introduction, contents})
+            const icon = location.state.formData?.icon;
+            setFormData({title, introduction, contents, icon})
         }
         
     },[anime])
     
-    const send = useCallback((formData:editAnimeFormData, animeId:number) => navigate("/edit_anime/confirmation", {state: {formData, animeId}}), [navigate]);
+    const send = useCallback((formData:editAnimeFormData, animeId:number, currentIcon?:string | null) => navigate("/edit_anime/confirmation", {state: {formData, animeId, currentIcon}}), [navigate]);
 
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData, animeId);
+                send(formData, animeId, anime?.file_name);
             }
         }
     }
@@ -47,7 +50,7 @@ export const EditRequestAnime: FC = memo(() =>{
     return (
         <Container>
             <h2>作品修正リクエスト</h2>
-            <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
+            <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>
     )

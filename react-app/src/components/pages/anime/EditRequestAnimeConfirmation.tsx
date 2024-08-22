@@ -14,6 +14,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
 
     const editAnimeFormData = location.state.formData as editAnimeFormData;
     const animeId = location.state.animeId;
+    const currentIcon = location.state?.currentIcon;
 
     const back = useCallback((formData:editAnimeFormData, animeId:number) => navigate("/edit_anime", {state: {formData, animeId}}), [navigate]);
 
@@ -27,6 +28,8 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
                 title={editAnimeFormData.title} 
                 introduction={editAnimeFormData.introduction} 
                 contents={editAnimeFormData.contents} 
+                current_icon={currentIcon}
+                new_icon={editAnimeFormData.icon}
             />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>

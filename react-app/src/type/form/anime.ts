@@ -9,4 +9,5 @@ export type editAnimeFormData = {
     title: string;
     introduction?: string | null;
     contents: string;
+    icon?: File | null;
 }
