@@ -18,13 +18,7 @@ export const RegisterAnimeComplete: FC = memo(() =>{
             <p>新規アニメ作品の申請が完了しました。<br />
             承認され次第、聖地情報の登録が可能になります。</p>
             <RegisterAnimeDetailDisplay title={responseData.title} kana={responseData.kana} introduction={responseData.introduction} />
-            {responseData.file_name &&
-                <div className="d-flex flex-wrap">
-                    <div className="position-relative m-1">
-                        <Icon file_name={responseData.file_name} />
-                    </div>
-                </div>
-            }
+            {responseData.file_name && <Icon file_name={responseData.file_name} />}
 
             <div className="d-grid gap-2">
                 <Button variant="primary" onClick={onClickTop}>TOP</Button>

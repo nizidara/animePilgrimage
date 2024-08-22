@@ -1,7 +1,8 @@
 import React, { ChangeEvent, FC, memo, RefObject } from "react"
-import { Form, Image, OverlayTrigger, Tooltip } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 import { registerAnimeFormData } from "../../../type/form/anime";
-import { BsImage, BsXCircle } from "react-icons/bs";
+import { FileUploadIcon } from "../../atoms/FileUploadIcon";
+import { ImagePreview } from "../../molecules/ImagePreview";
 
 type FormProps = {
     onFormChange: (data: registerAnimeFormData) => void;
@@ -53,25 +54,11 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 <Form.Group className="mb-3" controlId="registerFormIcon">
                     <Form.Label>アイコン画像</Form.Label><br />
                     <Form.Label>
-                        <OverlayTrigger placement="bottom" overlay={<Tooltip id="media-uploat-tip">画像アップロード</Tooltip>}>
-                            <a className="img"><BsImage /></a>
-                        </OverlayTrigger>
+                        <FileUploadIcon />
                     </Form.Label>
                     <Form.Control type="file" name="icon" hidden onChange={handleFileChange} />
                 </Form.Group>
-                {formData.icon && (
-                    <div className="d-flex flex-wrap">
-                        <div className="position-relative m-1">
-                            <Image src={URL.createObjectURL(formData.icon)} thumbnail width={200} height={200} />
-                            <BsXCircle
-                                className="position-absolute top-0 start-100 translate-middle"
-                                size={24}
-                                onClick={handleRemoveIcon}
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </div>
-                    </div>
-                )}
+                {formData.icon && <ImagePreview image={formData.icon} handleRemoveIcon={handleRemoveIcon} />}
             </Form>
         </>
     )

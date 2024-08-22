@@ -1,7 +1,6 @@
 import React, { ChangeEvent, FC, memo, RefObject } from "react"
-import { Form, Image, OverlayTrigger, Tooltip } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 import { editAnimeFormData } from "../../../type/form/anime";
-import { BsImage, BsXCircle } from "react-icons/bs";
 import { Icon } from "../../atoms/Icon";
 import { ImagePreview } from "../../molecules/ImagePreview";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
@@ -55,7 +54,8 @@ export const EditAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setF
 
                 {anime_icon && 
                     <div>
-                        <p>現在のアイコン</p><Icon file_name={anime_icon} />
+                        <p>現在のアイコン</p>
+                        <Icon file_name={anime_icon} />
                     </div>
                 }
                 <Form.Group className="mb-3 mt-3" controlId="registerFormIcon">
@@ -65,9 +65,7 @@ export const EditAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     </Form.Label>
                     <Form.Control type="file" name="icon" hidden onChange={handleFileChange} />
                 </Form.Group>
-                {formData.icon && (
-                    <ImagePreview image={formData.icon} handleRemoveIcon={handleRemoveIcon} />
-                )}
+                {formData.icon && <ImagePreview image={formData.icon} handleRemoveIcon={handleRemoveIcon} />}
             </Form>
         </>
     )

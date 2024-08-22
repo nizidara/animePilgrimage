@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, memo, useState } from "react"
-import { Button, Col, Form, Image, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import { BsImage } from "react-icons/bs";
+import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { usePostComment } from "../../../hooks/comments/usePostComment";
+import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 
 type commentFormData = {
     placeId: string;
@@ -50,9 +50,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     <Col>
                         <Form.Group controlId="commentformPhoto" className="mb-3">
                             <Form.Label>
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip id="media-uploat-tip">画像アップロード</Tooltip>}>
-                                    <a className="img"><BsImage /></a>
-                                </OverlayTrigger>
+                                <FileUploadIcon />
                             </Form.Label>
                             <Form.Control type="file" accept="image/*" multiple hidden onChange={onImageChange} />
                         </Form.Group>

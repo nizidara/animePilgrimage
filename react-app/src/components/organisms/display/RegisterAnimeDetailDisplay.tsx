@@ -1,6 +1,6 @@
 import { FC, memo } from "react"
 import { registerAnimeFormData } from "../../../type/form/anime";
-import { Image } from "react-bootstrap";
+import { ImagePreview } from "../../molecules/ImagePreview";
 
 
 export const RegisterAnimeDetailDisplay: FC<registerAnimeFormData> = memo((props) => {
@@ -12,13 +12,7 @@ export const RegisterAnimeDetailDisplay: FC<registerAnimeFormData> = memo((props
             <p>作品名:{title}</p>
             <p>作品名（カナ）：{kana}</p>
             <p>作品紹介：{introduction}</p>
-            {icon &&
-                <div className="d-flex flex-wrap">
-                    <div className="position-relative m-1">
-                        <Image src={URL.createObjectURL(icon)} thumbnail width={200} height={200} />
-                    </div>
-                </div>
-            }
+            {icon && <ImagePreview image={icon} />}
         </>
     )
 });

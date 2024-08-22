@@ -2,7 +2,7 @@ import { FC, memo } from "react"
 import { responseEditAnimeData } from "../../../type/api/anime";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { Icon } from "../../atoms/Icon";
-import { Image } from "react-bootstrap";
+import { ImagePreview } from "../../molecules/ImagePreview";
 
 type editDetailData = Omit<responseEditAnimeData, 'anime_id' | 'request_date' | 'request_type' | 'request_anime_id'> & {
     anime_id?: number | null;
@@ -26,18 +26,17 @@ export const EditAnimeDetailDisplay: FC<editDetailData> = memo((props) => {
             <p>修正理由：{contents}</p>
             {current_icon && 
                     <div>
-                        <p>現在のアイコン</p><Icon file_name={current_icon} />
+                        <p>現在のアイコン</p>
+                        <Icon file_name={current_icon} />
                     </div>
             }
                     
             {new_icon && (
-                    <div className="d-flex flex-wrap">
-                        <div className="position-relative m-1">
-                            <p>修正用アイコン</p>
-                            <Image src={URL.createObjectURL(new_icon)} thumbnail width={200} height={200} />
-                        </div>
-                    </div>
-                )}
+                <div>
+                    <p className="mt-2">修正用アイコン</p>
+                    <ImagePreview image={new_icon} />
+                </div>
+            )}
         </>
     )
 });
