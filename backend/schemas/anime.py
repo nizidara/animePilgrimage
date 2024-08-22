@@ -11,8 +11,8 @@ class AnimeBase(BaseModel):
 class AnimeCreate(AnimeBase):
     kana: str
     flag: int
-    icon: UploadFile
-    #icon: Optional[UploadFile]
+    #icon: UploadFile                   #check for SwaggerUI
+    icon: Optional[UploadFile]
 
     @classmethod
     def as_form(
@@ -21,8 +21,8 @@ class AnimeCreate(AnimeBase):
         introduction: Optional[str] = Form(""),
         kana: str = Form(...),
         flag: int = Form(...),
-        icon: UploadFile = File(),
-        #icon: Optional[UploadFile] = File(None),
+        #icon: UploadFile = File(),     #check for SwaggerUI
+        icon: Optional[UploadFile] = File(None),
     ):
         return cls(
             title=title,
