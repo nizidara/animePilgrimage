@@ -47,7 +47,7 @@ async def edit_anime_list(db: AsyncSession = Depends(get_db)):
 
 # create anime info request
 @router.post("", response_model=anime_schema.AnimeResponse)
-async def create_anime(anime_body: anime_schema.AnimeCreate, db: AsyncSession = Depends(get_db)):
+async def create_anime(anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await anime_crud.request_anime(db, anime_body)
 
 # create edit anime info request

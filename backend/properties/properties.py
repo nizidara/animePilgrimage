@@ -23,4 +23,5 @@ origins = [
 local_base_path = os.getenv('LOCAL_BASE_PATH')
 
 base_path = Path(local_base_path)  # base path
-upload_directory = Path("uploads/images/")  # directory path
+upload_directory = Path("uploads/images/")  # image directory path
+icon_directory = Path("uploads/icons/") # icon directory path

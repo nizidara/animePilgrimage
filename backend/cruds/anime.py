@@ -6,16 +6,37 @@ import models.anime as anime_model
 import models.user as user_model
 import schemas.anime as anime_schema
 
+from properties.properties import base_path, icon_directory
+
 # create anime
 async def request_anime(
         db: AsyncSession, anime_request: anime_schema.AnimeCreate
 ) -> anime_schema.AnimeResponse:
-    anime = anime_model.Anime(**anime_request.model_dump())
+    
+    anime_dict = anime_request.model_dump()
+    anime_dict.pop("icon", None)    # delete icon field
+
+    # save icon
+    file_name = None
+    if anime_request.icon:
+        image_filename = f"{uuid.uuid4()}_{anime_request.icon.filename}"
+        image_path = base_path / icon_directory / image_filename
+        file_name = icon_directory / image_filename
+
+        with image_path.open("wb") as buffer:
+            buffer.write(await anime_request.icon.read())
+
+    anime = anime_model.Anime(**anime_dict, file_name=file_name)
     db.add(anime)
     db.commit()
     db.refresh(anime)
 
-    return anime
+    response = None
+    if anime:
+        response_dict = anime.__dict__
+        response = anime_schema.AnimeResponse(**response_dict)
+
+    return response
 
 # create edit request anime
 async def edit_request_anime(
