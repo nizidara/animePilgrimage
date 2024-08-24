@@ -52,7 +52,7 @@ async def create_anime(anime_body: anime_schema.AnimeCreate = Depends(anime_sche
 
 # create edit anime info request
 @router.post("/edit", response_model=anime_schema.AnimeEditResponse)
-async def create_anime_edit(edit_body: anime_schema.AnimeEditCreate, db: AsyncSession = Depends(get_db)):
+async def create_anime_edit(edit_body: anime_schema.AnimeEditCreate = Depends(anime_schema.AnimeEditCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await anime_crud.edit_request_anime(db, edit_body)
 
 # update anime.flag = 1 for display or anime.flag = 0 for not display

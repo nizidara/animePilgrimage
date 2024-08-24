@@ -45,12 +45,23 @@ async def edit_request_anime(
     
     # convert str -> UUID
     anime_edit_dict = anime_edit.model_dump()
+    anime_edit_dict.pop("icon", None)    # delete icon field
     user_name = None
     if anime_edit.user_id is not None:
         anime_edit_dict['user_id'] = uuid.UUID(anime_edit.user_id).bytes
         user = db.query(user_model.User).filter(user_model.User.user_id == anime_edit_dict['user_id']).first()
         user_name = user.user_name
-    edit = anime_model.RequestAnime(**anime_edit_dict)
+    # save icon
+    file_name = None
+    if anime_edit.icon:
+        image_filename = f"{uuid.uuid4()}_{anime_edit.icon.filename}"
+        image_path = base_path / icon_directory / image_filename
+        file_name = icon_directory / image_filename
+
+        with image_path.open("wb") as buffer:
+            buffer.write(await anime_edit.icon.read())
+
+    edit = anime_model.RequestAnime(**anime_edit_dict, file_name=file_name)
 
     # create
     db.add(edit)
