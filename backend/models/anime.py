@@ -31,6 +31,7 @@ class RequestAnime(Base):
     request_date = Column(DateTime, nullable=False, default='1970-01-01 00:00:00')
     request_type = Column(SmallInteger, nullable=False, default=0, comment='0:edit request, 1:delete request')
     title = Column(String(50), nullable=False, comment='Sequels are dealt with same title but side stories are dealt with other title')
+    file_name = Column(String(200), nullable=True, comment='anime icon file name')
     introduction = Column(String(200), nullable=True)
     contents = Column(Text, nullable=False)
     user_id = Column(VARBINARY(16), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='FK')
