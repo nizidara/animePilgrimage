@@ -1,11 +1,12 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
 import { SearchMap } from "../map/SearchMap";
-import { Form } from "react-bootstrap";
+import { Button, Form, Image } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
+import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 
 type FormProps = {
     onFormChange: (data: registerPlaceFormData) => void;
@@ -39,6 +40,33 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 ...prevData,
                 latitude: latitude,
                 longitude: longitude,
+            };
+            onFormChange(updatedData);
+            return updatedData;
+        });
+    };
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && formData.images.length + e.target.files.length <= 10) {
+            const updatedImages = [...formData.images, ...Array.from(e.target.files)]
+            setFormData(prevData => {
+                const updatedData = {
+                    ...prevData,
+                    images: updatedImages,
+                };
+                onFormChange(updatedData);
+                return updatedData;
+            });
+        }
+    };
+
+    const handleRemoveImage = (index: number) => {
+        const updatedImages = [...formData.images];
+        updatedImages.splice(index, 1);
+        setFormData(prevData => {
+            const updatedData = {
+                ...prevData,
+                images: updatedImages,
             };
             onFormChange(updatedData);
             return updatedData;
@@ -87,6 +115,22 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
                 </Form.Group>
+
+                <Form.Group className="mb-3" controlId="registerPlaceFormImages">
+                    <Form.Label>アニメ画像（最大10枚）</Form.Label><br />
+                    <Form.Label>
+                        <FileUploadIcon />
+                    </Form.Label>
+                    <Form.Control type="file" accept="image/*" multiple hidden onChange={handleImageChange} />
+                </Form.Group>
+                <div className="d-flex flex-wrap">
+                    {formData.images.map((image, index) => (
+                        <div key={index} className="position-relative m-1">
+                            <Image src={URL.createObjectURL(image)} thumbnail width={200} height={200} />
+                            <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={() => handleRemoveImage(index)}>×</Button>
+                        </div>
+                    ))}
+                </div>
             </Form>
         </>
     )

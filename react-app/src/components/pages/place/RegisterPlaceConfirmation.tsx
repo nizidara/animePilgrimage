@@ -39,6 +39,7 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
                 anime_title={animeTitle}
                 region_name={regionName}
                 anime_icon={anime?.file_name}
+                images={registerPlaceFormData.images}
             />
 
             <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} />

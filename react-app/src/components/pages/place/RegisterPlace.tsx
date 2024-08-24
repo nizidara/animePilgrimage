@@ -11,7 +11,7 @@ export const RegisterPlace: FC = memo(() =>{
 
     //formData
     const animeId =location.state?.animeId || "";
-    const initialFormData = location.state?.formData || { name: '', anime_id: animeId, region_id: '', comment: '', latitude: 0,  longitude: 0};
+    const initialFormData = location.state?.formData || { name: '', anime_id: animeId, region_id: '', comment: '', latitude: 0, longitude: 0, images: []};
     const [formData, setFormData] = useState<registerPlaceFormData>(initialFormData);
     const formRef = useRef<HTMLFormElement>(null);
 

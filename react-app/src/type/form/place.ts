@@ -5,6 +5,7 @@ export type registerPlaceFormData = {
     longitude: number;
     comment?: string | null;
     region_id: number;
+    images: File[];
 }
 
 export type editPlaceFormData = {
