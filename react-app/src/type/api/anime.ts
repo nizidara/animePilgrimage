@@ -23,4 +23,5 @@ export type responseAnimeData = {
 export type responseEditAnimeData = editAnimeData & {
     request_anime_id: number;
     user_name?: string | null;
+    file_name?: string | null
 }

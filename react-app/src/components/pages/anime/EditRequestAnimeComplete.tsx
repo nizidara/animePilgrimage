@@ -3,6 +3,7 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseEditAnimeData } from "../../../type/api/anime";
 import { EditAnimeDetailDisplay } from "../../organisms/display/EditAnimeDetailDisplay";
+import { Icon } from "../../atoms/Icon";
 
 export const EditRequestAnimeComplete: FC = memo(() =>{
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ export const EditRequestAnimeComplete: FC = memo(() =>{
                 request_anime_id={responseData.request_anime_id}
                 request_date={responseData.request_date}
             />
+            {responseData.file_name && <Icon file_name={responseData.file_name} />}
 
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">

@@ -18,8 +18,6 @@ export const EditRequestAnime: FC = memo(() =>{
     const [formData, setFormData] = useState<editAnimeFormData>(initialFormData);
     const formRef = useRef<HTMLFormElement>(null);
 
-    console.log(formData)
-
     useEffect(() => {
         if(anime){
             const title = anime.title;
