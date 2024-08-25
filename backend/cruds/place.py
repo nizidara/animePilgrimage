@@ -9,6 +9,9 @@ import models.place as place_model
 import models.user as user_model
 import models.photo as photo_model
 import schemas.place as place_schema
+import schemas.photo as photo_schema
+
+from properties.properties import base_path, anime_photo_directory
 
 # create place
 async def create_place(
@@ -20,6 +23,7 @@ async def create_place(
     edited_user_name = None
     if place_body:
         place_dict = place_body.model_dump()
+        place_dict.pop("images", None)    # delete image field
         if place_body.created_user_id is not None:
             place_dict['created_user_id'] = uuid.UUID(place_body.created_user_id).bytes
             created_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['created_user_id']).first()
@@ -30,10 +34,37 @@ async def create_place(
             edited_user_name = edited_user.user_name
     place = place_model.Place(**place_dict)
 
+    # save images
+    saved_image_paths = []
+    if place_body.images:
+        # upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
+
+        for image in place_body.images:
+            image_filename = f"{uuid.uuid4()}_{image.filename}"
+            image_path = base_path / anime_photo_directory / image_filename
+            save_path = anime_photo_directory / image_filename
+
+            with image_path.open("wb") as buffer:
+                buffer.write(await image.read())
+            
+            saved_image_paths.append(str(save_path))
+
     # create
     db.add(place)
     db.commit()
     db.refresh(place)
+
+    # create photo DB
+    file_names_response = []
+    if place_body.images:
+        photo_body = photo_schema.AnimePhotoCreate(
+            file_names=saved_image_paths,
+            place_id=str(uuid.UUID(bytes=place.place_id)),
+            user_id=place_body.created_user_id,
+        )
+        photo_response = await photo_crud.create_anime_photo(db=db, photo_body=photo_body)
+        for photo in photo_response:
+            file_names_response.append(photo.file_name)
 
     # convert UUID -> str
     response = None
@@ -44,7 +75,7 @@ async def create_place(
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=None, anime_icon=place.anime.file_name)
+        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=None, anime_icon=place.anime.file_name, file_names=file_names_response)
 
     return response
 
@@ -108,18 +139,21 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
     query = query.order_by(place_model.Place.name)
 
     results = db.execute(query).all()
+
+    # get anime photo file names
+    # now not to get file names in placeList
     
     # convert UUID -> str
     response_list = []
     if results:
-        for place, created_user_name, edited_user_name, _, file_name in results:
+        for place, created_user_name, edited_user_name, _, place_icon in results:
             response_dict = place.__dict__
             response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
             if place.created_user_id is not None:
                 response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
             if place.edited_user_id is not None:
                 response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-            response_list.append(place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=file_name, anime_icon=place.anime.file_name))
+            response_list.append(place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=[]))
 
     return response_list
 
@@ -138,18 +172,25 @@ async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.Plac
         outerjoin(photo_model.PlaceIcon, place_model.Place.place_id == photo_model.PlaceIcon.place_id).\
         outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id).\
         filter(place_model.Place.place_id == place_id_bytes).first()
-
+    
     # convert UUID -> str
     response = None
+    file_names_response = []
     if result:
-        place, created_user_name, edited_user_name, _, file_name = result
+        place, created_user_name, edited_user_name, _, place_icon = result
         response_dict = place.__dict__
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=file_name, anime_icon=place.anime.file_name)
+
+        # get anime photo file names
+        anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
+        if anime_photo_response:
+            file_names_response = [item.file_name for item in anime_photo_response]
+
+        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=file_names_response)
 
     return response
 
@@ -204,11 +245,17 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
         filter(place_model.Place.place_id == place_id_bytes).first()
     
     response = None
+    file_names_response = []
     if result:
-        place, created_user_name, edited_user_name, _, file_name = result
+        place, created_user_name, edited_user_name, _, place_icon = result
         place.flag = flag
         db.commit()
         db.refresh(place)
+
+        # get anime photo file names
+        anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
+        if anime_photo_response:
+            file_names_response = [item.file_name for item in anime_photo_response]
 
         # convert UUID -> str
         response_dict = place.__dict__
@@ -217,7 +264,7 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=file_name, anime_icon=place.anime.file_name)
+        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=file_names_response)
 
     return response
 
@@ -237,7 +284,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
             place, created_user_name = result
             region_name = None
             anime_title = None
-            file_name = None
+            file_names_response = []
 
             # edit
             if request.request_type == 0:
@@ -262,7 +309,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 anime_icon = place.anime.file_name
                 icon = await photo_crud.get_place_icon(db=db, place_id=str(uuid.UUID(bytes=place.place_id)))
                 if icon is not None:
-                    file_name = icon.file_name
+                    place_icon = icon.file_name
 
             # delete
             elif request.request_type == 1:
@@ -284,7 +331,13 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
                 edited_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['edited_user_id']).bytes).first()
                 edited_user_name = edited_user.user_name
-            response = place_schema.PlaceResponse(**response_dict, region_name=region_name, anime_title=anime_title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=file_name, anime_icon=anime_icon)
+
+            # get anime photo file names
+            anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=response_dict['place_id'])
+            if anime_photo_response:
+                file_names_response = [item.file_name for item in anime_photo_response]
+            
+            response = place_schema.PlaceResponse(**response_dict, region_name=region_name, anime_title=anime_title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=anime_icon, file_names=file_names_response)
 
     return response
 
@@ -313,7 +366,8 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
         # convert UUID -> str
         created_user_name = None
         edited_user_name = None
-        file_name = None
+        place_icon = None
+        file_names_response = []
         
         response_dict = place.__dict__
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
@@ -325,10 +379,17 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
             edited_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['edited_user_id']).bytes).first()
             edited_user_name = edited_user.user_name
+
+        # get place icon
         icon = await photo_crud.get_place_icon(db=db, place_id=place_id)
         if icon is not None:
-            file_name = icon.file_name
-        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, file_name=file_name, anime_icon=place.anime.file_name)
+            place_icon = icon.file_name
+        # get anime photo file names
+        anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
+        if anime_photo_response:
+            file_names_response = [item.file_name for item in anime_photo_response]
+
+        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=file_names_response)
 
     return response
 
