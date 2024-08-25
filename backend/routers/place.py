@@ -45,7 +45,7 @@ async def request_place_list(db: AsyncSession = Depends(get_db)):
 
 # create place info
 @router.post("", response_model=place_schema.PlaceResponse)
-async def create_place(place_body: place_schema.PlaceCreate, db: AsyncSession = Depends(get_db)):
+async def create_place(place_body: place_schema.PlaceCreate = Depends(place_schema.PlaceCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await place_crud.create_place(db=db, place_body=place_body)
 
 # create edit or delete place info request

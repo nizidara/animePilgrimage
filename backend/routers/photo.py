@@ -44,7 +44,7 @@ async def get_real_photo_list(place_id: str, comment_id: str = None, db: AsyncSe
     return photos
 
 # post anime photo
-@router.post("/anime", response_model=photo_schema.AnimePhotoResponse)
+@router.post("/anime", response_model=List[photo_schema.AnimePhotoResponse])
 async def create_anime_photos(photo_body: photo_schema.AnimePhotoCreate, db: AsyncSession = Depends(get_db)):
     return await photo_crud.create_anime_photo(db=db, photo_body=photo_body)
 

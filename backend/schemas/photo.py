@@ -31,14 +31,17 @@ class PlacePhotoIconResponse(PlacePhotoIconCreate):
         orm_mode = True
 
 class AnimePhotoCreate(BaseModel):
-    file_name: str
+    file_names: List[str]
     place_id: str
     user_id: Optional[str] = None
 
     class Config:
         orm_mode = True
 
-class AnimePhotoResponse(AnimePhotoCreate):
+class AnimePhotoResponse(BaseModel):
+    file_name: str
+    place_id: str
+    user_id: Optional[str] = None
     anime_photo_id: str
     place_name: str
     anime_id: int

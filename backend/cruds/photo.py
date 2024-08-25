@@ -12,44 +12,53 @@ import schemas.photo as photo_schema
 # create anime photo
 async def create_anime_photo(
         db: AsyncSession, photo_body: photo_schema.AnimePhotoCreate
-) -> photo_schema.AnimePhotoResponse:
+) -> List[photo_schema.AnimePhotoResponse]:
     
     # convert str -> UUID
     place_name, anime_id, anime_title, user_name = None, None, None, None
+    place_id_uuid, user_id_uuid = None, None
+    response_list = []
     if photo_body:
-        photo_dict = photo_body.model_dump()
-        photo_dict['place_id'] = uuid.UUID(photo_body.place_id).bytes
-        place = db.query(place_model.Place).filter(place_model.Place.place_id == photo_dict['place_id']).first()
+        place_id_uuid = uuid.UUID(photo_body.place_id).bytes
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_uuid).first()
         place_name = place.name
         anime_id = place.anime_id
         anime_title = place.anime.title
         if photo_body.user_id is not None:
-            photo_dict['user_id'] = uuid.UUID(photo_body.user_id).bytes
-            user = db.query(user_model.User).filter(user_model.User.user_id == photo_dict['user_id']).first()
+            user_id_uuid = uuid.UUID(photo_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == user_id_uuid).first()
             user_name = user.user_name
-    photo = photo_model.AnimePhoto(**photo_dict)
 
-    # create
-    db.add(photo)
-    db.commit()
-    db.refresh(photo)
+        for file_name in photo_body.file_names:
+            photo_dict = {
+                "file_name" : file_name,
+                "place_id": place_id_uuid,
+                "user_id": user_id_uuid
+            }
 
-    # convert UUID -> str
-    response = None
-    if photo:
-        response_dict = photo.__dict__
-        response_dict['anime_photo_id'] = str(uuid.UUID(bytes=photo.anime_photo_id))
-        response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
-        if photo.user_id is not None:
-            response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
-        response = photo_schema.AnimePhotoResponse(**response_dict, place_name=place_name, anime_id=anime_id, anime_title=anime_title, user_name=user_name)
+            photo = photo_model.AnimePhoto(**photo_dict)
 
-    return response
+            # create
+            db.add(photo)
+            db.commit()
+            db.refresh(photo)
+
+            # convert UUID -> str
+            if photo:
+                response_dict = photo.__dict__
+                response_dict['anime_photo_id'] = str(uuid.UUID(bytes=photo.anime_photo_id))
+                response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
+                if photo.user_id is not None:
+                    response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
+                response = photo_schema.AnimePhotoResponse(**response_dict, place_name=place_name, anime_id=anime_id, anime_title=anime_title, user_name=user_name)
+                response_list.append(response)
+
+    return response_list
 
 # create real photo
 async def create_real_photo(
         db: AsyncSession, photo_body: photo_schema.RealPhotoCreate
-) -> photo_schema.RealPhotoResponse:
+) -> List[photo_schema.RealPhotoResponse]:
     
     # convert str -> UUID
     place_name, anime_id, anime_title, user_name = None, None, None, None
