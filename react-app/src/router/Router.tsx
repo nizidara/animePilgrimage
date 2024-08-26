@@ -25,6 +25,7 @@ import { RegisterPlaceConfirmation } from "../components/pages/place/RegisterPla
 import { RegisterPlaceComplete } from "../components/pages/place/RegisterPlaceComplete";
 import { PlaceList } from "../components/pages/place/PlaceList";
 import { PlaceDetail } from "../components/pages/place/PlaceDetail";
+import { AddPhotoPlace } from "../components/pages/place/AddPhotoPlace";
 import { EditRequestPlace } from "../components/pages/place/EditRequestPlace";
 import { EditRequestPlaceConfirmation } from "../components/pages/place/EditRequestPlaceConfirmation";
 import { EditRequestPlaceComplete } from "../components/pages/place/EditRequestPlaceComplete";
@@ -45,8 +46,6 @@ import { Contact } from "../components/pages/other/Contact";
 import { ContactResult } from "../components/pages/other/ContactResult";
 import { Guide } from "../components/pages/other/Guide";
 import { Page404 } from "../components/pages/other/Page404";
-
-import { Map } from "../components/pages/Map";
 
 //admin
 import { AdminTop } from "../components/pages/admin/AdminTop";
@@ -81,6 +80,7 @@ export const Router: FC = memo(() => {
                 <Route path="/register_place/complete" element={<FullLayout><RegisterPlaceComplete /></FullLayout>} />
                 <Route path="/place/list" element={<FullLayout><PlaceList /></FullLayout>} />
                 <Route path="/place" element={<FullLayout><PlaceDetail /></FullLayout>} />
+                <Route path="/place/photo" element={<FullLayout><AddPhotoPlace /></FullLayout>} />
                 <Route path="/edit_place" element={<FullLayout><EditRequestPlace /></FullLayout>} />
                 <Route path="/edit_place/confirmation" element={<FullLayout><EditRequestPlaceConfirmation /></FullLayout>} />
                 <Route path="/edit_place/complete" element={<FullLayout><EditRequestPlaceComplete /></FullLayout>} />
@@ -110,7 +110,6 @@ export const Router: FC = memo(() => {
                 <Route path="/admin/contact/list" element={<FullLayout><AdminContactList /></FullLayout>} />
                 <Route path="/admin/contact" element={<FullLayout><AdminContactDetail /></FullLayout>} />
                 
-                <Route path="/map" element={<FullLayout><Map /></FullLayout>} />
                 <Route path="*" element={<HeaderLayout><Page404 /></HeaderLayout>} />
             </Routes>
         </BrowserRouter>

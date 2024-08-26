@@ -15,16 +15,17 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
 
     const editPlaceFormData = location.state.formData as editPlaceFormData;
     const placeId = location.state.placeId as string;
+    const animePhoto = location.state.animePhoto as string[];
     const { anime } = useGetAnimeDetail(editPlaceFormData.anime_id);
     const { region } = useGetRegionDetail(editPlaceFormData.region_id);
     const animeTitle = anime ? anime.title : "";
     const regionName = region ? region.region_name : "";
 
-    const back = useCallback((formData:editPlaceFormData, placeId:string) => navigate("/edit_place", {state: {formData, placeId}}), [navigate]);
+    const back = useCallback((formData:editPlaceFormData, placeId:string, animePhoto:string[]) => navigate("/edit_place", {state: {formData, placeId, animePhoto}}), [navigate]);
     const {edit} = useEditRequestPlace();
 
-    const onClickBack = () => back(editPlaceFormData, placeId);
-    const onClickSend = () => edit(editPlaceFormData, placeId);
+    const onClickBack = () => back(editPlaceFormData, placeId, animePhoto);
+    const onClickSend = () => edit(editPlaceFormData, placeId, animePhoto);
 
     return (
         <Container>
@@ -40,6 +41,7 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
                 comment={editPlaceFormData.comment} 
                 contents={editPlaceFormData.contents}
                 anime_icon={anime?.file_name}
+                file_names={animePhoto}
             />
 
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />

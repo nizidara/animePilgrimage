@@ -16,6 +16,7 @@ export const EditRequestPlace: FC = memo(() =>{
     //formData
     const initialFormData = location.state?.formData || {name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, contents:''};
     const [formData, setFormData] = useState<editPlaceFormData>(initialFormData);
+    const [animePhoto, setAnimePhoto] = useState<string[]>([]);
     const formRef = useRef<HTMLFormElement>(null);
 
     //animeTitle
@@ -30,7 +31,9 @@ export const EditRequestPlace: FC = memo(() =>{
             const longitude = location.state.formData?.longitude || place.longitude;
             const comment = location.state.formData?.comment || place.comment;
             const contents = location.state.formData?.contents || '';
+            const fileNames = location.state.animePhoto || place.file_names;
             setFormData({name, anime_id, region_id, comment, latitude, longitude, contents})
+            setAnimePhoto(fileNames)
         }
     },[place])
 
@@ -39,13 +42,13 @@ export const EditRequestPlace: FC = memo(() =>{
     };
 
     //page transition
-    const send = useCallback((formData:editPlaceFormData, placeId:string) => navigate("/edit_place/confirmation", {state: {formData, placeId}}), [navigate]);
+    const send = useCallback((formData:editPlaceFormData, placeId:string, animePhoto:string[]) => navigate("/edit_place/confirmation", {state: {formData, placeId, animePhoto}}), [navigate]);
 
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData, placeId);
+                send(formData, placeId, animePhoto);
             }
         }
     }
@@ -54,9 +57,8 @@ export const EditRequestPlace: FC = memo(() =>{
     return (
         <Container>
             <h2>聖地修正リクエスト</h2>
-            {formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} formRef={formRef} />}
+            {formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} animePhoto={animePhoto} formRef={formRef} />}
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
-            <p>作中画像追加Form？</p>
         </Container>
     )
 });

@@ -9,6 +9,7 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
     const location = useLocation();
 
     const responseData = location.state.responseData as responseRequestPlaceData;
+    const animePhoto = location.state.animePhoto as string[];
 
     const onClickPlace = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
     const onClickTop = useCallback(() => navigate("/"), [navigate]);
@@ -28,6 +29,7 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
                 request_date={responseData.request_date}
                 request_place_id={responseData.request_place_id}
                 anime_icon={responseData.anime_icon}
+                file_names={animePhoto}
             />
             <center>
             <Button variant="primary" onClick={() => onClickPlace(responseData.place_id)} className="mt-2">聖地情報に戻る</Button><br />
