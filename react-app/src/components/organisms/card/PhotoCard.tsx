@@ -6,11 +6,12 @@ import { Photo } from "../../atoms/Photo";
 import '../../../thema/photo/PhotoListStyles.css';
 
 type PhotoListData = {
-    realPhotoList: responseRealPhotoData[];
+    realPhotoList?: responseRealPhotoData[];
+    file_names?: string[];
 }
 
 export const PhotoCard: FC<PhotoListData> = memo((props) => {
-    const {realPhotoList} = props;
+    const {realPhotoList, file_names} = props;
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showArrows, setShowArrows] = useState(false);
@@ -31,7 +32,7 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
             const { scrollWidth, clientWidth } = scrollRef.current;
             setShowArrows(scrollWidth > clientWidth);
         }
-    }, [realPhotoList]);
+    }, [realPhotoList, file_names]);
     
     return (
         <>
@@ -46,9 +47,14 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
             )} */}
             <div className="photo-list-container flex-grow-1" ref={scrollRef}>
                 <ListGroup horizontal className="photo-list">
-                    {realPhotoList.map(photo => (
+                    {realPhotoList && realPhotoList.map(photo => (
                         <ListGroup.Item key={photo.real_photo_id}>
                             <Photo file_name={photo.file_name} />
+                        </ListGroup.Item>
+                    ))}
+                    {file_names && file_names.map((file_name, index) => (
+                        <ListGroup.Item key={index}>
+                            <Photo file_name={file_name} />
                         </ListGroup.Item>
                     ))}
                 </ListGroup>

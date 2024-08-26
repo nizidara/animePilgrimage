@@ -56,6 +56,7 @@ export const EditRequestPlace: FC = memo(() =>{
             <h2>聖地修正リクエスト</h2>
             {formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} formRef={formRef} />}
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
+            <p>作中画像追加Form？</p>
         </Container>
     )
 });

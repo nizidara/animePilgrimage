@@ -23,8 +23,8 @@ export const AdminPlaceDetail: FC = memo(() =>{
     useEffect(() => {
         if(place){
             //要修正？(image対応)
-            const {name, comment, latitude, longitude, anime_id, region_id, images} = place;
-            setFormData({name, anime_id, region_id, comment, latitude, longitude, images})
+            const {name, comment, latitude, longitude, anime_id, region_id, file_names} = place;
+            setFormData({name, anime_id, region_id, comment, latitude, longitude, images:[]})
         }
     },[place])
 

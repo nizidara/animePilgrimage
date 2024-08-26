@@ -27,12 +27,13 @@ export const RegisterPlaceComplete: FC = memo(() =>{
                 longitude={responseData.longitude}
                 comment={responseData.comment} 
                 anime_icon={responseData.anime_icon}
+                file_names={responseData.file_names}
             />
 
             <center>
-            <Button variant="primary" onClick={onClickRegisterPlace} className="mt-2">続けて聖地を登録</Button><br />
-            <Button variant="primary" onClick={onClickAnime} className="mt-2">アニメ情報</Button><br />
-            <Button variant="primary" onClick={onClickPlace} className="mt-2">聖地情報</Button>
+                <Button variant="primary" onClick={onClickRegisterPlace} className="mt-2">続けて聖地を登録</Button><br />
+                <Button variant="primary" onClick={onClickAnime} className="mt-2">アニメ情報</Button><br />
+                <Button variant="primary" onClick={onClickPlace} className="mt-2">聖地情報</Button>
             </center>
             
         </Container>

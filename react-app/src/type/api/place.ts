@@ -19,7 +19,7 @@ export type photoData = {
     src: string;
 }
 
-export type responsePlaceData = registerPlaceData & {
+export type responsePlaceData = Omit<registerPlaceData, 'images'> & {
     place_id: string;
     region_name: string;
     anime_title: string;
@@ -27,6 +27,7 @@ export type responsePlaceData = registerPlaceData & {
     edited_user_name?: string | null;
     file_name?: string | null;
     anime_icon?: string | null;
+    file_names: string[];
 }
 
 export type responseRequestPlaceData = requestPlaceData & {

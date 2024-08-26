@@ -14,6 +14,7 @@ import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
+import { Photo } from "../../atoms/Photo";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -63,7 +64,7 @@ export const PlaceDetail: FC = memo(() =>{
                 place_id={place.place_id}
                 file_name={place.file_name}
             />
-            
+            <PhotoCard file_names={place.file_names} />
             <PhotoCard realPhotoList={realPhotoList} />
             
             <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />

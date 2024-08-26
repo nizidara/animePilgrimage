@@ -5,19 +5,21 @@ import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { ImagePreview } from "../../molecules/ImagePreview";
+import { PhotoCard } from "../card/PhotoCard";
 
 //要修正？(images対応)
-type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'images'> & {
+type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'file_names'> & {
     anime_id?: number | null;
     region_id?: number | null;
     place_id?: string | null;
     flag?: number | null;
     anime_icon?: string | null;
     images?: File[] | null;
+    file_names? : string[] | null;
 }
 
 export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((props) => {
-    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag, anime_icon, images} = props;
+    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag, anime_icon, images, file_names} = props;
 
     const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id, anime_icon})
     
@@ -32,6 +34,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
             <div className="d-flex flex-wrap">
                 {images && images.map((image, index) => <ImagePreview key={index} image={image} />)}
             </div>
+            {file_names && <PhotoCard file_names={file_names} />}
         </>
     )
 });
