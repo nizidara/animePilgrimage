@@ -1,5 +1,5 @@
 import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
@@ -43,7 +43,8 @@ export const EditRequestPlace: FC = memo(() =>{
 
     //page transition
     const send = useCallback((formData:editPlaceFormData, placeId:string, animePhoto:string[]) => navigate("/edit_place/confirmation", {state: {formData, placeId, animePhoto}}), [navigate]);
-
+    
+    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate]);
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
@@ -56,7 +57,11 @@ export const EditRequestPlace: FC = memo(() =>{
     
     return (
         <Container>
-            <h2>聖地修正リクエスト</h2>
+            
+            <div className="d-flex justify-content-between mt-2">
+                <h2>聖地修正リクエスト</h2>
+                <Button variant="outline-success" className="float-right" onClick={onClickAddPhoto}>写真追加はこちら</Button>
+            </div>
             {formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} animePhoto={animePhoto} formRef={formRef} />}
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>

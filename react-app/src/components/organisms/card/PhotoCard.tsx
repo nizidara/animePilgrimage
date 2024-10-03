@@ -1,17 +1,18 @@
 import { FC, MouseEvent, memo, useEffect, useRef, useState } from "react"
 import { Button, Image, ListGroup, Modal, Overlay, Popover } from "react-bootstrap";
 import { photoData } from "../../../type/api/place";
-import { responseRealPhotoData } from "../../../type/api/photo";
+import { responseAnimePhotoData, responseRealPhotoData } from "../../../type/api/photo";
 import { Photo } from "../../atoms/Photo";
 import '../../../thema/photo/PhotoListStyles.css';
 
 type PhotoListData = {
     realPhotoList?: responseRealPhotoData[];
+    animePhotoList?: responseAnimePhotoData[];
     file_names?: string[];
 }
 
 export const PhotoCard: FC<PhotoListData> = memo((props) => {
-    const {realPhotoList, file_names} = props;
+    const {realPhotoList, animePhotoList, file_names} = props;
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showArrows, setShowArrows] = useState(false);
@@ -32,7 +33,7 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
             const { scrollWidth, clientWidth } = scrollRef.current;
             setShowArrows(scrollWidth > clientWidth);
         }
-    }, [realPhotoList, file_names]);
+    }, [realPhotoList, animePhotoList, file_names]);
     
     return (
         <>
@@ -49,6 +50,11 @@ export const PhotoCard: FC<PhotoListData> = memo((props) => {
                 <ListGroup horizontal className="photo-list">
                     {realPhotoList && realPhotoList.map(photo => (
                         <ListGroup.Item key={photo.real_photo_id}>
+                            <Photo file_name={photo.file_name} />
+                        </ListGroup.Item>
+                    ))}
+                    {animePhotoList && animePhotoList.map(photo => (
+                        <ListGroup.Item key={photo.anime_photo_id}>
                             <Photo file_name={photo.file_name} />
                         </ListGroup.Item>
                     ))}

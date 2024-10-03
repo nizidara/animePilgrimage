@@ -15,6 +15,7 @@ import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
 import { Photo } from "../../atoms/Photo";
+import { responseRealPhotoData } from "../../../type/api/photo";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -22,6 +23,7 @@ export const PlaceDetail: FC = memo(() =>{
 
     const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate]);
     const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate]);
+    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate]);
 
     const query = useQuery();
     const placeId = query.get('place_id');
@@ -64,8 +66,16 @@ export const PlaceDetail: FC = memo(() =>{
                 place_id={place.place_id}
                 file_name={place.file_name}
             />
-            <PhotoCard file_names={place.file_names} />
-            <PhotoCard realPhotoList={realPhotoList} />
+            <div className="position-relative m-1">
+                <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
+                <PhotoCard file_names={place.file_names} />
+                {realPhotoList.length > 0 &&
+                    <div>
+                        <p>現地写真（みんなの投稿）</p>
+                        <PhotoCard realPhotoList={realPhotoList} />
+                    </div>
+                }
+            </div>
             
             <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
             <ListGroup>
