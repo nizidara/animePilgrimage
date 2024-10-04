@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
 import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
+import { usePostAnimePhoto } from "../../../hooks/photos/usePostAnimePhoto";
 
 type FormProps = {
     formData: File[];
@@ -9,6 +10,8 @@ type FormProps = {
 };
 
 export const AddAnimePhotoForm: FC<FormProps> = memo(({formData, setFormData, formRef}) => {
+    const {post} = usePostAnimePhoto();
+
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {
             const updatedImages = [...formData, ...Array.from(e.target.files)];

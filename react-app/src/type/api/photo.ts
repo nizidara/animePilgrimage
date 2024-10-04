@@ -11,29 +11,29 @@ export type responsePlaceIconData = {
     place_name: string;
 }
 
-export type registerAnimePhotoData = {
-    file_name: string;
+export type postAnimePhotoData = {
     place_id: string;
     user_id?: string | null;
 }
 
-export type registerRealPhotoData = {
-    file_name: string;
+export type postRealPhotoData = {
     place_id: string;
     user_id?: string | null;
     comment_id?: string | null;
 }
 
-export type responseAnimePhotoData = registerAnimePhotoData & {
+export type responseAnimePhotoData = postAnimePhotoData & {
     anime_photo_id: string;
+    file_name: string;
     place_name: string;
     anime_id: number;
     anime_title: string;
     user_name?: string | null;
 }
 
-export type responseRealPhotoData = registerRealPhotoData & {
+export type responseRealPhotoData = postRealPhotoData & {
     real_photo_id: string;
+    file_name: string;
     place_name: string;
     anime_id: number;
     anime_title: string;

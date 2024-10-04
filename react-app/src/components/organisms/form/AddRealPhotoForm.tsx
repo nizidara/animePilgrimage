@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
 import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
+import { usePostRealPhoto } from "../../../hooks/photos/usePostRealPhoto";
 
 type FormProps = {
     formData: File[];
@@ -10,7 +11,7 @@ type FormProps = {
 
 export const AddRealPhotoForm: FC<FormProps> = memo(({formData, setFormData, formRef}) => {
 
-    //const {post} = useAddReadPhoto();
+    const {post} = usePostRealPhoto();
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {
