@@ -11,8 +11,6 @@ import models.photo as photo_model
 import schemas.place as place_schema
 import schemas.photo as photo_schema
 
-from properties.properties import base_path, anime_photo_directory
-
 # create place
 async def create_place(
         db: AsyncSession, place_body: place_schema.PlaceCreate
@@ -34,31 +32,16 @@ async def create_place(
             edited_user_name = edited_user.user_name
     place = place_model.Place(**place_dict)
 
-    # save images
-    saved_image_paths = []
-    if place_body.images:
-        # upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
-
-        for image in place_body.images:
-            image_filename = f"{uuid.uuid4()}_{image.filename}"
-            image_path = base_path / anime_photo_directory / image_filename
-            save_path = anime_photo_directory / image_filename
-
-            with image_path.open("wb") as buffer:
-                buffer.write(await image.read())
-            
-            saved_image_paths.append(str(save_path))
-
     # create
     db.add(place)
     db.commit()
     db.refresh(place)
 
-    # create photo DB
+    # save images
     file_names_response = []
     if place_body.images:
         photo_body = photo_schema.AnimePhotoCreate(
-            file_names=saved_image_paths,
+            images=place_body.images,
             place_id=str(uuid.UUID(bytes=place.place_id)),
             user_id=place_body.created_user_id,
         )

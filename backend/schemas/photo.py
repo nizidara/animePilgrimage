@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from typing import Optional, List
+from fastapi import UploadFile, File, Form
 
 class AnimeIconCreate(BaseModel):
     file_name: Optional[str] = ""
@@ -31,10 +32,23 @@ class PlacePhotoIconResponse(PlacePhotoIconCreate):
         orm_mode = True
 
 class AnimePhotoCreate(BaseModel):
-    file_names: List[str]
+    images: List[UploadFile]
     place_id: str
     user_id: Optional[str] = None
 
+    @classmethod
+    def as_form(
+        cls,
+        images: List[UploadFile] = File([]),
+        place_id: str = Form(...),
+        user_id: Optional[str] = Form(None),
+    ):
+        return cls(
+            images=images,
+            place_id=place_id,
+            user_id=user_id
+        )
+    
     class Config:
         orm_mode = True
 
@@ -52,10 +66,25 @@ class AnimePhotoResponse(BaseModel):
         orm_mode = True
 
 class RealPhotoCreate(BaseModel):
-    file_names: List[str]
+    images: List[UploadFile]
     place_id: str
     comment_id: Optional[str] = None
     user_id: Optional[str] = None
+
+    @classmethod
+    def as_form(
+        cls,
+        images: List[UploadFile] = File([]),
+        place_id: str = Form(...),
+        comment_id: Optional[str] = Form(None),
+        user_id: Optional[str] = Form(None),
+    ):
+        return cls(
+            images=images,
+            place_id=place_id,
+            comment_id=comment_id,
+            user_id=user_id
+        )
     
     class Config:
         orm_mode = True
