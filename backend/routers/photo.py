@@ -45,12 +45,12 @@ async def get_real_photo_list(place_id: str, comment_id: str = None, db: AsyncSe
 
 # post anime photo
 @router.post("/anime", response_model=List[photo_schema.AnimePhotoResponse])
-async def create_anime_photos(photo_body: photo_schema.AnimePhotoCreate, db: AsyncSession = Depends(get_db)):
+async def create_anime_photos(photo_body: photo_schema.AnimePhotoCreate = Depends(photo_schema.AnimePhotoCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await photo_crud.create_anime_photo(db=db, photo_body=photo_body)
 
 # post real photo
 @router.post("/reals", response_model=List[photo_schema.RealPhotoResponse])
-async def create_real_photos(photo_body: photo_schema.RealPhotoCreate, db: AsyncSession = Depends(get_db)):
+async def create_real_photos(photo_body: photo_schema.RealPhotoCreate = Depends(photo_schema.RealPhotoCreate.as_form), db: AsyncSession = Depends(get_db)):
     return await photo_crud.create_real_photo(db=db, photo_body=photo_body)
 
 # update anime icon

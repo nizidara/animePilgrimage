@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Tuple, Optional
 import uuid
-from pathlib import Path
 
 import models.comment as comment_model
 import models.user as user_model
@@ -11,8 +10,6 @@ import models.photo as photo_model
 import schemas.comment as comment_schema
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
-
-from properties.properties import base_path, upload_directory
 
 # create comment
 async def create_comment(
@@ -33,31 +30,16 @@ async def create_comment(
             user_name = user.user_name
     comment = comment_model.Comment(**comment_dict)
 
-    # save images
-    saved_image_paths = []
-    if comment_body.images:
-        # upload_directory.mkdir(parents=True, exist_ok=True)  # mkdir
-
-        for image in comment_body.images:
-            image_filename = f"{uuid.uuid4()}_{image.filename}"
-            image_path = base_path / upload_directory / image_filename
-            save_path = upload_directory / image_filename
-
-            with image_path.open("wb") as buffer:
-                buffer.write(await image.read())
-            
-            saved_image_paths.append(str(save_path))
-
     # create comment DB
     db.add(comment)
     db.commit()
     db.refresh(comment)
 
-    # create photo DB
+    # save images
     file_names_response = []
     if comment_body.images:
         photo_body = photo_schema.RealPhotoCreate(
-            file_names=saved_image_paths,
+            images=comment_body.images,
             place_id=comment_body.place_id,
             comment_id=str(uuid.UUID(bytes=comment.comment_id)),
             user_id=comment_body.user_id,

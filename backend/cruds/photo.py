@@ -9,34 +9,46 @@ import models.place as place_model
 import models.user as user_model
 import schemas.photo as photo_schema
 
+from properties.properties import base_path, upload_directory, anime_photo_directory
+
 # create anime photo
 async def create_anime_photo(
         db: AsyncSession, photo_body: photo_schema.AnimePhotoCreate
 ) -> List[photo_schema.AnimePhotoResponse]:
     
-    # convert str -> UUID
+    
     place_name, anime_id, anime_title, user_name = None, None, None, None
-    place_id_uuid, user_id_uuid = None, None
     response_list = []
     if photo_body:
-        place_id_uuid = uuid.UUID(photo_body.place_id).bytes
-        place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_uuid).first()
+        # convert str -> UUID
+        photo_dict = photo_body.model_dump()
+        photo_dict.pop("images", None)    # delete image field
+        photo_dict['place_id'] = uuid.UUID(photo_body.place_id).bytes
+
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == photo_dict['place_id']).first()
         place_name = place.name
         anime_id = place.anime_id
         anime_title = place.anime.title
         if photo_body.user_id is not None:
-            user_id_uuid = uuid.UUID(photo_body.user_id).bytes
-            user = db.query(user_model.User).filter(user_model.User.user_id == user_id_uuid).first()
+            photo_dict['user_id'] = uuid.UUID(photo_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == photo_dict['user_id']).first()
             user_name = user.user_name
 
-        for file_name in photo_body.file_names:
-            photo_dict = {
-                "file_name" : file_name,
-                "place_id": place_id_uuid,
-                "user_id": user_id_uuid
-            }
+        # save images
+        saved_image_paths = []
+        for image in photo_body.images:
+            image_filename = f"{uuid.uuid4()}_{image.filename}"
+            image_path = base_path / anime_photo_directory / image_filename
+            save_path = anime_photo_directory / image_filename
 
-            photo = photo_model.AnimePhoto(**photo_dict)
+            with image_path.open("wb") as buffer:
+                buffer.write(await image.read())
+            
+            saved_image_paths.append(str(save_path))
+
+        # create photo DB
+        for file_name in saved_image_paths:
+            photo = photo_model.AnimePhoto(**photo_dict, file_name=file_name)
 
             # create
             db.add(photo)
@@ -62,30 +74,39 @@ async def create_real_photo(
     
     # convert str -> UUID
     place_name, anime_id, anime_title, user_name = None, None, None, None
-    place_id_uuid, user_id_uuid, comment_id_uuid = None, None, None
     response_list = []
     if photo_body:
-        place_id_uuid = uuid.UUID(photo_body.place_id).bytes
-        place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_uuid).first()
+        # convert str -> UUID
+        photo_dict = photo_body.model_dump()
+        photo_dict.pop("images", None)    # delete image field
+        photo_dict['place_id'] = uuid.UUID(photo_body.place_id).bytes
+        
+        place = db.query(place_model.Place).filter(place_model.Place.place_id == photo_dict['place_id']).first()
         place_name = place.name
         anime_id = place.anime_id
         anime_title = place.anime.title
         if photo_body.user_id is not None:
-            user_id_uuid = uuid.UUID(photo_body.user_id).bytes
-            user = db.query(user_model.User).filter(user_model.User.user_id == user_id_uuid).first()
+            photo_dict['user_id'] = uuid.UUID(photo_body.user_id).bytes
+            user = db.query(user_model.User).filter(user_model.User.user_id == photo_dict['user_id']).first()
             user_name = user.user_name
         if photo_body.comment_id is not None:
-            comment_id_uuid = uuid.UUID(photo_body.comment_id).bytes
+            photo_dict['comment_id'] = uuid.UUID(photo_body.comment_id).bytes
 
-        for file_name in photo_body.file_names:
-            photo_dict = {
-                "file_name" : file_name,
-                "comment_id": comment_id_uuid,
-                "place_id": place_id_uuid,
-                "user_id": user_id_uuid
-            }
+        # save images
+        saved_image_paths = []
+        for image in photo_body.images:
+            image_filename = f"{uuid.uuid4()}_{image.filename}"
+            image_path = base_path / upload_directory / image_filename
+            save_path = upload_directory / image_filename
 
-            photo = photo_model.RealPhoto(**photo_dict)
+            with image_path.open("wb") as buffer:
+                buffer.write(await image.read())
+            
+            saved_image_paths.append(str(save_path))
+
+        # create photo DB
+        for file_name in saved_image_paths:
+            photo = photo_model.RealPhoto(**photo_dict, file_name=file_name)
 
             # create
             db.add(photo)
