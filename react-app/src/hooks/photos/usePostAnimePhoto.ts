@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { postAnimePhotoData, responseAnimePhotoData } from "../../type/api/photo";
 
-//post comment
+//post AnimePhoto
 export const usePostAnimePhoto = () => {
-    const [responseData, setResponseData] = useState<responseAnimePhotoData | null>(null);
+    const [responseData, setResponseData] = useState<responseAnimePhotoData[] | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
 
@@ -44,7 +44,8 @@ export const usePostAnimePhoto = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation(`/place/photo`, {state: responseData.place_id})
+            const placeId = responseData[0].place_id;
+            navigation("/place/photo", {state: {placeId}});
         }
     }, [responseData, navigation])
 

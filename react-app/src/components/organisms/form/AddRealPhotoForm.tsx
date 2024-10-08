@@ -4,12 +4,14 @@ import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostRealPhoto } from "../../../hooks/photos/usePostRealPhoto";
 
 type FormProps = {
+    placeId: string;
     formData: File[];
     setFormData: React.Dispatch<React.SetStateAction<File[]>>;
     formRef: RefObject<HTMLFormElement>;
+    onRealPhotoPosted: () => void;
 };
 
-export const AddRealPhotoForm: FC<FormProps> = memo(({formData, setFormData, formRef}) => {
+export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onRealPhotoPosted}) => {
 
     const {post} = usePostRealPhoto();
 
@@ -33,7 +35,7 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({formData, setFormData, for
     };
 
     const onClickSend = () => {
-        // post(formData, placeId, onImagePosted);
+        post(placeId, formData, onRealPhotoPosted);
         setFormData([]);
     };
 

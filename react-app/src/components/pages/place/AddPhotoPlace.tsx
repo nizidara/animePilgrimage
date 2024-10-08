@@ -13,8 +13,8 @@ export const AddPhotoPlace: FC = memo(() =>{
     const location = useLocation();
 
     const placeId = location.state.placeId;
-    const { animePhotoList } = useGetAnimePhotoList(placeId);
-    const { realPhotoList } = useGetRealPhotoList(placeId);
+    const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
+    const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
@@ -37,11 +37,11 @@ export const AddPhotoPlace: FC = memo(() =>{
             
             <p>作中写真</p>
             <PhotoCard animePhotoList={animePhotoList} />
-            <AddAnimePhotoForm formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} />
+            <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} />
 
             <p>現地写真（みんなの投稿）</p>
             <PhotoCard realPhotoList={realPhotoList} />
-            <AddRealPhotoForm formData={realImage} setFormData={setRealImage} formRef={realImageRef} />
+            <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} />
             
         </Container>
     )

@@ -4,12 +4,14 @@ import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostAnimePhoto } from "../../../hooks/photos/usePostAnimePhoto";
 
 type FormProps = {
+    placeId: string;
     formData: File[];
     setFormData: React.Dispatch<React.SetStateAction<File[]>>;
     formRef: RefObject<HTMLFormElement>;
+    onAnimePhotoPosted: () => void;
 };
 
-export const AddAnimePhotoForm: FC<FormProps> = memo(({formData, setFormData, formRef}) => {
+export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onAnimePhotoPosted}) => {
     const {post} = usePostAnimePhoto();
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +34,7 @@ export const AddAnimePhotoForm: FC<FormProps> = memo(({formData, setFormData, fo
     };
 
     const onClickSend = () => {
-        // post(formData, placeId, onImagePosted);
+        post(placeId, formData, onAnimePhotoPosted);
         setFormData([]);
     };
     

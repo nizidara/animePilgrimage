@@ -4,24 +4,28 @@ import { fastAPIURL } from "../../properties/properties";
 import { responseAnimePhotoData } from "../../type/api/photo";
 
 export const useGetAnimePhotoList = (place_id: string | null) => {
-  const [animePhotoList, setAnimePhotoList] = useState<responseAnimePhotoData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const url = fastAPIURL;
+    const [animePhotoList, setAnimePhotoList] = useState<responseAnimePhotoData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const url = fastAPIURL;
 
-  useEffect(() => {
-    if(place_id){
-        axios.get(url + "/photos/anime/list/" + place_id)
-        .then(response => {
-            setAnimePhotoList(response.data);
-            setLoading(false);
-        })
-        .catch(error => {
-            setError(error.message);
-            setLoading(false);
-        });
-    }
-  }, [place_id]);
+    const fetchAnimePhotos = () => {
+        if(place_id){
+            axios.get(url + "/photos/anime/list/" + place_id)
+            .then(response => {
+                setAnimePhotoList(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                setError(error.message);
+                setLoading(false);
+            });
+        }
+    };
 
-  return { animePhotoList, loading, error };
+    useEffect(() => {
+        fetchAnimePhotos();
+    }, [place_id])
+
+  return { animePhotoList, loading, error, fetchAnimePhotos };
 };

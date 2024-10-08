@@ -2,12 +2,11 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
-import { postCommentData, responseCommentData } from "../../type/api/comment";
-import { postRealPhotoData } from "../../type/api/photo";
+import { postRealPhotoData, responseRealPhotoData } from "../../type/api/photo";
 
-//post comment
+//post realPhoto
 export const usePostRealPhoto = () => {
-    const [responseData, setResponseData] = useState<responseCommentData | null>(null);
+    const [responseData, setResponseData] = useState<responseRealPhotoData[] | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
 
@@ -46,7 +45,8 @@ export const usePostRealPhoto = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation(`/place/photo`, {state: responseData.place_id})
+            const placeId = responseData[0].place_id;
+            navigation("/place/photo", {state: {placeId}});
         }
     }, [responseData, navigation])
 
