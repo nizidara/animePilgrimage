@@ -17,6 +17,7 @@ class PlaceCreate(PlaceBase):
     created_user_id: Optional[str] = None
     edited_user_id: Optional[str] = None
     images: List[UploadFile]
+    icon_index: Optional[int] = None
 
     @classmethod
     def as_form(
@@ -31,6 +32,7 @@ class PlaceCreate(PlaceBase):
         created_user_id: Optional[str] = Form(None),
         edited_user_id: Optional[str] = Form(None),
         images: List[UploadFile] = File([]),
+        icon_index: Optional[int] = Form(None),
     ):
         return cls(
             anime_id=anime_id,
@@ -42,7 +44,8 @@ class PlaceCreate(PlaceBase):
             region_id=region_id,
             created_user_id=created_user_id,
             edited_user_id=edited_user_id,
-            images=images
+            images=images,
+            icon_index=icon_index
         )
 
     class Config:

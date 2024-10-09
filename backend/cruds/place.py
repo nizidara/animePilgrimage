@@ -22,6 +22,7 @@ async def create_place(
     if place_body:
         place_dict = place_body.model_dump()
         place_dict.pop("images", None)    # delete image field
+        place_dict.pop("icon_index", None)
         if place_body.created_user_id is not None:
             place_dict['created_user_id'] = uuid.UUID(place_body.created_user_id).bytes
             created_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['created_user_id']).first()
@@ -39,6 +40,7 @@ async def create_place(
 
     # save images
     file_names_response = []
+    icon_file_name_response = None
     if place_body.images:
         photo_body = photo_schema.AnimePhotoCreate(
             images=place_body.images,
@@ -49,6 +51,18 @@ async def create_place(
         for photo in photo_response:
             file_names_response.append(photo.file_name)
 
+        # create icon
+        if place_body.icon_index:
+            if photo_response[place_body.icon_index].anime_photo_id:
+                place_icon_body = photo_schema.PlacePhotoIconCreate(
+                    anime_photo_id=photo_response[place_body.icon_index].anime_photo_id,
+                    place_id=photo_response[place_body.icon_index].place_id,
+                )
+                icon_response = await photo_crud.update_place_icon(db=db, place_icon_body=place_icon_body)
+                icon_file_name_response = icon_response.file_name
+
+
+
     # convert UUID -> str
     response = None
     if place:
@@ -58,7 +72,7 @@ async def create_place(
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=None, anime_icon=place.anime.file_name, file_names=file_names_response)
+        response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=icon_file_name_response, anime_icon=place.anime.file_name, file_names=file_names_response)
 
     return response
 
