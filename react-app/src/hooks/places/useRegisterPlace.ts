@@ -33,10 +33,6 @@ export const useRegisterPlace = () => {
             formData.append('images', image);
         });
 
-        // axios.post(url + "/places", registerData).then((res) => {
-        //     setResponseData(res.data);
-        // })
-
         axios.post(url + "/places", formData).then((res) => {
             setResponseData(res.data);
         })

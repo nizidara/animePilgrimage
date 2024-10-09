@@ -26,7 +26,7 @@ export const AdminPlaceList: FC = memo(() =>{
                             anime_id={place.anime_id} 
                             place_id={place.place_id}
                             onClickDetail={onClickDetail}
-                            file_name={place.file_name}
+                            place_icon={place.place_icon}
                         />
                     </ListGroup.Item>
                 ))}

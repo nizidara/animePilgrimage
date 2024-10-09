@@ -52,7 +52,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
     return (
         <Container>
             <h2>聖地削除リクエスト</h2>
-            <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} file_name={place.file_name}/>
+            <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
             <br />
             <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
 

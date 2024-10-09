@@ -64,7 +64,7 @@ export const PlaceDetail: FC = memo(() =>{
                 comment={place.comment} 
                 anime_id={place.anime_id} 
                 place_id={place.place_id}
-                file_name={place.file_name}
+                place_icon={place.place_icon}
             />
             <div className="position-relative m-1">
                 <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>

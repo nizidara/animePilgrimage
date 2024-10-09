@@ -26,6 +26,7 @@ export const RegisterPlaceComplete: FC = memo(() =>{
                 latitude={responseData.latitude}
                 longitude={responseData.longitude}
                 comment={responseData.comment} 
+                place_icon={responseData.place_icon}
                 anime_icon={responseData.anime_icon}
                 file_names={responseData.file_names}
             />

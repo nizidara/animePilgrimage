@@ -33,7 +33,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
                 place_id={place.place_id}
                 latitude={place.latitude}
                 longitude={place.longitude}
-                file_name={place.file_name}
+                place_icon={place.place_icon}
                 contents={deletePlaceFormData.contents} 
                 anime_icon={place.anime_icon}
             />

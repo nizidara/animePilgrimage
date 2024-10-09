@@ -21,10 +21,10 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
     useEffect(() => {
         // 画像が追加され、かつアイコンが未設定の場合に、最初の画像をアイコンに設定
-        if (formData.images.length > 0 && formData.iconIndex === null) {
-            setFormData(prevInputData => ({...prevInputData, iconIndex: 0}));
+        if (formData.images.length > 0 && formData.icon_index === null ) {
+            setFormData(prevInputData => ({...prevInputData, icon_index: 0}));
         }
-      }, [formData.images, formData.iconIndex]);
+      }, [formData.images, formData.icon_index]);
     
     //入力フォーム更新
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,11 +69,11 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
     const handleRemoveImage = (index: number) => {
         //画像削除時，選択アイコン変更
-        if (formData.iconIndex === index) {
-            setFormData(prevInputData => ({...prevInputData, iconIndex: null}));
-        } else if (formData.iconIndex !== undefined && formData.iconIndex !== null && formData.iconIndex > index) {
-            const updateIndex = formData.iconIndex - 1;
-            setFormData(prevInputData => ({...prevInputData, iconIndex: updateIndex}));
+        if (formData.icon_index === index) {
+            setFormData(prevInputData => ({...prevInputData, icon_index: null}));
+        } else if (formData.icon_index !== undefined && formData.icon_index !== null && formData.icon_index > index) {
+            const updateIndex = formData.icon_index - 1;
+            setFormData(prevInputData => ({...prevInputData, icon_index: updateIndex}));
         }
 
         const updatedImages = [...formData.images];
@@ -89,7 +89,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
     };
 
     const handleIconSelect = (index: number) => {
-        setFormData(prevInputData => ({...prevInputData, iconIndex: index}));
+        setFormData(prevInputData => ({...prevInputData, icon_index: index}));
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -151,7 +151,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                                     name="iconImage"
                                     id={`iconImage-${index}`}
                                     label="アイコンに設定"
-                                    checked={formData.iconIndex === index}
+                                    checked={formData.icon_index === index}
                                     onChange={() => handleIconSelect(index)}
                                 />
                             </div>
@@ -163,11 +163,11 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     ))}
                 </div>
                 
-                {formData.iconIndex !== undefined && formData.iconIndex !== null && (
+                {formData.icon_index !== undefined && formData.icon_index !== null && (
                     <div className="mt-3">
                         <p>アイコン画像</p>
                         <Image
-                            src={URL.createObjectURL(formData.images[formData.iconIndex])}
+                            src={URL.createObjectURL(formData.images[formData.icon_index])}
                             thumbnail
                             width={200}
                             height={200}
