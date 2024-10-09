@@ -19,7 +19,7 @@ export type photoData = {
     src: string;
 }
 
-export type responsePlaceData = Omit<registerPlaceData, 'images'> & {
+export type responsePlaceData = Omit<registerPlaceData, 'images' | 'iconIndex'> & {
     place_id: string;
     region_name: string;
     anime_title: string;

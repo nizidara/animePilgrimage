@@ -16,10 +16,11 @@ type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'an
     anime_icon?: string | null;
     images?: File[] | null;
     file_names? : string[] | null;
+    icon_index? : number | null;
 }
 
 export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((props) => {
-    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag, anime_icon, images, file_names} = props;
+    const {name, comment, latitude, longitude, anime_title, region_name, place_id, flag, anime_icon, images, file_names, icon_index} = props;
 
     const geojson = convertPlaceDataToGeoJson({longitude, latitude, name, comment, place_id, anime_icon})
     
@@ -35,6 +36,8 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
                 {images && images.map((image, index) => <ImagePreview key={index} image={image} />)}
             </div>
             {file_names && <PhotoCard file_names={file_names} />}
+            <p>アイコン画像</p>
+            {icon_index !== null && icon_index !== undefined && images ? <ImagePreview image={images[icon_index]} /> : <p>未設定</p>}
         </>
     )
 });

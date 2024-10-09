@@ -16,7 +16,7 @@ export const AddPhotoPlace: FC = memo(() =>{
     const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
     const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
 
-    const onClickBack = useCallback(() => navigate(-1), [navigate]);
+    const onClickBack = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     //formData
     const [animeImage, setAnimeImage] = useState<File[]>([]);
@@ -31,7 +31,7 @@ export const AddPhotoPlace: FC = memo(() =>{
                 <h2>写真追加フォーム</h2>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end align-items-center">
-                    <Button variant="outline-primary" onClick={onClickBack}>聖地情報に戻る</Button>
+                    <Button variant="outline-primary" onClick={() => onClickBack(placeId)}>聖地情報に戻る</Button>
                 </Col>
             </Row>
             

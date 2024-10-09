@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
+import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect, useState } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { Button, Form, Image } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -18,6 +18,13 @@ type FormProps = {
 export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef }) => {
     const { animeList } = useGetAnimeList();
     const { regionList } = useGetRegionList();
+
+    useEffect(() => {
+        // 画像が追加され、かつアイコンが未設定の場合に、最初の画像をアイコンに設定
+        if (formData.images.length > 0 && formData.iconIndex === null) {
+            setFormData(prevInputData => ({...prevInputData, iconIndex: 0}));
+        }
+      }, [formData.images, formData.iconIndex]);
     
     //入力フォーム更新
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +68,14 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
     };
 
     const handleRemoveImage = (index: number) => {
+        //画像削除時，選択アイコン変更
+        if (formData.iconIndex === index) {
+            setFormData(prevInputData => ({...prevInputData, iconIndex: null}));
+        } else if (formData.iconIndex !== undefined && formData.iconIndex !== null && formData.iconIndex > index) {
+            const updateIndex = formData.iconIndex - 1;
+            setFormData(prevInputData => ({...prevInputData, iconIndex: updateIndex}));
+        }
+
         const updatedImages = [...formData.images];
         updatedImages.splice(index, 1);
         setFormData(prevData => {
@@ -71,6 +86,10 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
             onFormChange(updatedData);
             return updatedData;
         });
+    };
+
+    const handleIconSelect = (index: number) => {
+        setFormData(prevInputData => ({...prevInputData, iconIndex: index}));
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -126,11 +145,35 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 <div className="d-flex flex-wrap">
                     {formData.images.map((image, index) => (
                         <div key={index} className="position-relative m-1">
-                            <Image src={URL.createObjectURL(image)} thumbnail width={200} height={200} />
-                            <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={() => handleRemoveImage(index)}>×</Button>
+                            <div className="position-absolute top-0 start-0">
+                                <Form.Check
+                                    type="radio"
+                                    name="iconImage"
+                                    id={`iconImage-${index}`}
+                                    label="アイコンに設定"
+                                    checked={formData.iconIndex === index}
+                                    onChange={() => handleIconSelect(index)}
+                                />
+                            </div>
+                            <div className="mt-4 position-relative">
+                                <Image src={URL.createObjectURL(image)} thumbnail width={200} height={200} />
+                                <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={() => handleRemoveImage(index)}>×</Button>
+                            </div>
                         </div>
                     ))}
                 </div>
+                
+                {formData.iconIndex !== undefined && formData.iconIndex !== null && (
+                    <div className="mt-3">
+                        <p>アイコン画像</p>
+                        <Image
+                            src={URL.createObjectURL(formData.images[formData.iconIndex])}
+                            thumbnail
+                            width={200}
+                            height={200}
+                        />
+                    </div>
+                )}
             </Form>
         </>
     )
