@@ -77,8 +77,13 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
                 </Form.Group>
-
-                <PhotoCard file_names={animePhoto} />
+                
+                {animePhoto.length !==0 && 
+                    <div>
+                        <p>作中写真（写真追加・アイコン修正は左上の<b>「写真追加はこちら」</b>ボタンからお願いします）</p>
+                        <PhotoCard file_names={animePhoto} />
+                    </div>
+                }
 
                 <Form.Group className="mb-3" controlId="editPlaceFormContents">
                     <Form.Label>リクエスト理由※（作品名の修正・画像削除はこちらに記載してください）</Form.Label>

@@ -22,6 +22,11 @@ export type postRealPhotoData = {
     comment_id?: string | null;
 }
 
+export type updatePlaceIconData = {
+    anime_photo_id: string;
+    place_id?: string | null;
+}
+
 export type responseAnimePhotoData = postAnimePhotoData & {
     anime_photo_id: string;
     file_name: string;

@@ -6,6 +6,8 @@ import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
+import { UpdatePlaceIconForm } from "../../organisms/form/UpdatePlaceIconForm";
+import { useGetPlaceIcon } from "../../../hooks/photos/useGetPlaceIcon";
 
 
 export const AddPhotoPlace: FC = memo(() =>{
@@ -15,12 +17,14 @@ export const AddPhotoPlace: FC = memo(() =>{
     const placeId = location.state.placeId;
     const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
     const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
+    const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
     const onClickBack = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     //formData
     const [animeImage, setAnimeImage] = useState<File[]>([]);
     const [realImage, setRealImage] = useState<File[]>([]);
+    const placeIconRef = useRef<HTMLFormElement>(null);
     const animeImageRef = useRef<HTMLFormElement>(null);
     const realImageRef = useRef<HTMLFormElement>(null);
     
@@ -35,6 +39,8 @@ export const AddPhotoPlace: FC = memo(() =>{
                 </Col>
             </Row>
             
+            <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} />
+
             <p>作中写真</p>
             <PhotoCard animePhotoList={animePhotoList} />
             <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} />
