@@ -139,6 +139,8 @@ async def approve_edit_request_anime(db: AsyncSession, request_anime_id: int) ->
         if anime:
             anime.title = edit.title
             anime.introduction = edit.introduction
+            anime.file_name = edit.file_name
+            
             # update
             db.commit()
             db.refresh(anime)
