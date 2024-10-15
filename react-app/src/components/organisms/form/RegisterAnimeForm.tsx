@@ -3,15 +3,17 @@ import { Form } from "react-bootstrap"
 import { registerAnimeFormData } from "../../../type/form/anime";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { ImagePreview } from "../../molecules/ImagePreview";
+import { Icon } from "../../atoms/Icon";
 
 type FormProps = {
     onFormChange: (data: registerAnimeFormData) => void;
     formData: registerAnimeFormData;
     setFormData: React.Dispatch<React.SetStateAction<registerAnimeFormData>>;
     formRef: RefObject<HTMLFormElement>;
+    anime_icon?: string | null;
 };
 
-export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef }) => {
+export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef, anime_icon }) => {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -50,6 +52,13 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     <Form.Control as="textarea" name="introduction" defaultValue={formData.introduction ? formData.introduction : ""} maxLength={200} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.introduction ? formData.introduction.length : 0} / 200 </Form.Text>
                 </Form.Group>
+
+                {anime_icon && 
+                    <div>
+                        <p>現在のアイコン</p>
+                        <Icon file_name={anime_icon} />
+                    </div>
+                }
 
                 <Form.Group className="mb-3" controlId="registerFormIcon">
                     <Form.Label>アイコン画像</Form.Label><br />

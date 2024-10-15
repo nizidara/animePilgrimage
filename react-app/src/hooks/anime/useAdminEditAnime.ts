@@ -12,13 +12,22 @@ export const useAdminEditAnime = () => {
     const url = fastAPIURL;
 
     //put
-    const edit = useCallback((formData : registerAnimeFormData, animeId: string) => {
+    const edit = useCallback((animeData : registerAnimeFormData, animeId: string) => {
         const registerData : registerAnimeData = {
-            ...formData,
+            ...animeData,
             flag: 1
         }
 
-        axios.put(url + `/anime/edit/admin/${animeId}`, registerData).then((res) => {
+        const formData = new FormData();
+
+        Object.keys(registerData).forEach((key) => {
+            const value = (registerData as any)[key];
+            if (value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+        });
+
+        axios.put(url + `/anime/edit/admin/${animeId}`, formData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

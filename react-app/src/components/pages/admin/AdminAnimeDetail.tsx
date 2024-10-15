@@ -14,6 +14,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     const query = useQuery();
     const animeId = query.get('anime_id');
     const { anime, loading, error } = useGetAnimeDetail(animeId);
+    const [icon, setIcon] = useState<string | null>(null);
 
     const {edit} = useAdminEditAnime();
     const onClickTop = useCallback(() => navigate("/admin/top"), [navigate]);
@@ -26,6 +27,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
         if(anime){
             const {title, kana, introduction} = anime;
             setFormData({title, kana, introduction})
+            anime.file_name && setIcon(anime.file_name);
         }
     },[anime])
 
@@ -57,7 +59,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     return (
         <Container>
             <h2>アニメ情報編集</h2>
-            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
+            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">
                 <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
