@@ -8,6 +8,7 @@ import { deletePlaceFormData } from "../../type/form/place";
 //post place request
 export const useDeleteRequestPlace = () => {
     const [responseData, setResponseData] = useState<responseRequestPlaceData | null>(null);
+    const [placeIcon, setPlaceIcon] = useState<string | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
 
@@ -21,6 +22,8 @@ export const useDeleteRequestPlace = () => {
             user_id: null   //now null only
         }
 
+        place.place_icon && setPlaceIcon(place.place_icon);
+
         axios.post(url + "/places/request", deleteData).then((res) => {
             setResponseData(res.data);
         })
@@ -29,7 +32,7 @@ export const useDeleteRequestPlace = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/delete_place/complete", {state: {responseData}})
+            navigation("/delete_place/complete", {state: {responseData, placeIcon}})
         }
     }, [responseData, navigation])
 

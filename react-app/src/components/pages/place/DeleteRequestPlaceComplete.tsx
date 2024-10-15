@@ -9,6 +9,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
     const location = useLocation();
 
     const responseData = location.state.responseData as responseRequestPlaceData;
+    const placeIcon = location.state.placeIcon as string;
     const placeId = responseData.place_id;
 
     const onClickPlace = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
@@ -26,6 +27,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
                 place_id={responseData.place_id}
                 latitude={responseData.latitude}
                 longitude={responseData.longitude}
+                place_icon={placeIcon}
                 contents={responseData.contents} 
                 request_place_id={responseData.request_place_id}
                 request_date={responseData.request_date}
