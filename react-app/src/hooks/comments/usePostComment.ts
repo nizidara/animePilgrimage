@@ -12,6 +12,10 @@ export const usePostComment = () => {
 
     //post
     const post = useCallback((comment: string, placeId : string, images: File[], onCommentPosted: () => void) => {
+        if(images.length != 0 && comment.length == 0){
+            comment = " ";
+        }
+
         const postData : postCommentData = {
             comment: comment,
             comment_date: new Date().toISOString(),

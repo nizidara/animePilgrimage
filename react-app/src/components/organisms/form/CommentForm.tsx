@@ -65,7 +65,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     </Col>
 
                     <Col xs="auto" className="d-flex justify-content-end align-items-center">
-                        <Button variant="primary" disabled={!comment} onClick={onClickSend} >投稿</Button>
+                        <Button variant="primary" disabled={!comment && selectedImages.length == 0} onClick={onClickSend} >投稿</Button>
                         {/* <Button variant="primary" disabled={!comment && selectedImages.length == 0} onClick={onClickSend} >投稿</Button> */}
                     </Col>
                 </Row>
