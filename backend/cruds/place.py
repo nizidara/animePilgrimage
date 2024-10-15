@@ -52,7 +52,7 @@ async def create_place(
             file_names_response.append(photo.file_name)
 
         # create icon
-        if place_body.icon_index:
+        if place_body.icon_index is not None:
             if photo_response[place_body.icon_index].anime_photo_id:
                 place_icon_body = photo_schema.PlacePhotoIconCreate(
                     anime_photo_id=photo_response[place_body.icon_index].anime_photo_id,
