@@ -63,7 +63,7 @@ async def update_anime_flag(anime_id: int, flag: int, db: AsyncSession = Depends
         raise HTTPException(status_code=404, detail="Anime not found")
     return anime
 
-# update anime.title or anime.introduction for edit function
+# update anime.title or anime.introduction or amine.icon for edit function
 @router.put("/edit/{request_anime_id}", response_model=anime_schema.AnimeResponse)
 async def approve_anime_edit(request_anime_id: int, db: AsyncSession = Depends(get_db)):
     anime = await anime_crud.approve_edit_request_anime(db, request_anime_id=request_anime_id)
@@ -73,7 +73,7 @@ async def approve_anime_edit(request_anime_id: int, db: AsyncSession = Depends(g
 
 # update anime info excluding anime_id 
 @router.put("/edit/admin/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def anime_edit_admin(anime_id: int, anime_body: anime_schema.AnimeCreate, db: AsyncSession = Depends(get_db)):
+async def anime_edit_admin(anime_id: int, anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
     anime = await anime_crud.update_anime(db, anime_id=anime_id, anime_body=anime_body)
     if anime is None:
         raise HTTPException(status_code=404, detail="Anime not found")

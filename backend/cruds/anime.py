@@ -154,10 +154,25 @@ async def approve_edit_request_anime(db: AsyncSession, request_anime_id: int) ->
 async def update_anime(db: AsyncSession, anime_id: int, anime_body: anime_schema.AnimeCreate) -> anime_schema.AnimeResponse:
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     if anime:
-        for key, value in anime_body.model_dump().items():
-            setattr(anime, key, value)
+        anime.title = anime_body.title
+        anime.kana = anime_body.kana
+        anime.introduction = anime_body.introduction
+        anime.flag = anime_body.flag
+        
+        # save new icon if not null
+        if anime_body.icon:
+            image_filename = f"{uuid.uuid4()}_{anime_body.icon.filename}"
+            image_path = base_path / icon_directory / image_filename
+            file_name = icon_directory / image_filename
+
+            with image_path.open("wb") as buffer:
+                buffer.write(await anime_body.icon.read())
+            
+            anime.file_name = file_name
+        
         db.commit()
         db.refresh(anime)
+
     return anime
 
 # delete anime
