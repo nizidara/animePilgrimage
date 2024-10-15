@@ -163,7 +163,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     ))}
                 </div>
                 
-                {formData.icon_index !== undefined && formData.icon_index !== null && (
+                {formData.icon_index !== null && (
                     <div className="mt-3">
                         <p>アイコン画像</p>
                         <Image

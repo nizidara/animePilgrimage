@@ -6,7 +6,7 @@ export type registerPlaceFormData = {
     comment?: string | null;
     region_id: number;
     images: File[];
-    icon_index?: number | null;
+    icon_index: number | null;
 }
 
 export type editPlaceFormData = {

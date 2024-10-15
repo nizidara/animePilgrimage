@@ -8,7 +8,6 @@ import { ImagePreview } from "../../molecules/ImagePreview";
 import { PhotoCard } from "../card/PhotoCard";
 import { Icon } from "../../atoms/Icon";
 
-//要修正？(images対応)
 type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'file_names'> & {
     anime_id?: number | null;
     region_id?: number | null;

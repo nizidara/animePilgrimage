@@ -17,14 +17,14 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const {edit} = useAdminEditPlace();
 
     //要修正？(image対応)
-    const [formData, setFormData] = useState<registerPlaceFormData>({name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, images:[]});
+    const [formData, setFormData] = useState<registerPlaceFormData>({name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, images:[], icon_index:null});
     const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if(place){
             //要修正？(image対応)
             const {name, comment, latitude, longitude, anime_id, region_id, file_names} = place;
-            setFormData({name, anime_id, region_id, comment, latitude, longitude, images:[]})
+            setFormData({name, anime_id, region_id, comment, latitude, longitude, images:[], icon_index:null})
         }
     },[place])
 
