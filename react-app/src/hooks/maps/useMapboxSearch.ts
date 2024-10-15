@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 type SearchResult = {
-  lat: number;
-  lng: number;
+    lat: number;
+    lng: number;
 }
 
 const useMapboxSearch = () => {
-  const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+    const [query, setQuery] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSearch = async (onSearch: (result: SearchResult) => void) => {
         setLoading(true);
@@ -33,7 +33,7 @@ const useMapboxSearch = () => {
         }
     };
 
-  return {
+    return {
         query,
         setQuery,
         handleSearch,
