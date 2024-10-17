@@ -36,3 +36,17 @@ async def get_user_detail(db: AsyncSession, user_id: str) -> user_schema.UserLog
         
     return response
 
+# login function
+async def login_user(db: AsyncSession, login_body:user_schema.UserLogin) -> user_schema.UserLoginResponse:
+    
+    # get
+    user = db.query(user_model.User).filter(user_model.User.login_id == login_body.login_id).first()
+
+    response = None
+    if user is not None:
+        response_dict = user.__dict__
+        user.user_id = str(uuid.UUID(bytes=user.user_id))
+        response = user_schema.UserLoginResponse(**response_dict, user_attribute_name=user.user_attribute.user_attribute_name if user.user_attribute else None)
+
+    return response
+
