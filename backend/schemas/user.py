@@ -20,4 +20,4 @@ class UserLoginResponse(UserBase):
     login_date:date
     flag: Optional[int] = 0
     user_attribute_id: Optional[int] = 0
-    user_attribute_name: Optional[str] = "non-member"
+    user_attribute_name: Optional[str] = "not user"
