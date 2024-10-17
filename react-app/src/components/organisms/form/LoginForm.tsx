@@ -1,7 +1,9 @@
 import { ChangeEvent, FC, FormEvent, memo, useCallback, useState } from "react"
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../../type/api/user";
+import { loginData } from "../../../type/api/user";
+import { useLoginUser } from "../../../hooks/users/useLoginUser";
+import { useAuth } from "../../../providers/AuthContext";
 
 
 export const LoginForm: FC = memo(() => {
@@ -10,11 +12,12 @@ export const LoginForm: FC = memo(() => {
     const [loginId, setLoginId] = useState('');
     const [password, setPassword] = useState('');
 
+    const {login} = useAuth();
+
     const onChangeLoginId = (e:ChangeEvent<HTMLInputElement>) => setLoginId(e.target.value);
     const onChangePassword = (e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
-    const login = useCallback((formData:login) => navigate("/", {state: {formData}}), [navigate]);
-    const formData = {loginId, password} as login;
+    const formData = {loginId, password} as loginData;
     const onClickLogin = (e: FormEvent) => {
         e.preventDefault();
         login(formData);
@@ -34,7 +37,7 @@ export const LoginForm: FC = memo(() => {
                 </Form.Group>
 
                 <div className="d-grid gap-2">
-                <Button variant="primary" type="submit">ログイン</Button>
+                    <Button variant="primary" type="submit">ログイン</Button>
                 </div>
             </Form>
             

@@ -55,6 +55,7 @@ import { AdminAnimeList } from "../components/pages/admin/AdminAnimeList";
 import { AdminAnimeDetail } from "../components/pages/admin/AdminAnimeDetail";
 import { AdminPlaceDetail } from "../components/pages/admin/AdminPlaceDetail";
 import { AdminPlaceList } from "../components/pages/admin/AdminPlaceList";
+import { PrivateRoute } from "./PrivateRoute";
 
 export const Router: FC = memo(() => {
     return(
@@ -102,13 +103,13 @@ export const Router: FC = memo(() => {
                 <Route path="/contact/result" element={<FullLayout><ContactResult /></FullLayout>} />
 
                 {/* admin */}
-                <Route path="/admin/top" element={<FullLayout><AdminTop /></FullLayout>} />
-                <Route path="/admin/anime/list" element={<FullLayout><AdminAnimeList /></FullLayout>} />
-                <Route path="/admin/anime" element={<FullLayout><AdminAnimeDetail /></FullLayout>} />
-                <Route path="/admin/place/list" element={<FullLayout><AdminPlaceList /></FullLayout>} />
-                <Route path="/admin/place" element={<FullLayout><AdminPlaceDetail /></FullLayout>} />
-                <Route path="/admin/contact/list" element={<FullLayout><AdminContactList /></FullLayout>} />
-                <Route path="/admin/contact" element={<FullLayout><AdminContactDetail /></FullLayout>} />
+                <Route path="/admin/top" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminTop /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/anime/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminAnimeList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/anime" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminAnimeDetail /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/place/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminPlaceList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/place" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminPlaceDetail /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/contact/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminContactList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/contact" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminContactDetail /></FullLayout></PrivateRoute>} />
                 
                 <Route path="*" element={<HeaderLayout><Page404 /></HeaderLayout>} />
             </Routes>
