@@ -26,3 +26,8 @@ base_path = Path(local_base_path)  # base path
 upload_directory = Path("uploads/images/")  # image directory path
 icon_directory = Path("uploads/icons/") # icon directory path
 anime_photo_directory = Path("uploads/anime/")  # anime image directory path
+
+# jwt setting
+secret_key = os.getenv('SECRET_KEY')
+algorithm = os.getenv('ALGORITHM')
+access_token_expire_minutes = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
