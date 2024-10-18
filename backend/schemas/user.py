@@ -21,3 +21,22 @@ class UserLoginResponse(UserBase):
     flag: Optional[int] = 0
     user_attribute_id: Optional[int] = 0
     user_attribute_name: Optional[str] = "not user"
+
+    class Config:
+        orm_mode = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: str
+
+    class Config:
+        orm_mode = True
+
+class CurrentUserResponse(BaseModel):
+    user_id: str
+    user_name: str
+    user_attribute_name: str
+
+    class Config:
+        orm_mode = True
