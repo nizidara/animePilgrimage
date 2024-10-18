@@ -11,7 +11,7 @@ export const useLoginUser = () => {
             password: password
         }
         try {
-            const response = await axios.post(url + '/users', formData);
+            const response = await axios.post(url + '/users/login', formData);
             return response.data; // 取得したトークンなどを返す
         } catch (error) {
             throw new Error('ログインに失敗しました');
