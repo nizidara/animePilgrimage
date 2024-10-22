@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLoginUser } from '../hooks/users/useLoginUser';
 import { useGetUser } from '../hooks/users/useGetUser';
-import { loginData, userData } from '../type/api/user';
+import { loginData, userData, userToken } from '../type/api/user';
+import { useNavigate } from 'react-router-dom';
 
 type AuthContextType = {
     user: userData | null;
@@ -15,19 +16,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<userData | null>(null);
     const { login } = useLoginUser(); 
     const { getUser } = useGetUser(); 
-    const mockUser:userData = {
-        id:1,
-        name:"hoge",
-        email:"fuga",
-        role:"admin",
-    };
 
     const handleLogin = async (loginData : loginData) => {
-        const token = await login(loginData.loginId, loginData.password);
-        localStorage.setItem('token', token);
-        const userData = await getUser(token);
+        const token:userToken = await login(loginData.loginId, loginData.password);
+        localStorage.setItem('token', token.access_token);
+        const userData = await getUser(token.access_token);
         setUser(userData);
-        // setUser(mockUser);
     };
 
     const logout = () => {

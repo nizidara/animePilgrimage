@@ -14,7 +14,7 @@ export const PrivateRoute: FC<PrivateRouteProps> = ({ children, roleRequired }) 
     return <Navigate to="/login" />;
   }
 
-  if (user.role !== roleRequired && user.role !== 'admin') {
+  if (user.user_attribute_name !== roleRequired && user.user_attribute_name !== 'admin') {
     return <Navigate to="/" />;
   }
 

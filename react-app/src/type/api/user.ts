@@ -4,8 +4,13 @@ export type loginData = {
 }
 
 export type userData = {
-    id: number;
-    name: string;
-    email: string;
-    role: 'guest' | 'free' | 'paid' | 'admin';
+    user_id: number;
+    user_name: string;
+    user_attribute_name: 'not member' | 'admin' | 'normal member' | 'special member' | 'others';
+}
+
+export type userToken = {
+    access_token: string;
+    token_type: string;
+    user_id: string;
 }

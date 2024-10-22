@@ -21,6 +21,7 @@ export const LoginForm: FC = memo(() => {
     const onClickLogin = (e: FormEvent) => {
         e.preventDefault();
         login(formData);
+        navigate("/");
     }
 
     return (
@@ -28,12 +29,12 @@ export const LoginForm: FC = memo(() => {
             <Form onSubmit={onClickLogin}>
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
-                    <Form.Control required value={loginId} onChange={onChangeLoginId} />
+                    <Form.Control required value={loginId} onChange={onChangeLoginId} autoComplete="username" />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="loginFormPassword">
                     <Form.Label>パスワード</Form.Label>
-                    <Form.Control required type="password" value={password} onChange={onChangePassword}/>
+                    <Form.Control required type="password" value={password} onChange={onChangePassword} autoComplete="current-password"/>
                 </Form.Group>
 
                 <div className="d-grid gap-2">
