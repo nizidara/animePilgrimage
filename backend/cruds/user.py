@@ -4,12 +4,12 @@ from fastapi import Depends, HTTPException, status
 from typing import List, Tuple
 import uuid
 from jose import JWTError, jwt
-from datetime import datetime, timedelta, timezone
 
 import models.user as user_model
 import schemas.user as user_schema
+import logic.auth as auth
 
-from properties.properties import secret_key, algorithm, access_token_expire_minutes
+from properties.properties import secret_key, algorithm
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
@@ -71,18 +71,12 @@ async def login_user(db: AsyncSession, login_body:user_schema.UserLogin) -> user
 
     response = None
     if user is not None:
+        # check password
+        if not await auth.verify_password(login_body.password, user.password):
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+        
         response_dict = user.__dict__
         user.user_id = str(uuid.UUID(bytes=user.user_id))
         response = user_schema.UserLoginResponse(**response_dict, user_attribute_name=user.user_attribute.user_attribute_name if user.user_attribute else None)
 
     return response
-
-# create access token
-async def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=int(access_token_expire_minutes)))
-    to_encode.update({"exp": expire})
-    
-    encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=algorithm)
-
-    return encoded_jwt
