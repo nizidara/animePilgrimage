@@ -7,7 +7,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 export const Header: FC = memo(() => {
     const {user, logout} = useAuth();
     const navigate = useNavigate();
-    console.log(user);
 
     const handleLogout = () => {
         logout();
