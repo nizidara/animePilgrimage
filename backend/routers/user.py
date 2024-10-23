@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import schemas.user as user_schema
 import cruds.user as user_crud
 import models.user as user_model
+import logic.auth as auth
 from database.db import engine, get_db
 from properties.properties import secret_key, algorithm, access_token_expire_minutes
 
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 user_model.Base.metadata.create_all(bind=engine)
 
-# #get user for login
+# #get user in auth
 @router.get("/auth", response_model=user_schema.CurrentUserResponse)
 async def get_current_user(current_user: user_schema.CurrentUserResponse = Depends(user_crud.get_current_user)):
 
@@ -49,6 +50,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     
-    access_token = await user_crud.create_access_token({"id":user.user_id, "name":user.user_name, "attribute":user.user_attribute_name})
+    access_token = await auth.create_access_token({"id":user.user_id, "name":user.user_name, "attribute":user.user_attribute_name})
 
     return {"access_token": access_token, "token_type": "bearer", "user_id": user.user_id}
