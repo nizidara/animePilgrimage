@@ -1,8 +1,7 @@
-import { ChangeEvent, FC, FormEvent, memo, useCallback, useState } from "react"
-import { Button, Form } from "react-bootstrap";
+import { ChangeEvent, FC, FormEvent, memo, useState } from "react"
+import { Alert, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { loginData } from "../../../type/api/user";
-import { useLoginUser } from "../../../hooks/users/useLoginUser";
 import { useAuth } from "../../../providers/AuthContext";
 
 
@@ -11,6 +10,7 @@ export const LoginForm: FC = memo(() => {
 
     const [loginId, setLoginId] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const {login} = useAuth();
 
@@ -18,15 +18,22 @@ export const LoginForm: FC = memo(() => {
     const onChangePassword = (e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
     const formData = {loginId, password} as loginData;
-    const onClickLogin = (e: FormEvent) => {
+
+    const onClickLogin = async (e: FormEvent) => {
         e.preventDefault();
-        login(formData);
-        navigate("/");
+        setError(null);
+        try {
+            await login(formData);
+            navigate("/");
+        } catch (err: any) {
+            setError(err.message);
+        }
     }
 
     return (
         <>
             <Form onSubmit={onClickLogin}>
+                {error && <Alert variant="danger">{error}</Alert>}
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
                     <Form.Control required value={loginId} onChange={onChangeLoginId} autoComplete="username" />

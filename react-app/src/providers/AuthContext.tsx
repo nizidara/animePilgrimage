@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useLoginUser } from '../hooks/users/useLoginUser';
 import { useGetUser } from '../hooks/users/useGetUser';
 import { loginData, userData, userToken } from '../type/api/user';
-import { useNavigate } from 'react-router-dom';
 
 type AuthContextType = {
     user: userData | null;
@@ -18,22 +17,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { getUser } = useGetUser(); 
 
     const handleLogin = async (loginData : loginData) => {
-        const token:userToken = await login(loginData.loginId, loginData.password);
-        localStorage.setItem('token', token.access_token);
-        const userData = await getUser(token.access_token);
+        await login(loginData.loginId, loginData.password);
+        //localStorage.setItem('token', token.access_token);
+        const userData = await getUser();
         setUser(userData);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        document.cookie = 'access_token=; Max-Age=0; path=/;';
         setUser(null);
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            getUser(token).then(setUser).catch(() => logout());
-        }
+        // const token = localStorage.getItem('token');
+        // if (token) {
+        //     getUser(token).then(setUser).catch(() => logout());
+        // }
+        const fetchUser = async () => {
+            const userData = await getUser(); // Cookieからトークンを使用してユーザー情報を取得
+            setUser(userData);
+        };
+
+        fetchUser().catch(() => logout());
     }, [getUser]);
 
     return (
