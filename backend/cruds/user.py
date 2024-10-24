@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Cookie
 from typing import List, Tuple
 import uuid
 from jose import JWTError, jwt
@@ -13,20 +13,25 @@ from properties.properties import secret_key, algorithm
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> user_schema.CurrentUserResponse:
+async def get_current_user(access_token: str = Cookie(None)) -> user_schema.CurrentUserResponse:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    
+    if access_token is None:
+        raise credentials_exception
+    
     try:
-        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+        payload = jwt.decode(access_token, secret_key, algorithms=[algorithm])
         user_id: str = payload.get("id")
         name: str = payload.get("name")
         attribute: str = payload.get("attribute")
+        
         if user_id is None:
             raise credentials_exception
-        print(payload)
+        
         return user_schema.CurrentUserResponse(user_id=user_id, user_name=name, user_attribute_name=attribute)
         
     except JWTError:
