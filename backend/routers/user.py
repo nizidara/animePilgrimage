@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
+from jose import JWTError, jwt
 
 import schemas.user as user_schema
 import cruds.user as user_crud
@@ -14,10 +15,23 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 user_model.Base.metadata.create_all(bind=engine)
 
-# #get user in auth
+#get user info in auth
 @router.get("/auth", response_model=user_schema.CurrentUserResponse)
-async def get_current_user(current_user: user_schema.CurrentUserResponse = Depends(user_crud.get_current_user)):
-    return current_user
+async def get_current_user(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
+    if access_token is None:
+        raise HTTPException(status_code=401, detail="Access token not found")
+    
+    try:
+        payload = await auth.decode_token(access_token)
+        user_id: str = payload.get("id")
+        
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Access refresh token")
+        
+        return await user_crud.auth_user(db=db, user_id=user_id)
+        
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Access refresh token")
 
 # get user detail
 @router.get("/detail/{user_id}", response_model=user_schema.UserLoginResponse)
@@ -46,8 +60,10 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     
-    access_token = await auth.create_access_token({"id":user.user_id, "name":user.user_name, "attribute":user.user_attribute_name})
+    access_token = await auth.create_access_token({"id":user.user_id})
+    refresh_token = await auth.create_refresh_token({"id": user.user_id})
     
+    # store access token in cookie
     response.set_cookie(
         key="access_token", 
         value=access_token,
@@ -57,4 +73,50 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
         samesite=samesite
     )
 
+    # store refresh token in cookie
+    response.set_cookie(
+        key="refresh_token", 
+        value=refresh_token,
+        httponly=True,
+        max_age=2592000,  # 30 days
+        secure=True,
+        samesite=samesite
+    )
+
     return {"message": "login successful"}
+
+@router.post("/refresh")
+async def refresh_token(response: Response, refresh_token: str = Cookie(None)):
+    if refresh_token is None:
+        raise HTTPException(status_code=401, detail="Refresh token not found")
+
+    try:
+        payload = await auth.decode_token(refresh_token)
+        user_id = payload.get("id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+        # new access token
+        access_token = await auth.create_access_token({"id": user_id})
+
+        # store new access token in cookie
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            max_age=3600,
+            secure=True,
+            samesite=samesite
+        )
+
+        return {"message": "Token refreshed"}
+    
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    
+# logout
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token", path="/", httponly=True, secure=True, samesite=samesite)
+    response.delete_cookie("refresh_token", path="/", httponly=True, secure=True, samesite=samesite)
+    return {"message": "Logged out successfully"}

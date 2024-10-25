@@ -31,10 +31,15 @@ class LoginResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class CurrentUserResponse(BaseModel):
+class UserIdResponse(BaseModel):
     user_id: str
+
+    class Config:
+        orm_mode = True
+
+class CurrentUserResponse(UserIdResponse):
     user_name: str
-    user_attribute_name: str
+    user_attribute_name: Optional[str] = "not user"
 
     class Config:
         orm_mode = True

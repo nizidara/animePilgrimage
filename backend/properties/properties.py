@@ -31,6 +31,7 @@ anime_photo_directory = Path("uploads/anime/")  # anime image directory path
 secret_key = os.getenv('SECRET_KEY')
 algorithm = os.getenv('ALGORITHM')
 access_token_expire_minutes = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
+refresh_token_expire_days = os.getenv('REFRESH_TOKEN_EXPIRE_DAYS')
 
 # cookie setting(dev)
 samesite = os.getenv('SAMESITE')
