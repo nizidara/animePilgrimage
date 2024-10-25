@@ -12,7 +12,6 @@ export const useGetUser = () => {
             });
             return response.data; // ユーザーデータを返す
         } catch (error) {
-            console.log(error)
             throw new Error('ユーザー情報の取得に失敗しました');
         }
     }, [url]);

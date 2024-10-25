@@ -1,7 +1,9 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLoginUser } from '../hooks/users/useLoginUser';
 import { useGetUser } from '../hooks/users/useGetUser';
-import { loginData, userData, userToken } from '../type/api/user';
+import { loginData, userData } from '../type/api/user';
+import axios from 'axios';
+import { fastAPIURL } from '../properties/properties';
 
 type AuthContextType = {
     user: userData | null;
@@ -18,27 +20,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleLogin = async (loginData : loginData) => {
         await login(loginData.loginId, loginData.password);
-        //localStorage.setItem('token', token.access_token);
         const userData = await getUser();
         setUser(userData);
     };
 
-    const logout = () => {
-        document.cookie = 'access_token=; Max-Age=0; path=/;';
-        setUser(null);
+    const logout = async () => {
+        try {
+            await axios.post(fastAPIURL + '/users/logout', {}, { withCredentials: true });
+            setUser(null);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     useEffect(() => {
-        // const token = localStorage.getItem('token');
-        // if (token) {
-        //     getUser(token).then(setUser).catch(() => logout());
-        // }
         const fetchUser = async () => {
-            const userData = await getUser(); // Cookieからトークンを使用してユーザー情報を取得
-            setUser(userData);
+            try{
+                const userData = await getUser();
+                setUser(userData);
+            } catch(error) {
+                try{
+                    //token再取得
+                    await axios.post(fastAPIURL + '/users/refresh', {}, { withCredentials: true });
+                    const userData = await getUser();
+                    setUser(userData);
+                } catch {
+                    logout();
+                }
+            }
         };
 
-        fetchUser().catch(() => logout());
+        fetchUser();
     }, [getUser]);
 
     return (
