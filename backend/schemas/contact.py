@@ -1,11 +1,11 @@
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 class ContactBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr
     title: str
     contents: str
 
