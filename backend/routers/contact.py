@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.contact as contact_crud
 import schemas.contact as contact_schema
 import models.contact as contact_model
+import logic.mail as mail
 from database.db import engine, get_db
 
 router = APIRouter(prefix="/contacts", tags=["contacts"])
@@ -26,7 +27,10 @@ async def get_contact(db: AsyncSession = Depends(get_db)):
 
 # send contact
 @router.post("", response_model=contact_schema.ContactResponse)
-async def send_contact(contents_body: contact_schema.ContactCreate, db: AsyncSession = Depends(get_db)):
+async def send_contact(contents_body: contact_schema.ContactCreate, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    # send mail
+    background_tasks.add_task(mail.send_email, contents_body)
+
     return await contact_crud.create_contact(db, contents_body)
 
 ## check contact and update status

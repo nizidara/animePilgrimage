@@ -35,3 +35,9 @@ refresh_token_expire_days = os.getenv('REFRESH_TOKEN_EXPIRE_DAYS')
 
 # cookie setting(dev)
 samesite = os.getenv('SAMESITE')
+
+# mail setting
+sender_email = os.getenv('SENDER_EMAIL')
+sender_password = os.getenv('SENDER_PASSWORD')
+recipient_email = os.getenv('RECIPIENT_EMAIL')
+email_server = os.getenv('EMAIL_SERVER')
