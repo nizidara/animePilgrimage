@@ -12,7 +12,7 @@ export const Icon: FC<IconProps> = memo((props) =>{
 
     return (    
         <>
-            {file_name ? <Image src={file_name} rounded className="icon-image-crop" /> : <BsImage size={80} />}
+            {file_name ? <Image src={file_name.startsWith("http") ? file_name : `${process.env.PUBLIC_URL}/${file_name}`}  rounded className="icon-image-crop" /> : <BsImage size={80} />}
         </>
     )
 });
