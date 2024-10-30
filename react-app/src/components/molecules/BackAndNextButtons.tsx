@@ -13,11 +13,11 @@ export const BackAndNextButtons: FC<ButtonsProps> = memo((props) =>{
     const {backName, nextName, onClickBack, onClickNext} = props;
 
     return (    
-        <Row className="justify-content-md-center">
-            <Col xs lg="1" className="d-grid">
+        <Row className="d-flex justify-content-center">
+            <Col xs="auto" sm="auto" className="d-grid">
                 <Button variant="secondary" onClick={onClickBack}>{backName}</Button>
             </Col>
-            <Col xs lg="1" className="d-grid">
+            <Col xs="auto" sm="auto" className="d-grid">
                 <Button variant="primary" onClick={onClickNext}>{nextName}</Button>
             </Col>
         </Row>

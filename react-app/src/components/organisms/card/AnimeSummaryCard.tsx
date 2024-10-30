@@ -17,10 +17,10 @@ export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
             <Card className="clickable-card" onClick={() => onClickDetail(anime_id)}>
                 <Card.Body>
                         <Row>
-                            <Col sm={1}>
+                            <Col xs="auto" sm="auto">
                                     <Icon file_name={file_name} />
                             </Col>
-                            <Col sm={11}>
+                            <Col>
                                     <Card.Title>{title}</Card.Title>
                                     <Card.Text>
                                         {introduction}
