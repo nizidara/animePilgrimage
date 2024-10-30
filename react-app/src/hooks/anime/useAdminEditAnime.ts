@@ -12,7 +12,7 @@ export const useAdminEditAnime = () => {
     const url = fastAPIURL;
 
     //put
-    const edit = useCallback((animeData : registerAnimeFormData, animeId: string) => {
+    const edit = useCallback((animeData : registerAnimeFormData, onAnimeDataUpdated : () => void, animeId: string) => {
         const registerData : registerAnimeData = {
             ...animeData,
             flag: 1
@@ -29,6 +29,7 @@ export const useAdminEditAnime = () => {
 
         axios.put(url + `/anime/edit/admin/${animeId}`, formData).then((res) => {
             setResponseData(res.data);
+            onAnimeDataUpdated();
         })
     }, [setResponseData])
 

@@ -9,7 +9,7 @@ export const useGetAnimeDetail = (anime_id: string | number | null) => {
     const [error, setError] = useState<string | null>(null);
     const url = fastAPIURL;
 
-    useEffect(() => {
+    const fetchAnimeDetail = () => {
         if(anime_id){
             axios.get(url + "/anime/detail/" + anime_id)
         .then(response => {
@@ -21,8 +21,11 @@ export const useGetAnimeDetail = (anime_id: string | number | null) => {
             setLoading(false);
         });
         }
-        
-    }, [anime_id]);
+    };
 
-    return { anime, loading, error };
+    useEffect(() => {
+        fetchAnimeDetail();
+    }, [anime_id])
+
+    return { anime, loading, error, fetchAnimeDetail };
 };

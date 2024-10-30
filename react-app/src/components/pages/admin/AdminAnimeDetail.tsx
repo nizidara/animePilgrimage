@@ -13,7 +13,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
 
     const query = useQuery();
     const animeId = query.get('anime_id');
-    const { anime, loading, error } = useGetAnimeDetail(animeId);
+    const { anime, loading, error, fetchAnimeDetail } = useGetAnimeDetail(animeId);
     const [icon, setIcon] = useState<string | null>(null);
 
     const {edit} = useAdminEditAnime();
@@ -51,7 +51,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                edit(formData, animeId);
+                edit(formData, fetchAnimeDetail, animeId);
             }
         }
     }
