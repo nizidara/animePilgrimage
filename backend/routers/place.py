@@ -71,7 +71,7 @@ async def approve_place_edit(request_place_id: int, db: AsyncSession = Depends(g
 
 # update place info direct
 @router.put("/edit/admin/{place_id}", response_model=place_schema.PlaceResponse)
-async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceCreate, db: AsyncSession = Depends(get_db)):
+async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceAdminEdit, db: AsyncSession = Depends(get_db)):
     place = await place_crud.update_place(db, place_id=place_id, place_body=place_body)
     if place is None:
         raise HTTPException(status_code=404, detail="Place not found")

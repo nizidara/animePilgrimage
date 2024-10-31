@@ -339,7 +339,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
     return response
 
 # update place(direct)
-async def update_place(db: AsyncSession, place_id: str, place_body: place_schema.PlaceCreate) -> place_schema.PlaceResponse:
+async def update_place(db: AsyncSession, place_id: str, place_body: place_schema.PlaceAdminEdit) -> place_schema.PlaceResponse:
     # convert str -> UUID
     place_id_bytes = uuid.UUID(place_id).bytes
     place_dict = None

@@ -88,3 +88,12 @@ class PlaceRequestResponse(PlaceRequestCreate):
 
     class Config:
         orm_mode = True
+
+class PlaceAdminEdit(PlaceBase):
+    flag: int
+    region_id: int
+    created_user_id: Optional[str] = None
+    edited_user_id: Optional[str] = None
+
+    class Config:
+        orm_mode = True
