@@ -5,7 +5,7 @@ import { fastAPIURL } from "../../properties/properties";
 import { postAnimePhotoData, responseAnimePhotoData } from "../../type/api/photo";
 
 //post AnimePhoto
-export const usePostAnimePhoto = () => {
+export const usePostAnimePhoto = (isAdmin:boolean) => {
     const [responseData, setResponseData] = useState<responseAnimePhotoData[] | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
@@ -45,7 +45,7 @@ export const usePostAnimePhoto = () => {
     useEffect(() => {
         if(responseData!== null){
             const placeId = responseData[0].place_id;
-            navigation("/place/photo", {state: {placeId}});
+            isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});
         }
     }, [responseData, navigation])
 

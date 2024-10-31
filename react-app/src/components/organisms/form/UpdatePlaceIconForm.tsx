@@ -9,10 +9,11 @@ type FormProps = {
     placeIcon?: responsePlaceIconData;
     formRef: RefObject<HTMLFormElement>;
     onPlaceIconUpdated: () => void;
+    isAdmin: boolean;
 };
 
-export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIcon, formRef, onPlaceIconUpdated}) => {
-    const {update} = useUpdatePlaceIcon();
+export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIcon, formRef, onPlaceIconUpdated, isAdmin}) => {
+    const {update} = useUpdatePlaceIcon(isAdmin);
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [iconIndex, setIconIndex] = useState<number | null>(null);

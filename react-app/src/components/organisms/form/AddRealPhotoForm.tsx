@@ -9,11 +9,12 @@ type FormProps = {
     setFormData: React.Dispatch<React.SetStateAction<File[]>>;
     formRef: RefObject<HTMLFormElement>;
     onRealPhotoPosted: () => void;
+    isAdmin : boolean;
 };
 
-export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onRealPhotoPosted}) => {
+export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onRealPhotoPosted, isAdmin}) => {
 
-    const {post} = usePostRealPhoto();
+    const {post} = usePostRealPhoto(isAdmin);
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {

@@ -9,10 +9,11 @@ type FormProps = {
     setFormData: React.Dispatch<React.SetStateAction<File[]>>;
     formRef: RefObject<HTMLFormElement>;
     onAnimePhotoPosted: () => void;
+    isAdmin: boolean;
 };
 
-export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onAnimePhotoPosted}) => {
-    const {post} = usePostAnimePhoto();
+export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onAnimePhotoPosted, isAdmin}) => {
+    const {post} = usePostAnimePhoto(isAdmin);
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {

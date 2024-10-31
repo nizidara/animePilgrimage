@@ -5,7 +5,7 @@ import { fastAPIURL } from "../../properties/properties";
 import { postRealPhotoData, responseRealPhotoData } from "../../type/api/photo";
 
 //post realPhoto
-export const usePostRealPhoto = () => {
+export const usePostRealPhoto = (isAdmin: boolean) => {
     const [responseData, setResponseData] = useState<responseRealPhotoData[] | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
@@ -46,7 +46,7 @@ export const usePostRealPhoto = () => {
     useEffect(() => {
         if(responseData!== null){
             const placeId = responseData[0].place_id;
-            navigation("/place/photo", {state: {placeId}});
+            isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});            
         }
     }, [responseData, navigation])
 

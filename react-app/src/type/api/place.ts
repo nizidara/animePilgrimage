@@ -6,6 +6,8 @@ export type registerPlaceData = registerPlaceFormData & {
     edited_user_id?: string | null;
 }
 
+export type editAdminPlaceData = Omit<registerPlaceData, 'images' | 'icon_index'>
+
 export type requestPlaceData = editPlaceFormData & {
     place_id: string
     request_date: string;

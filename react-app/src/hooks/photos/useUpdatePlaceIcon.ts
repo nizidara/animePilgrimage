@@ -5,7 +5,7 @@ import { fastAPIURL } from "../../properties/properties";
 import { responsePlaceIconData, updatePlaceIconData } from "../../type/api/photo";
 
 //update place icon
-export const useUpdatePlaceIcon = () => {
+export const useUpdatePlaceIcon = (isAdmin:boolean) => {
     const [responseData, setResponseData] = useState<responsePlaceIconData | null>(null);
     const navigation = useNavigate();
     const url = fastAPIURL;
@@ -27,7 +27,7 @@ export const useUpdatePlaceIcon = () => {
     useEffect(() => {
         if(responseData!== null){
             const placeId = responseData.place_id;
-            navigation("/place/photo", {state: {placeId}});
+            isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});
         }
     }, [responseData, navigation])
 
