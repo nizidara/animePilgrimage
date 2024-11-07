@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
 import models.photo as photo_model
+import routers.user as user_router
+import schemas.user as user_schema
 from database.db import engine, get_db
 
 router = APIRouter(prefix="/photos", tags=["photos"])
@@ -71,16 +73,22 @@ async def update_place_icon(place_icon_body: photo_schema.PlacePhotoIconCreate, 
 
 # delete anime photo file DB
 @router.delete("/anime/{anime_photo_id}")
-async def delete_anime_photo(anime_photo_id: str, db: AsyncSession = Depends(get_db)):
-    photo = await photo_crud.delete_anime_photo(db=db, anime_photo_id=anime_photo_id)
-    if photo is None:
-        raise HTTPException(status_code=404, detail="anime photo not found")
-    return {"message": "anime photo deleted successfully"}
+async def delete_anime_photo(anime_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        photo = await photo_crud.delete_anime_photo(db=db, anime_photo_id=anime_photo_id)
+        if photo is None:
+            raise HTTPException(status_code=404, detail="anime photo not found")
+        return {"message": "anime photo deleted successfully"}
 
-# delete place photo file DB
+# delete real photo file DB
 @router.delete("/reals/{real_photo_id}")
-async def delete_anime_photo(real_photo_id: str, db: AsyncSession = Depends(get_db)):
-    photo = await photo_crud.delete_real_photo(db=db, real_photo_id=real_photo_id)
-    if photo is None:
-        raise HTTPException(status_code=404, detail="real photo not found")
-    return {"message": "real photo deleted successfully"}
+async def delete_real_photo(real_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        photo = await photo_crud.delete_real_photo(db=db, real_photo_id=real_photo_id)
+        if photo is None:
+            raise HTTPException(status_code=404, detail="real photo not found")
+        return {"message": "real photo deleted successfully"}
