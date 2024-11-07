@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
+import api from "../../api/axiosInstance";
 
 type UseDeletePhotoReturnType = {
     deleteRealPhotos: (photoIds: string[], onRealPhotoPosted: () => void) => Promise<void>;
@@ -19,7 +19,7 @@ export const useDeleteRealPhoto = (): UseDeletePhotoReturnType => {
 
         try {
             const deletePromises = photoIds.map(photoId => 
-                axios.delete(url + `/photos/reals/${photoId}`)
+                api.delete(url + `/photos/reals/${photoId}`)
             );
             await Promise.all(deletePromises);
 

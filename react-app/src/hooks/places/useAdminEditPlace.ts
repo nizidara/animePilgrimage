@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
-import { editAdminPlaceData, registerPlaceData, responsePlaceData } from "../../type/api/place";
+import { editAdminPlaceData, responsePlaceData } from "../../type/api/place";
 import { registerPlaceFormData } from "../../type/form/place";
+import api from "../../api/axiosInstance";
 
 //put palce direct
 export const useAdminEditPlace = () => {
@@ -21,7 +21,7 @@ export const useAdminEditPlace = () => {
             edited_user_id: null    //null only(admin)
         }
 
-        axios.put(url + `/places/edit/admin/${placeId}`, registerData).then((res) => {
+        api.put(url + `/places/edit/admin/${placeId}`, registerData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

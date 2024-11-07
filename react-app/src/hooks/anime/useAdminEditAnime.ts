@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { registerAnimeData, responseAnimeData } from "../../type/api/anime";
 import { registerAnimeFormData } from "../../type/form/anime";
+import api from "../../api/axiosInstance";
 
 //put anime direct
 export const useAdminEditAnime = () => {
@@ -27,7 +27,7 @@ export const useAdminEditAnime = () => {
             }
         });
 
-        axios.put(url + `/anime/edit/admin/${animeId}`, formData).then((res) => {
+        api.put(url + `/anime/edit/admin/${animeId}`, formData).then((res) => {
             setResponseData(res.data);
             onAnimeDataUpdated();
         })
