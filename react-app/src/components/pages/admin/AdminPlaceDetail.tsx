@@ -1,5 +1,5 @@
 import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useNavigate } from "react-router-dom";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -11,9 +11,11 @@ import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { useGetPlaceIcon } from "../../../hooks/photos/useGetPlaceIcon";
 import { UpdatePlaceIconForm } from "../../organisms/form/UpdatePlaceIconForm";
-import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
+import { DeleteAnimePhotoForm } from "../../organisms/form/DeleteAnimePhotoForm";
+import { DeleteRealPhotoForm } from "../../organisms/form/DeleteRealPhotoForm";
+
 export const AdminPlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
@@ -82,11 +84,11 @@ export const AdminPlaceDetail: FC = memo(() =>{
                 <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={true} />
 
                 <p>作中写真</p>
-                <PhotoCard animePhotoList={animePhotoList} />
+                <DeleteAnimePhotoForm photoList={animePhotoList} formRef={animeImageRef} onPhotoPosted={fetchAnimePhotos} />
                 <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={true} />
 
                 <p>現地写真（みんなの投稿）</p>
-                <PhotoCard realPhotoList={realPhotoList} />
+                <DeleteRealPhotoForm photoList={realPhotoList} formRef={realImageRef} onPhotoPosted={fetchRealPhotos} />
                 <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={true} />
                 <div className="d-flex justify-content-center mt-2">
                     <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
