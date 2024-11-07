@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.anime as anime_crud
 import schemas.anime as anime_schema
 import models.anime as anime_model
+import routers.user as user_router
+import schemas.user as user_schema
 from database.db import engine, get_db
 
 router = APIRouter(prefix="/anime", tags=["anime"])
@@ -73,11 +75,14 @@ async def approve_anime_edit(request_anime_id: int, db: AsyncSession = Depends(g
 
 # update anime info excluding anime_id 
 @router.put("/edit/admin/{anime_id}", response_model=anime_schema.AnimeResponse)
-async def anime_edit_admin(anime_id: int, anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
-    anime = await anime_crud.update_anime(db, anime_id=anime_id, anime_body=anime_body)
-    if anime is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
-    return anime
+async def anime_edit_admin(anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime = await anime_crud.update_anime(db, anime_id=anime_id, anime_body=anime_body)
+        if anime is None:
+            raise HTTPException(status_code=404, detail="Anime not found")
+        return anime
 
 # delete anime info from DB
 @router.delete("/{anime_id}")

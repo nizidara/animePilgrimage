@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.place as place_crud
 import schemas.place as place_schema
 import models.place as place_model
+import routers.user as user_router
+import schemas.user as user_schema
 from database.db import engine, get_db
 
 router = APIRouter(prefix="/places", tags=["places"])
@@ -71,11 +73,14 @@ async def approve_place_edit(request_place_id: int, db: AsyncSession = Depends(g
 
 # update place info direct
 @router.put("/edit/admin/{place_id}", response_model=place_schema.PlaceResponse)
-async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceAdminEdit, db: AsyncSession = Depends(get_db)):
-    place = await place_crud.update_place(db, place_id=place_id, place_body=place_body)
-    if place is None:
-        raise HTTPException(status_code=404, detail="Place not found")
-    return place
+async def palce_edit_admin(place_id: str, place_body: place_schema.PlaceAdminEdit, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        place = await place_crud.update_place(db, place_id=place_id, place_body=place_body)
+        if place is None:
+            raise HTTPException(status_code=404, detail="Place not found")
+        return place
 
 # delete place info from DB
 @router.delete("/{place_id}")
