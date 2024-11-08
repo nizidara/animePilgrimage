@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { fastAPIURL } from "../../properties/properties";
 import { editAdminPlaceData, responsePlaceData } from "../../type/api/place";
 import { registerPlaceFormData } from "../../type/form/place";
 import api from "../../api/axiosInstance";
@@ -9,7 +8,6 @@ import api from "../../api/axiosInstance";
 export const useAdminEditPlace = () => {
     const [responseData, setResponseData] = useState<responsePlaceData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //put
     const edit = useCallback((formData : registerPlaceFormData, placeId: string, createdUserId?: string | null) => {
@@ -21,7 +19,7 @@ export const useAdminEditPlace = () => {
             edited_user_id: null    //null only(admin)
         }
 
-        api.put(url + `/places/edit/admin/${placeId}`, registerData).then((res) => {
+        api.put(`/places/edit/admin/${placeId}`, registerData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

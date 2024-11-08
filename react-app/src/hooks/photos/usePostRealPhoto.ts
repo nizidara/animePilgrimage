@@ -8,7 +8,6 @@ import { postRealPhotoData, responseRealPhotoData } from "../../type/api/photo";
 export const usePostRealPhoto = (isAdmin: boolean) => {
     const [responseData, setResponseData] = useState<responseRealPhotoData[] | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const post = useCallback((placeId : string, images: File[], onRealPhotoPosted: () => void) => {
@@ -32,7 +31,7 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
             formData.append('images', image);
         });
 
-        axios.post(url + "/photos/reals", formData, {
+        axios.post(`${fastAPIURL}/photos/reals`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -48,7 +47,7 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
             const placeId = responseData[0].place_id;
             isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});            
         }
-    }, [responseData, navigation])
+    }, [responseData, navigation, isAdmin])
 
     return {post};
 }

@@ -5,10 +5,9 @@ import { fastAPIURL } from "../properties/properties";
 
 export const useFastAPITest = () => {
     const [data, setData] = useState<Data>();
-    const url = fastAPIURL;
     
     const GetData = useCallback((id : string) => {
-        axios.get(url + "/" + id).then((res) => {
+        axios.get(`${fastAPIURL}/${id}`).then((res) => {
             setData(res.data);
         });
     },[setData]);

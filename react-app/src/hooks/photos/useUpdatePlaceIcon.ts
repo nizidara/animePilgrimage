@@ -8,7 +8,6 @@ import { responsePlaceIconData, updatePlaceIconData } from "../../type/api/photo
 export const useUpdatePlaceIcon = (isAdmin:boolean) => {
     const [responseData, setResponseData] = useState<responsePlaceIconData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //update
     const update = useCallback((anime_photo_id: string, onPlaceIconUpdated: () => void, place_id?: string | null) => {
@@ -17,7 +16,7 @@ export const useUpdatePlaceIcon = (isAdmin:boolean) => {
             place_id: place_id
         }
 
-        axios.put(url + "/photos/places/icons", postData).then((res) => {
+        axios.put(`${fastAPIURL}/photos/places/icons`, postData).then((res) => {
             setResponseData(res.data);
             onPlaceIconUpdated();
         })
@@ -29,7 +28,7 @@ export const useUpdatePlaceIcon = (isAdmin:boolean) => {
             const placeId = responseData.place_id;
             isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});
         }
-    }, [responseData, navigation])
+    }, [responseData, navigation, isAdmin])
 
     return {update};
 }

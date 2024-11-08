@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import { memo, FC, useCallback } from "react";
 import { Container } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";

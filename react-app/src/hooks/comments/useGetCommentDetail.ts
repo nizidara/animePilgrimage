@@ -7,10 +7,9 @@ export const useGetCommenDetail = (comment_id: string | null) => {
     const [comment, setComment] = useState<responseCommentData>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const url = fastAPIURL;
 
     useEffect(() => {
-        axios.get(url + "/comments/detail/" + comment_id)
+        axios.get(`${fastAPIURL}/comments/detail/${comment_id}`)
         .then(response => {
             setComment(response.data);
             setLoading(false);

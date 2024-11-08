@@ -7,10 +7,9 @@ export const useGetRegionDetail = (region_id: number) => {
     const [region, setRegion] = useState<responseRegionData>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const url = fastAPIURL;
 
     useEffect(() => {
-        axios.get(url + `/regions/detail/${region_id}`)
+        axios.get(`${fastAPIURL}/regions/detail/${region_id}`)
         .then(response => {
             setRegion(response.data);
             setLoading(false);

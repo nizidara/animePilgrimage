@@ -9,7 +9,6 @@ import { deleteCommentFormData } from "../../type/form/comment";
 export const useDeleteRequestComment = () => {
     const [responseData, setResponseData] = useState<responseDeleteCommentData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const post = useCallback((formData : deleteCommentFormData, commentId : string) => {
@@ -21,7 +20,7 @@ export const useDeleteRequestComment = () => {
             user_id: null
         }
 
-        axios.post(url + "/comments/report", postData).then((res) => {
+        axios.post(`${fastAPIURL}/comments/report`, postData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

@@ -1,6 +1,5 @@
-import axios from "axios";
-import { FC, memo, useState} from "react"
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { FC, memo } from "react"
+import { Button } from "react-bootstrap";
 import useMapboxSearch from "../../../hooks/maps/useMapboxSearch";
 
 type SearchMapboxFormProps = {
@@ -9,7 +8,7 @@ type SearchMapboxFormProps = {
 
 export const SearchMapBoxForm: FC<SearchMapboxFormProps> = memo((props) => {
     const {onSearch} = props;
-    const { query, setQuery, handleSearch, loading, error } = useMapboxSearch();
+    const { query, setQuery, handleSearch } = useMapboxSearch();
 
     const onClickSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();

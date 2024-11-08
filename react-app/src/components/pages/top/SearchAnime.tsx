@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect} from "react";
+import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Container, ListGroup } from "react-bootstrap";
 import { SearchAnimeForm } from "../../organisms/form/SearchAnimeForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";

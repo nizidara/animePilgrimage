@@ -14,7 +14,7 @@ export const CommentCard: FC<Comment> = memo((props) => {
     const navigate = useNavigate();
 
     const {comment, buttonFlag} = props
-    const onClickDeleteComment = useCallback(() => navigate("/delete_comment", {state: {comment}}), [navigate]);
+    const onClickDeleteComment = useCallback(() => navigate("/delete_comment", {state: {comment}}), [navigate, comment]);
     
     return (
         <>
@@ -29,7 +29,6 @@ export const CommentCard: FC<Comment> = memo((props) => {
                     <Card.Text>{comment.comment}</Card.Text>
                     {comment.file_names && comment.file_names.map((file, index) => (
                         <Photo key={index} file_name={file} />
-                        // <Card.Img key={index} src={file} alt={file} />
                     ))}
                  </Card.Body>
             </Card>

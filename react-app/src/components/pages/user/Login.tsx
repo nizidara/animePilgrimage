@@ -1,4 +1,4 @@
-import {memo, FC} from "react";
+import { memo, FC } from "react";
 import { Container } from "react-bootstrap";
 import { LoginForm } from "../../organisms/form/LoginForm";
 

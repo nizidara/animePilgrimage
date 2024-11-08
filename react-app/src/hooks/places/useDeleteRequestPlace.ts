@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { requestPlaceData, responsePlaceData, responseRequestPlaceData } from "../../type/api/place";
@@ -8,9 +8,8 @@ import { deletePlaceFormData } from "../../type/form/place";
 //post place request
 export const useDeleteRequestPlace = () => {
     const [responseData, setResponseData] = useState<responseRequestPlaceData | null>(null);
-    const [placeIcon, setPlaceIcon] = useState<string | null>(null);
+    const placeIconRef = useRef<string | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const deleteRequest = useCallback((formData : deletePlaceFormData, place: responsePlaceData) => {
@@ -22,9 +21,11 @@ export const useDeleteRequestPlace = () => {
             user_id: null   //now null only
         }
 
-        place.place_icon && setPlaceIcon(place.place_icon);
+        if (place.place_icon) {
+            placeIconRef.current = place.place_icon;
+        }
 
-        axios.post(url + "/places/request", deleteData).then((res) => {
+        axios.post(`${fastAPIURL}/places/request`, deleteData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])
@@ -32,7 +33,7 @@ export const useDeleteRequestPlace = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/delete_place/complete", {state: {responseData, placeIcon}})
+            navigation("/delete_place/complete", {state: {responseData, placeIcon: placeIconRef.current}})
         }
     }, [responseData, navigation])
 

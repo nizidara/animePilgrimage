@@ -2,7 +2,7 @@ import { memo, FC, useCallback } from "react";
 import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
-import { editAnimeFormData, registerAnimeFormData } from "../../../type/form/anime";
+import { editAnimeFormData } from "../../../type/form/anime";
 import { useEditRequestAnime } from "../../../hooks/anime/useEditRequestAnime";
 import { EditAnimeDetailDisplay } from "../../organisms/display/EditAnimeDetailDisplay";
 

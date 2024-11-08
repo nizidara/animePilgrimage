@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
+import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useNavigate } from "react-router-dom";

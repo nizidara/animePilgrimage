@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect, useState } from "react"
+import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { Button, Form, Image } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";

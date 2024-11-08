@@ -1,8 +1,8 @@
-import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
+import { memo, FC, useCallback } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
@@ -10,15 +10,15 @@ import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
-    const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
-    const onClickRegister = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
-    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
-
     const query = useQuery();
     const animeId = query.get('anime_id');
     const { anime, loading, error } = useGetAnimeDetail(animeId);
     const { placeList } = useGetPlaceList(undefined, animeId, undefined);
+
+    const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
+    const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
+    const onClickRegister = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
+    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     if (loading) {
         return <div>loading...</div>;

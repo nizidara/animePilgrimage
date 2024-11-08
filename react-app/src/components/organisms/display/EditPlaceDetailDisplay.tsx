@@ -2,7 +2,6 @@ import { FC, memo } from "react"
 import { DisplayMap } from "../map/DisplayMap";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { responseRequestPlaceData } from "../../../type/api/place";
-import { GeoJson } from "../../../type/externalAPI/mapbox";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";

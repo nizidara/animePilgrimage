@@ -1,10 +1,9 @@
-import {memo, FC, useCallback, useState, useEffect} from "react";
+import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { useLocation, useNavigate } from "react-router-dom";
-import { photoDataList, placeData, placeList } from "../../../testdatas/testdata";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
@@ -18,10 +17,6 @@ import { DummyMap } from "../../organisms/map/DummyMap";
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
     
-    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
-    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
-
     const query = useQuery();
     const location = useLocation();
     const animeId = query.get('anime_id');
@@ -34,6 +29,10 @@ export const PlaceList: FC = memo(() =>{
 
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
     const [realPhotoList, setRealPhotoList] = useState<responseRealPhotoData[] | null>(null);
+
+    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
+    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
+    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
  
     const handleMarkerClick = (placeId: string) => {
         setSelectedPlaceId(placeId);

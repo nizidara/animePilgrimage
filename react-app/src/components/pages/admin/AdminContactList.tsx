@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import { memo, FC, useCallback } from "react";
 import { Container, ListGroup } from "react-bootstrap";
 import { ContactSummaryCard } from "../../organisms/card/ContactSummaryCard";
 import { useGetContactList } from "../../../hooks/contacts/useGetContactList";

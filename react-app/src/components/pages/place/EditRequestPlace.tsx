@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
+import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -11,7 +11,7 @@ export const EditRequestPlace: FC = memo(() =>{
     const location = useLocation();
 
     const placeId = location.state.placeId;
-    const { place, loading, error } = useGetPlaceDetail(placeId);
+    const { place } = useGetPlaceDetail(placeId);
 
     //formData
     const initialFormData = location.state?.formData || {name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, contents:''};
@@ -38,13 +38,13 @@ export const EditRequestPlace: FC = memo(() =>{
     },[place])
 
     const formChange = (data:editPlaceFormData) => {
-        setFormData(data); // フォームデータを更新
+        setFormData(data); // update form data
     };
 
     //page transition
     const send = useCallback((formData:editPlaceFormData, placeId:string, animePhoto:string[]) => navigate("/edit_place/confirmation", {state: {formData, placeId, animePhoto}}), [navigate]);
     
-    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate]);
+    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();

@@ -1,6 +1,5 @@
 import { FC, memo, useCallback } from "react"
-import { Button, Card, Col, Image, Row } from "react-bootstrap";
-import { BsImage } from "react-icons/bs";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import '../../../thema/card/CardStyles.css';

@@ -1,8 +1,9 @@
-import {memo, FC, useCallback} from "react";
+import { memo, FC, useCallback } from "react";
 import { Container, ListGroup } from "react-bootstrap";
 import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useNavigate } from "react-router-dom";
+
 export const AdminAnimeList: FC = memo(() =>{
     const { animeList, loading, error } = useGetAnimeList();
 

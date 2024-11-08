@@ -1,5 +1,5 @@
 import {memo, FC, useCallback, useState, useRef} from "react";
-import { Button, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeleteRequestPlaceForm } from "../../organisms/form/DeleteRequestPlaceForm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
     const formRef = useRef<HTMLFormElement>(null);
 
     const formChange = (data:deletePlaceFormData) => {
-        setFormData(data); // フォームデータを更新
+        setFormData(data); // update form data
     };
 
     //page transition

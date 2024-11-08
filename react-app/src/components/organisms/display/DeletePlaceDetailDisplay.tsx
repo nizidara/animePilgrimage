@@ -3,7 +3,6 @@ import { responseRequestPlaceData } from "../../../type/api/place";
 import { PlaceSummaryCard } from "../card/PlaceSummaryCard";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { DisplayMap } from "../map/DisplayMap";
-import { GeoJson } from "../../../type/externalAPI/mapbox";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";

@@ -1,4 +1,4 @@
-import {memo, FC, useCallback} from "react";
+import { memo, FC, useCallback } from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,9 +12,9 @@ export const RegisterPlaceComplete: FC = memo(() =>{
     const placeId = responseData.place_id;
     const animeId = responseData.anime_id;
 
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate]);
-    const onClickPlace = useCallback(() => navigate(`/place?place_id=${placeId}`), [navigate]);
-    const onClickAnime = useCallback(() => navigate(`/anime?anime_id=${animeId}`), [navigate]);
+    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
+    const onClickPlace = useCallback(() => navigate(`/place?place_id=${placeId}`), [navigate, placeId]);
+    const onClickAnime = useCallback(() => navigate(`/anime?anime_id=${animeId}`), [navigate, animeId]);
 
     return (
         <Container>

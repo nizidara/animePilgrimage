@@ -3,7 +3,6 @@ import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { useAuth } from "../../../providers/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
 
-
 export const Header: FC = memo(() => {
     const {user, logout} = useAuth();
     const navigate = useNavigate();
@@ -21,7 +20,6 @@ export const Header: FC = memo(() => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            {/* <Nav.Link href="/map">Map</Nav.Link> */}
                             <NavDropdown title="検索" id="nav-dropdown-search">
                                 <NavDropdown.Item as={NavLink} to="/search/anime">アニメ検索</NavDropdown.Item>
                                 <NavDropdown.Item as={NavLink} to="/search/place">聖地検索</NavDropdown.Item>

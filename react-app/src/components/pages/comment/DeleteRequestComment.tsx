@@ -1,4 +1,4 @@
-import {memo, FC, useState, useCallback, useRef} from "react";
+import { memo, FC, useState, useCallback, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { DeleteRequestCommentForm } from "../../organisms/form/DeleteRequestCommentForm";
 import { useLocation, useNavigate } from "react-router-dom";

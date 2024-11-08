@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useEffect, useState} from "react";
+import { memo, FC, useCallback } from "react";
 import { Container } from "react-bootstrap";
 import { ContactDetailDisplay } from "../../organisms/display/ContactDetailDisplay";
 import { useNavigate } from "react-router-dom";

@@ -1,11 +1,9 @@
-import axios from "axios";
-import { ChangeEvent, FC, memo, useEffect, useState, useCallback, useRef} from "react"
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { FC, memo, useEffect, useState, useRef} from "react"
 import mapboxgl from 'mapbox-gl';
 import { mapboxAccessToken } from "../../../properties/properties";
 import { useMapbox } from "../../../hooks/maps/useMapbox";
 import { SearchMapBoxForm } from "../form/SearchMapboxForm";
-import { applyScale, resetScale, setupMarkerEvents } from "../../../utilities/mapbox/markerUtils";
+import { applyScale, setupMarkerEvents } from "../../../utilities/mapbox/markerUtils";
 
 mapboxgl.accessToken = mapboxAccessToken;
 

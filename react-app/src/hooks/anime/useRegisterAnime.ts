@@ -9,7 +9,6 @@ import { registerAnimeFormData } from "../../type/form/anime";
 export const useRegisterAnime = () => {
     const [responseData, setResponseData] = useState<responseAnimeData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const register = useCallback((animeData : registerAnimeFormData) => {
@@ -27,7 +26,7 @@ export const useRegisterAnime = () => {
             }
         });
 
-        axios.post(url + "/anime", formData).then((res) => {
+        axios.post(`${fastAPIURL}/anime`, formData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

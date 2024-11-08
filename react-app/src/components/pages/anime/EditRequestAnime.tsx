@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
+import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";

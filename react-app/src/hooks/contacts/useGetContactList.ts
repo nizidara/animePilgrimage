@@ -8,7 +8,7 @@ export const useGetContactList = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        api.get("/contacts/list")
+        api.get(`/contacts/list`)
             .then(response => {
                 setContacts(response.data);
                 setLoading(false);

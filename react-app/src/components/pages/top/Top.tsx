@@ -1,4 +1,4 @@
-import {memo, FC} from "react";
+import { memo, FC } from "react";
 import { Container } from "react-bootstrap";
 import { useFastAPITest } from "../../../hooks/useFastAPITest";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ export const Top: FC = memo(() =>{
     const onClickGetData = () => GetData("hello");
     return (
         <Container>
-            <h2>Homeページです．</h2>
+            <h2>Homeページです</h2>
             {data ? <div>{data.message}</div> : <button onClick={onClickGetData}>FastAPI実行確認</button>}
 
             <hr />

@@ -8,11 +8,10 @@ import { postCommentData, responseCommentData } from "../../type/api/comment";
 export const usePostComment = () => {
     const [responseData, setResponseData] = useState<responseCommentData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const post = useCallback((comment: string, placeId : string, images: File[], onCommentPosted: () => void) => {
-        if(images.length != 0 && comment.length == 0){
+        if(images.length !== 0 && comment.length === 0){
             comment = " ";
         }
 
@@ -38,7 +37,7 @@ export const usePostComment = () => {
             formData.append('images', image);
         });
 
-        axios.post(url + "/comments", formData, {
+        axios.post(`${fastAPIURL}/comments`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

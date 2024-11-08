@@ -1,9 +1,8 @@
-import {memo, FC, useCallback, useState} from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { placeList } from "../../../testdatas/testdata";
 import { useNavigate } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 

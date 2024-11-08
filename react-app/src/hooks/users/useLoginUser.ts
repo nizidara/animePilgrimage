@@ -1,8 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { fastAPIURL } from '../../properties/properties';
 
 export const useLoginUser = () => {
-    const url = fastAPIURL;
     
     const login = async (loginId: string, password: string) => {
         const loginData: URLSearchParams = new URLSearchParams();
@@ -10,14 +9,14 @@ export const useLoginUser = () => {
         loginData.append('password', password);
         
         try {
-            await axios.post(url + '/users/login', loginData, {
+            await axios.post(`${fastAPIURL}/users/login`, loginData, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 withCredentials: true,
             });
 
-        } catch (error: AxiosError | unknown) {
+        } catch (error: unknown) {
             if(axios.isAxiosError(error)){
                 if(error.response?.status === 400 || error.response?.status === 404){
                     throw new Error('ログインIDまたはパスワードが違います');

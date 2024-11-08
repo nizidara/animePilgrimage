@@ -9,7 +9,6 @@ import { sendContactFormData } from "../../type/form/contact";
 export const useSendContact = () => {
     const [responseData, setResponseData] = useState<responseContactData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const send = useCallback((formData : sendContactFormData) => {
@@ -21,7 +20,7 @@ export const useSendContact = () => {
             user_id: null
         }
 
-        axios.post(url + "/contacts", sendData).then((res) => {
+        axios.post(`${fastAPIURL}/contacts`, sendData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

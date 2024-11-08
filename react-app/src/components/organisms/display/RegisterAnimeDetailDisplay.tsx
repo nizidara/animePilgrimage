@@ -2,7 +2,6 @@ import { FC, memo } from "react"
 import { registerAnimeFormData } from "../../../type/form/anime";
 import { ImagePreview } from "../../molecules/ImagePreview";
 
-
 export const RegisterAnimeDetailDisplay: FC<registerAnimeFormData> = memo((props) => {
     const {title, kana, introduction, icon} = props;
 

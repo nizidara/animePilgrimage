@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState} from "react";
+import { memo, FC, useCallback } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { DeleteCommentDetailDisplay } from "../../organisms/display/DeleteCommentDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";

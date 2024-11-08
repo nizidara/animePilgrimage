@@ -8,7 +8,6 @@ import { postAnimePhotoData, responseAnimePhotoData } from "../../type/api/photo
 export const usePostAnimePhoto = (isAdmin:boolean) => {
     const [responseData, setResponseData] = useState<responseAnimePhotoData[] | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const post = useCallback((placeId : string, images: File[], onAnimePhotoPosted: () => void) => {
@@ -31,7 +30,7 @@ export const usePostAnimePhoto = (isAdmin:boolean) => {
             formData.append('images', image);
         });
 
-        axios.post(url + "/photos/anime", formData, {
+        axios.post(`${fastAPIURL}/photos/anime`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -47,7 +46,7 @@ export const usePostAnimePhoto = (isAdmin:boolean) => {
             const placeId = responseData[0].place_id;
             isAdmin ? navigation(`/admin/place?place_id=${placeId}`) : navigation("/place/photo", {state: {placeId}});
         }
-    }, [responseData, navigation])
+    }, [responseData, navigation, isAdmin])
 
     return {post};
 }

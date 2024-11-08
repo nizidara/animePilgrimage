@@ -9,7 +9,6 @@ import { registerPlaceFormData } from "../../type/form/place";
 export const useRegisterPlace = () => {
     const [responseData, setResponseData] = useState<responsePlaceData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //post
     const register = useCallback((placeData : registerPlaceFormData) => {
@@ -33,7 +32,7 @@ export const useRegisterPlace = () => {
             formData.append('images', image);
         });
 
-        axios.post(url + "/places", formData).then((res) => {
+        axios.post(`${fastAPIURL}/places`, formData).then((res) => {
             setResponseData(res.data);
         })
     }, [setResponseData])

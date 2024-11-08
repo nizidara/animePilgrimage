@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useRef} from "react";
+import { memo, FC, useCallback, useState, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useLocation, useNavigate } from "react-router-dom";

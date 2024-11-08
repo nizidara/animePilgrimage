@@ -1,5 +1,5 @@
-import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useState } from "react"
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
+import { FC, KeyboardEvent, memo, RefObject, useState } from "react"
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { responseAnimePhotoData, responsePlaceIconData } from "../../../type/api/photo";
 import { Icon } from "../../atoms/Icon";
 import { useUpdatePlaceIcon } from "../../../hooks/photos/useUpdatePlaceIcon";

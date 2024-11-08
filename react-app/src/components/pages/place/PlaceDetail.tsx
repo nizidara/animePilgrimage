@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useRef, useState, useEffect} from "react";
+import { memo, FC, useCallback } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -6,7 +6,6 @@ import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { CommentForm } from "../../organisms/form/CommentForm";
 import { CommentCard } from "../../organisms/card/CommentCard";
 import { useNavigate } from "react-router-dom";
-import { commentList, photoDataList, placeData} from "../../../testdatas/testdata";
 import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
@@ -14,23 +13,20 @@ import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
-import { Photo } from "../../atoms/Photo";
-import { responseRealPhotoData } from "../../../type/api/photo";
 
 
 export const PlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
-
-    const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate]);
-    const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate]);
-    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate]);
 
     const query = useQuery();
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
     const { commentList, fetchComments } = useGetCommentList(placeId);
     const { realPhotoList } = useGetRealPhotoList(placeId);
-
+    
+    const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate, placeId]);
+    const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate, placeId]);
+    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
     if (loading) {
         return <div>loading...</div>;
     }

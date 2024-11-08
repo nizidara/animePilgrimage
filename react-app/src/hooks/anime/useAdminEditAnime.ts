@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { fastAPIURL } from "../../properties/properties";
 import { registerAnimeData, responseAnimeData } from "../../type/api/anime";
 import { registerAnimeFormData } from "../../type/form/anime";
 import api from "../../api/axiosInstance";
@@ -9,7 +8,6 @@ import api from "../../api/axiosInstance";
 export const useAdminEditAnime = () => {
     const [responseData, setResponseData] = useState<responseAnimeData | null>(null);
     const navigation = useNavigate();
-    const url = fastAPIURL;
 
     //put
     const edit = useCallback((animeData : registerAnimeFormData, onAnimeDataUpdated : () => void, animeId: string) => {
@@ -27,7 +25,7 @@ export const useAdminEditAnime = () => {
             }
         });
 
-        api.put(url + `/anime/edit/admin/${animeId}`, formData).then((res) => {
+        api.put(`/anime/edit/admin/${animeId}`, formData).then((res) => {
             setResponseData(res.data);
             onAnimeDataUpdated();
         })

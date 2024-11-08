@@ -7,10 +7,9 @@ export const useGetAnimeList = () => {
     const [animeList, setAnimeList] = useState<responseAnimeData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const url = fastAPIURL;
 
     useEffect(() => {
-        axios.get(url + "/anime/list/search")
+        axios.get(`${fastAPIURL}/anime/list/search`)
         .then(response => {
             setAnimeList(response.data);
             setLoading(false);

@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useEffect, useRef} from "react";
+import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useNavigate } from "react-router-dom";
@@ -61,7 +61,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
     }
     
     const formChange = (data:registerPlaceFormData) => {
-        setFormData(data); // フォームデータを更新
+        setFormData(data); //update form data
     };
 
     const onClickDecide = () => {
