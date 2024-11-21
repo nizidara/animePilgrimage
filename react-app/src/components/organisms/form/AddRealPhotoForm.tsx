@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, memo, RefObject } from "react"
+import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useState } from "react"
 import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostRealPhoto } from "../../../hooks/photos/usePostRealPhoto";
@@ -13,13 +13,26 @@ type FormProps = {
 };
 
 export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onRealPhotoPosted, isAdmin}) => {
-
     const {post} = usePostRealPhoto(isAdmin);
+
+    const [imageError, setImageError] = useState<string>("");
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {
+            const newFiles = Array.from(e.target.files);
+            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+            if (invalidFiles.length > 0) {
+                setImageError("※画像ファイルのみアップロード可能です");
+                return;
+            }
+
+            setImageError("");
+
             const updatedImages = [...formData, ...Array.from(e.target.files)];
             setFormData(updatedImages);
+        } else {
+            setImageError("画像は最大4枚までアップロード可能です。");
+            return;
         }
     };
 
@@ -44,7 +57,8 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setForm
         <>
             <Form ref={formRef} onKeyDown={handleKeyDown}>
                 <Form.Group className="mb-3" controlId="addFormRealImages">
-                    <Form.Label>現地画像を追加する（最大10枚）</Form.Label><br />
+                    <Form.Label className="me-2">現地画像を追加する（最大10枚）</Form.Label>
+                    {imageError && <span className="text-danger">{imageError}</span>}<br />
                     <Form.Label>
                         <FileUploadIcon />
                     </Form.Label>

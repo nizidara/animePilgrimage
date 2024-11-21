@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, memo, RefObject } from "react"
+import React, { ChangeEvent, FC, memo, RefObject, useState } from "react"
 import { Form } from "react-bootstrap"
 import { registerAnimeFormData } from "../../../type/form/anime";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
@@ -14,6 +14,7 @@ type FormProps = {
 };
 
 export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef, anime_icon }) => {
+    const [imageError, setImageError] = useState<string>("");
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -23,6 +24,15 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
+
+        if (file && !file.type.startsWith("image/")) {
+            setImageError("※画像ファイルのみアップロード可能です");
+            e.target.value = "";
+            return;
+        }
+
+        setImageError("");
+
         setFormData(prevInputData => ({ ...prevInputData, icon: file }));
         onFormChange({ ...formData, icon: file });
     };
@@ -61,11 +71,12 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 }
 
                 <Form.Group className="mb-3" controlId="registerFormIcon">
-                    <Form.Label>アイコン画像</Form.Label><br />
+                    <Form.Label className="me-2">アイコン画像</Form.Label>
+                    {imageError && <span className="text-danger">{imageError}</span>}<br />
                     <Form.Label>
                         <FileUploadIcon />
                     </Form.Label>
-                    <Form.Control type="file" name="icon" hidden onChange={handleFileChange} />
+                    <Form.Control type="file" accept="image/*" name="icon" hidden onChange={handleFileChange} />
                 </Form.Group>
                 {formData.icon && <ImagePreview image={formData.icon} handleRemoveIcon={handleRemoveIcon} />}
             </Form>

@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect } from "react"
+import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect, useState } from "react"
 import { SearchMap } from "../map/SearchMap";
 import { Button, Form, Image } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -19,6 +19,8 @@ type FormProps = {
 export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef, isAdmin }) => {
     const { animeList } = useGetAnimeList();
     const { regionList } = useGetRegionList();
+
+    const [imageError, setImageError] = useState<string>("");
 
     useEffect(() => {
         // 画像が追加され、かつアイコンが未設定の場合に、最初の画像をアイコンに設定
@@ -56,6 +58,16 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.images.length + e.target.files.length <= 10) {
+
+            const newFiles = Array.from(e.target.files);
+            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+            if (invalidFiles.length > 0) {
+                setImageError("※画像ファイルのみアップロード可能です");
+                return;
+            }
+
+            setImageError("");
+
             const updatedImages = [...formData.images, ...Array.from(e.target.files)]
             setFormData(prevData => {
                 const updatedData = {
@@ -65,6 +77,9 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 onFormChange(updatedData);
                 return updatedData;
             });
+        } else {
+            setImageError("画像は最大10枚までアップロード可能です。");
+            return;
         }
     };
 
@@ -138,7 +153,8 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 
                 {!isAdmin && <>
                     <Form.Group className="mb-3" controlId="registerPlaceFormImages">
-                        <Form.Label>アニメ画像（最大10枚）</Form.Label><br />
+                        <Form.Label className="me-2">アニメ画像（最大10枚）</Form.Label>
+                        {imageError && <span className="text-danger">{imageError}</span>}<br />
                         <Form.Label>
                             <FileUploadIcon />
                         </Form.Label>

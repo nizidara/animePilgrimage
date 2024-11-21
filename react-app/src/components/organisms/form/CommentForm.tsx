@@ -14,11 +14,24 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
 
     const [comment, setComment] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [imageError, setImageError] = useState<string>("");
 
     const onChangeComment = (e:ChangeEvent<HTMLInputElement>) => setComment(e.target.value);
     const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && selectedImages.length + e.target.files.length <= 4) {
+            const newFiles = Array.from(e.target.files);
+            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+            if (invalidFiles.length > 0) {
+                setImageError("※画像ファイルのみアップロード可能です");
+                return;
+            }
+
+            setImageError("");
+
             setSelectedImages([...selectedImages, ...Array.from(e.target.files)]);
+        } else {
+            setImageError("画像は最大4枚までアップロード可能です。");
+            return;
         }
     };
 
@@ -49,6 +62,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                 <Row className="mb-3">
                     <Col>
                         <Form.Group controlId="commentformPhoto" className="mb-3">
+                            {imageError && <div><span className="text-danger">{imageError}</span><br /></div>}
                             <Form.Label>
                                 <FileUploadIcon />
                             </Form.Label>
