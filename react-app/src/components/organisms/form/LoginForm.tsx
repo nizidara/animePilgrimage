@@ -36,7 +36,7 @@ export const LoginForm: FC = memo(() => {
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
-                    <Form.Control required value={loginId} onChange={onChangeLoginId} autoComplete="username" />
+                    <Form.Control required type="text" pattern="[a-zA-Z0-9_]*" title="ログインIDは半角英数字とアンダーバー（_）のみ使用できます" value={loginId} onChange={onChangeLoginId} autoComplete="username" />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="loginFormPassword">
