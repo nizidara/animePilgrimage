@@ -56,6 +56,7 @@ import { AdminAnimeDetail } from "../components/pages/admin/AdminAnimeDetail";
 import { AdminPlaceDetail } from "../components/pages/admin/AdminPlaceDetail";
 import { AdminPlaceList } from "../components/pages/admin/AdminPlaceList";
 import { PrivateRoute } from "./PrivateRoute";
+import { RegisterAnimeProvider } from "../providers/RegisterAnimeContext";
 
 export const Router: FC = memo(() => {
     return(
@@ -67,8 +68,8 @@ export const Router: FC = memo(() => {
                 <Route path="/search/place" element={<FullLayout><SearchPlace /></FullLayout>} />
 
                 {/* anime */}
-                <Route path="/register_anime" element={<FullLayout><RegisterAnime /></FullLayout>} />
-                <Route path="/register_anime/confirmation" element={<FullLayout><RegisterAnimeConfirmation /></FullLayout>} />
+                <Route path="/register_anime" element={<RegisterAnimeProvider><FullLayout><RegisterAnime /></FullLayout></RegisterAnimeProvider>} />
+                <Route path="/register_anime/confirmation" element={<RegisterAnimeProvider><FullLayout><RegisterAnimeConfirmation /></FullLayout></RegisterAnimeProvider>} />
                 <Route path="/register_anime/complete" element={<FullLayout><RegisterAnimeComplete /></FullLayout>} />
                 <Route path="/anime" element={<FullLayout><AnimeDetail /></FullLayout>} />
                 <Route path="/edit_anime" element={<FullLayout><EditRequestAnime /></FullLayout>} />

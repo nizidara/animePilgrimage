@@ -1,17 +1,16 @@
-import { memo, FC, useCallback, useState, useRef } from "react";
+import { memo, FC, useCallback, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { registerAnimeFormData } from "../../../type/form/anime";
+import { useRegisterAnimeContext } from "../../../providers/RegisterAnimeContext";
 
 export const RegisterAnime: FC = memo(() =>{
     const navigate = useNavigate();
-    const location = useLocation();
 
     //formData
-    const initialFormData = location.state?.formData || { title: '', kana: '', introduction: '' };
-    const [formData, setFormData] = useState<registerAnimeFormData>(initialFormData);
+    const { formData, setFormData } = useRegisterAnimeContext();
     const formRef = useRef<HTMLFormElement>(null);
 
     const formChange = (data:registerAnimeFormData) => {
@@ -19,13 +18,13 @@ export const RegisterAnime: FC = memo(() =>{
     };
 
     //page transition
-    const send = useCallback((formData:registerAnimeFormData) => navigate("/register_anime/confirmation", {state: {formData}}), [navigate]);
+    const send = useCallback(() => navigate("/register_anime/confirmation"), [navigate]);
 
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData);
+                send();
             }
         }
     }
