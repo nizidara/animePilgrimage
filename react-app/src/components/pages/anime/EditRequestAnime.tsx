@@ -1,41 +1,39 @@
-import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
+import { memo, FC, useCallback, useEffect, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { EditAnimeForm } from "../../organisms/form/EditAnimeForm";
 import { editAnimeFormData } from "../../../type/form/anime";
+import { useEditAnimeContext } from "../../../providers/EditAnimeContext";
 
 export const EditRequestAnime: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
-    const animeId = location.state.animeId;
-    const { anime } = useGetAnimeDetail(animeId);
-
-    const initialFormData = location.state?.formData || { title: '', introduction: '', contents: ''};
-
-    const [formData, setFormData] = useState<editAnimeFormData>(initialFormData);
+    //formData
+    const { formData, setFormData, animeIdContext } = useEditAnimeContext();
     const formRef = useRef<HTMLFormElement>(null);
+
+    const animeId = location.state.animeId || animeIdContext;
+    const { anime } = useGetAnimeDetail(animeId);
 
     useEffect(() => {
         if(anime){
             const title = anime.title;
-            const introduction = location.state.formData?.introduction || anime.introduction;
-            const contents = location.state.formData?.contents || '';
-            const icon = location.state.formData?.icon;
+            const introduction = formData.introduction !== null ? formData.introduction : anime.introduction;
+            const contents = formData.contents || '';
+            const icon = formData.icon;
             setFormData({title, introduction, contents, icon})
         }
-        
-    },[anime])
+    },[anime, formData.introduction, formData.contents, formData.icon, setFormData])
     
-    const send = useCallback((formData:editAnimeFormData, animeId:number, currentIcon?:string | null) => navigate("/edit_anime/confirmation", {state: {formData, animeId, currentIcon}}), [navigate]);
-
+    const send = useCallback((animeId:number, currentIcon?:string | null) => navigate("/edit_anime/confirmation", {state: {animeId, currentIcon}}), [navigate]);
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData, animeId, anime?.file_name);
+                send(animeId, anime?.file_name);
             }
         }
     }

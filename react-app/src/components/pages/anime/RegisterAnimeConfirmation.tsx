@@ -7,9 +7,11 @@ import { useRegisterAnime } from "../../../hooks/anime/useRegisterAnime";
 import { useRegisterAnimeContext } from "../../../providers/RegisterAnimeContext";
 
 export const RegisterAnimeConfirmation: FC = memo(() =>{
-    const { formData } = useRegisterAnimeContext();
     const navigate = useNavigate();
-    const {register} = useRegisterAnime();
+
+    const { formData } = useRegisterAnimeContext();
+    
+    const { register } = useRegisterAnime();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     const onClickSend = () => register(formData);

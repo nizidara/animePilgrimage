@@ -57,6 +57,7 @@ import { AdminPlaceDetail } from "../components/pages/admin/AdminPlaceDetail";
 import { AdminPlaceList } from "../components/pages/admin/AdminPlaceList";
 import { PrivateRoute } from "./PrivateRoute";
 import { RegisterAnimeProvider } from "../providers/RegisterAnimeContext";
+import { EditAnimeProvider } from "../providers/EditAnimeContext";
 
 export const Router: FC = memo(() => {
     return(
@@ -72,8 +73,8 @@ export const Router: FC = memo(() => {
                 <Route path="/register_anime/confirmation" element={<RegisterAnimeProvider><FullLayout><RegisterAnimeConfirmation /></FullLayout></RegisterAnimeProvider>} />
                 <Route path="/register_anime/complete" element={<FullLayout><RegisterAnimeComplete /></FullLayout>} />
                 <Route path="/anime" element={<FullLayout><AnimeDetail /></FullLayout>} />
-                <Route path="/edit_anime" element={<FullLayout><EditRequestAnime /></FullLayout>} />
-                <Route path="/edit_anime/confirmation" element={<FullLayout><EditRequestAnimeConfirmation /></FullLayout>} />
+                <Route path="/edit_anime" element={<EditAnimeProvider><FullLayout><EditRequestAnime /></FullLayout></EditAnimeProvider>} />
+                <Route path="/edit_anime/confirmation" element={<EditAnimeProvider><FullLayout><EditRequestAnimeConfirmation /></FullLayout></EditAnimeProvider>} />
                 <Route path="/edit_anime/complete" element={<FullLayout><EditRequestAnimeComplete /></FullLayout>} />
 
                 {/* place */}

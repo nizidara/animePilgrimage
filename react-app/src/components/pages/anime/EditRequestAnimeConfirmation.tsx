@@ -2,34 +2,33 @@ import { memo, FC, useCallback } from "react";
 import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
-import { editAnimeFormData } from "../../../type/form/anime";
 import { useEditRequestAnime } from "../../../hooks/anime/useEditRequestAnime";
 import { EditAnimeDetailDisplay } from "../../organisms/display/EditAnimeDetailDisplay";
+import { useEditAnimeContext } from "../../../providers/EditAnimeContext";
 
 export const EditRequestAnimeConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
-    const {edit} = useEditRequestAnime();
+    const { formData } = useEditAnimeContext();
 
-    const editAnimeFormData = location.state.formData as editAnimeFormData;
     const animeId = location.state.animeId;
     const currentIcon = location.state?.currentIcon;
 
-    const back = useCallback((formData:editAnimeFormData, animeId:number) => navigate("/edit_anime", {state: {formData, animeId}}), [navigate]);
+    const { edit } = useEditRequestAnime();
 
-    const onClickBack = () => back(editAnimeFormData, animeId);
-    const onClickSend = () => edit(editAnimeFormData, animeId);
+    const onClickBack = useCallback(() => navigate(-1), [navigate]);
+    const onClickSend = () => edit(formData, animeId);
 
     return (
         <Container>
             <h2>リクエスト内容確認</h2>
             <EditAnimeDetailDisplay 
-                title={editAnimeFormData.title} 
-                introduction={editAnimeFormData.introduction} 
-                contents={editAnimeFormData.contents} 
+                title={formData.title} 
+                introduction={formData.introduction} 
+                contents={formData.contents} 
                 current_icon={currentIcon}
-                new_icon={editAnimeFormData.icon}
+                new_icon={formData.icon}
             />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>
