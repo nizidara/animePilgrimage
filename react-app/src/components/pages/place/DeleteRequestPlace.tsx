@@ -1,4 +1,4 @@
-import {memo, FC, useCallback, useState, useRef} from "react";
+import {memo, FC, useCallback, useRef} from "react";
 import { Container } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeleteRequestPlaceForm } from "../../organisms/form/DeleteRequestPlaceForm";
@@ -7,25 +7,25 @@ import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { deletePlaceFormData } from "../../../type/form/place";
 import { responsePlaceData } from "../../../type/api/place";
+import { useDeletePlaceContext } from "../../../providers/DeletePlaceContext";
 
 export const DeleteRequestPlace: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
+    //formData
+    const { formData, setFormData } = useDeletePlaceContext();
+    const formRef = useRef<HTMLFormElement>(null);
+
     const placeId = location.state.placeId;
     const { place, loading, error } = useGetPlaceDetail(placeId);
-
-    //formData
-    const initialFormData = location.state?.formData || { contents: ''};
-    const [formData, setFormData] = useState<deletePlaceFormData>(initialFormData);
-    const formRef = useRef<HTMLFormElement>(null);
 
     const formChange = (data:deletePlaceFormData) => {
         setFormData(data); // update form data
     };
 
     //page transition
-    const send = useCallback((formData:deletePlaceFormData, place:responsePlaceData) => navigate("/delete_place/confirmation", {state: {formData, place}}), [navigate]);
+    const send = useCallback((place:responsePlaceData) => navigate("/delete_place/confirmation", {state: {place}}), [navigate]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
     if (loading) {
@@ -44,7 +44,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData, place);
+                send(place);
             }
         }
     }

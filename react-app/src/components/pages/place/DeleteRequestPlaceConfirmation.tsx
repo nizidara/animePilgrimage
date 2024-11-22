@@ -3,23 +3,21 @@ import { Container } from "react-bootstrap";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
-import { deletePlaceFormData } from "../../../type/form/place";
 import { responsePlaceData } from "../../../type/api/place";
 import { useDeleteRequestPlace } from "../../../hooks/places/useDeleteRequestPlace";
+import { useDeletePlaceContext } from "../../../providers/DeletePlaceContext";
 
 export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
-    const deletePlaceFormData = location.state.formData as deletePlaceFormData;
+    const { formData } = useDeletePlaceContext();
     const place = location.state.place as responsePlaceData;
-    const placeId = place.place_id
 
-    const back = useCallback((formData:deletePlaceFormData, placeId:string) => navigate("/delete_place", {state: {formData, placeId}}), [navigate]);
     const {deleteRequest} = useDeleteRequestPlace();
 
-    const onClickBack = () => back(deletePlaceFormData, placeId);
-    const onClickSend = () => deleteRequest(deletePlaceFormData, place);
+    const onClickBack = useCallback(() => navigate(-1), [navigate]);
+    const onClickSend = () => deleteRequest(formData, place);
 
     return (
         <Container>
@@ -34,7 +32,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
                 latitude={place.latitude}
                 longitude={place.longitude}
                 place_icon={place.place_icon}
-                contents={deletePlaceFormData.contents} 
+                contents={formData.contents} 
                 anime_icon={place.anime_icon}
             />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
