@@ -34,7 +34,7 @@ export const useRegisterAnime = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/register_anime/complete", {state: {responseData}})
+            navigation("/register_anime/complete", { state: { responseData }, replace: true })
         }
     }, [responseData, navigation])
 

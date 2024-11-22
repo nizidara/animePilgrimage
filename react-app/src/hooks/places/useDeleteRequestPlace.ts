@@ -33,7 +33,7 @@ export const useDeleteRequestPlace = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/delete_place/complete", {state: {responseData, placeIcon: placeIconRef.current}})
+            navigation("/delete_place/complete", { state: { responseData, placeIcon: placeIconRef.current }, replace: true })
         }
     }, [responseData, navigation])
 

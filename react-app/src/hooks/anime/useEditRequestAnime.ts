@@ -38,7 +38,7 @@ export const useEditRequestAnime = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/edit_anime/complete", {state: {responseData}})
+            navigation("/edit_anime/complete", { state: { responseData }, replace: true })
         }
     }, [responseData, navigation])
 

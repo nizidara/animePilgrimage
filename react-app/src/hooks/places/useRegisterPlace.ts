@@ -40,7 +40,7 @@ export const useRegisterPlace = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/register_place/complete", {state: {responseData}})
+            navigation("/register_place/complete", { state: { responseData }, replace: true })
         }
     }, [responseData, navigation])
 

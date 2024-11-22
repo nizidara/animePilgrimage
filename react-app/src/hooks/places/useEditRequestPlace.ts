@@ -31,7 +31,7 @@ export const useEditRequestPlace = () => {
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
         if(responseData!== null){
-            navigation("/edit_place/complete", {state: {responseData, animePhoto: animePhotoRef.current}})
+            navigation("/edit_place/complete", { state: { responseData, animePhoto: animePhotoRef.current }, replace: true })
         }
     }, [responseData, navigation])
 
