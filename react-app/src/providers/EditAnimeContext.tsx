@@ -5,7 +5,6 @@ import { editAnimeFormData } from "../type/form/anime";
 type EditAnimeContextType = {
     formData: editAnimeFormData;
     setFormData: React.Dispatch<React.SetStateAction<editAnimeFormData>>;
-    animeIdContext: number;
   };
 
 // Contextを作成
@@ -30,10 +29,9 @@ const defaultFormData: editAnimeFormData = {
 
 export const EditAnimeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [formData, setFormData] = useState<editAnimeFormData>(defaultFormData);
-    const animeIdContext = 0;
 
     return (
-        <EditAnimeContext.Provider value={{ formData, setFormData, animeIdContext }}>
+        <EditAnimeContext.Provider value={{ formData, setFormData }}>
             {children}
         </EditAnimeContext.Provider>
     );

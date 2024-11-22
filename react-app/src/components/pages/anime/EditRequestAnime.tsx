@@ -12,21 +12,22 @@ export const EditRequestAnime: FC = memo(() =>{
     const location = useLocation();
 
     //formData
-    const { formData, setFormData, animeIdContext } = useEditAnimeContext();
+    const { formData, setFormData } = useEditAnimeContext();
     const formRef = useRef<HTMLFormElement>(null);
 
-    const animeId = location.state.animeId || animeIdContext;
+    const animeId = location.state.animeId;
     const { anime } = useGetAnimeDetail(animeId);
 
     useEffect(() => {
         if(anime){
-            const title = anime.title;
-            const introduction = formData.introduction !== null ? formData.introduction : anime.introduction;
-            const contents = formData.contents || '';
-            const icon = formData.icon;
-            setFormData({title, introduction, contents, icon})
+            setFormData((prevFormData) =>({
+                title: anime.title,
+                introduction: prevFormData.introduction !== null ? prevFormData.introduction : anime.introduction,
+                contents: prevFormData.contents || '',
+                icon: prevFormData.icon,
+            }))
         }
-    },[anime, formData.introduction, formData.contents, formData.icon, setFormData])
+    },[anime, setFormData])
     
     const send = useCallback((animeId:number, currentIcon?:string | null) => navigate("/edit_anime/confirmation", {state: {animeId, currentIcon}}), [navigate]);
     const onClickNext = () => {

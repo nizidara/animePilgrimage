@@ -59,6 +59,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import { RegisterAnimeProvider } from "../providers/RegisterAnimeContext";
 import { EditAnimeProvider } from "../providers/EditAnimeContext";
 import { RegisterPlaceProvider } from "../providers/RegisterPlaceContext";
+import { EditPlaceProvider } from "../providers/EditPlaceContext";
 
 export const Router: FC = memo(() => {
     return(
@@ -85,8 +86,8 @@ export const Router: FC = memo(() => {
                 <Route path="/place/list" element={<FullLayout><PlaceList /></FullLayout>} />
                 <Route path="/place" element={<FullLayout><PlaceDetail /></FullLayout>} />
                 <Route path="/place/photo" element={<FullLayout><AddPhotoPlace /></FullLayout>} />
-                <Route path="/edit_place" element={<FullLayout><EditRequestPlace /></FullLayout>} />
-                <Route path="/edit_place/confirmation" element={<FullLayout><EditRequestPlaceConfirmation /></FullLayout>} />
+                <Route path="/edit_place" element={<EditPlaceProvider><FullLayout><EditRequestPlace /></FullLayout></EditPlaceProvider>} />
+                <Route path="/edit_place/confirmation" element={<EditPlaceProvider><FullLayout><EditRequestPlaceConfirmation /></FullLayout></EditPlaceProvider>} />
                 <Route path="/edit_place/complete" element={<FullLayout><EditRequestPlaceComplete /></FullLayout>} />
                 <Route path="/delete_place" element={<FullLayout><DeleteRequestPlace /></FullLayout>} />
                 <Route path="/delete_place/confirmation" element={<FullLayout><DeleteRequestPlaceConfirmation /></FullLayout>} />

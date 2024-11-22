@@ -1,58 +1,59 @@
-import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
+import { memo, FC, useCallback, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { editPlaceFormData } from "../../../type/form/place";
 import { EditPlaceForm } from "../../organisms/form/EditPlaceForm";
+import { useEditPlaceContext } from "../../../providers/EditPlaceContext";
 
 export const EditRequestPlace: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
+    
+    //formData
+    const { formData, setFormData, animePhoto, setAnimePhoto } = useEditPlaceContext();
+    const formRef = useRef<HTMLFormElement>(null);
 
     const placeId = location.state.placeId;
     const { place } = useGetPlaceDetail(placeId);
-
-    //formData
-    const initialFormData = location.state?.formData || {name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, contents:''};
-    const [formData, setFormData] = useState<editPlaceFormData>(initialFormData);
-    const [animePhoto, setAnimePhoto] = useState<string[]>([]);
-    const formRef = useRef<HTMLFormElement>(null);
 
     //animeTitle
     const animeTitle = place?.anime_title || "";
 
     useEffect(() => {
         if(place){
-            const name = location.state.formData?.name || place.name;
-            const anime_id = place.anime_id;
-            const region_id = location.state.formData?.region_id || place.region_id;
-            const latitude = location.state.formData?.latitude || place.latitude;
-            const longitude = location.state.formData?.longitude || place.longitude;
-            const comment = location.state.formData?.comment || place.comment;
-            const contents = location.state.formData?.contents || '';
-            const fileNames = location.state.animePhoto || place.file_names;
-            setFormData({name, anime_id, region_id, comment, latitude, longitude, contents})
+            setFormData((prevFormData) => ({
+                name : prevFormData.name || place.name,
+                anime_id : place.anime_id,
+                region_id : prevFormData.region_id || place.region_id,
+                comment : prevFormData.comment || place.comment,
+                latitude : prevFormData.latitude || place.latitude,
+                longitude : prevFormData.longitude || place.longitude,
+                contents : prevFormData.contents || '',
+            }))
+            const fileNames = place.file_names;
             setAnimePhoto(fileNames)
         }
-    },[place])
+    },[place, setFormData, setAnimePhoto])
 
     const formChange = (data:editPlaceFormData) => {
         setFormData(data); // update form data
     };
 
     //page transition
-    const send = useCallback((formData:editPlaceFormData, placeId:string, animePhoto:string[]) => navigate("/edit_place/confirmation", {state: {formData, placeId, animePhoto}}), [navigate]);
+    const send = useCallback((placeId:string) => navigate("/edit_place/confirmation", {state: {placeId}}), [navigate]);
     
-    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
     const onClickNext = () => {
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                send(formData, placeId, animePhoto);
+                send(placeId);
             }
         }
     }
+
+    const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     
     return (
