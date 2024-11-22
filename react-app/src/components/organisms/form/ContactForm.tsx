@@ -43,7 +43,7 @@ export const ContactForm: FC = memo(() => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="contactFormTitle">
-                    <Form.Label>題名</Form.Label>
+                    <Form.Label>題名※</Form.Label>
                     <Form.Control required value={title} maxLength={100} onChange={onChangeTitle}/>
                 </Form.Group>
 

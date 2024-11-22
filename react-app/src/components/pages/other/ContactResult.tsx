@@ -27,7 +27,7 @@ export const ContactResult: FC = memo(() =>{
 
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">
-                    <Button variant="primary" onClick={onClickTop}>アニメ情報に戻る</Button>
+                    <Button variant="primary" onClick={onClickTop}>TOPに戻る</Button>
                 </Col>
             </Row>
 
