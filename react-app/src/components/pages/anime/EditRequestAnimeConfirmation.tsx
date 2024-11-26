@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useEditRequestAnime } from "../../../hooks/anime/useEditRequestAnime";
@@ -23,7 +23,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>リクエスト内容確認</h2>
-            {editError && <div><span className="text-danger">{editError}</span></div>}
+            {editError && <Alert variant="danger">{editError}</Alert>}
             <EditAnimeDetailDisplay 
                 title={formData.title} 
                 introduction={formData.introduction} 
