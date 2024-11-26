@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -14,7 +14,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     const { formData } = useDeletePlaceContext();
     const place = location.state.place as responsePlaceData;
 
-    const {deleteRequest} = useDeleteRequestPlace();
+    const { deleteRequest, deleteRequestError } = useDeleteRequestPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     const onClickSend = () => deleteRequest(formData, place);
@@ -22,6 +22,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>リクエスト内容確認</h2>
+            {deleteRequestError && <Alert variant="danger">{deleteRequestError}</Alert>}
             <p>削除リクエスト内容をご確認ください。</p>
             <DeletePlaceDetailDisplay 
                 name={place.name}

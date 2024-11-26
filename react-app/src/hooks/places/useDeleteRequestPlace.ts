@@ -8,11 +8,14 @@ import { deletePlaceFormData } from "../../type/form/place";
 //post place request
 export const useDeleteRequestPlace = () => {
     const [responseData, setResponseData] = useState<responseRequestPlaceData | null>(null);
+    const [deleteRequestError, setDeleteRequestError] = useState<string | null>(null);
     const placeIconRef = useRef<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const deleteRequest = useCallback((formData : deletePlaceFormData, place: responsePlaceData) => {
+        setDeleteRequestError(null);
+
         const deleteData : requestPlaceData = {
             ...formData,
             ...place,
@@ -25,8 +28,12 @@ export const useDeleteRequestPlace = () => {
             placeIconRef.current = place.place_icon;
         }
 
-        axios.post(`${fastAPIURL}/places/request`, deleteData).then((res) => {
+        axios.post(`${fastAPIURL}/places/request`, deleteData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setDeleteRequestError("送信中にエラーが発生しました");
         })
     }, [setResponseData])
 
@@ -37,5 +44,5 @@ export const useDeleteRequestPlace = () => {
         }
     }, [responseData, navigation])
 
-    return {deleteRequest};
+    return { deleteRequest, deleteRequestError };
 }

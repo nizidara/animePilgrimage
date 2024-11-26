@@ -7,10 +7,13 @@ import api from "../../api/axiosInstance";
 //put anime direct
 export const useAdminEditAnime = () => {
     const [responseData, setResponseData] = useState<responseAnimeData | null>(null);
+    const [editError, setEditError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //put
     const edit = useCallback((animeData : registerAnimeFormData, onAnimeDataUpdated : () => void, animeId: string) => {
+        setEditError(null);
+        
         const registerData : registerAnimeData = {
             ...animeData,
             flag: 1
@@ -25,9 +28,13 @@ export const useAdminEditAnime = () => {
             }
         });
 
-        api.put(`/anime/edit/admin/${animeId}`, formData).then((res) => {
+        api.put(`/anime/edit/admin/${animeId}`, formData)
+        .then((res) => {
             setResponseData(res.data);
             onAnimeDataUpdated();
+        })
+        .catch(() => {
+            setEditError("エラーが発生しました")
         })
     }, [setResponseData])
 
@@ -38,5 +45,5 @@ export const useAdminEditAnime = () => {
         }
     }, [responseData, navigation])
 
-    return {edit};
+    return {edit, editError};
 }

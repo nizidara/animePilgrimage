@@ -1,5 +1,5 @@
 import { FC, KeyboardEvent, memo, RefObject, useState } from "react"
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { responseAnimePhotoData, responsePlaceIconData } from "../../../type/api/photo";
 import { Icon } from "../../atoms/Icon";
 import { useUpdatePlaceIcon } from "../../../hooks/photos/useUpdatePlaceIcon";
@@ -13,7 +13,7 @@ type FormProps = {
 };
 
 export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIcon, formRef, onPlaceIconUpdated, isAdmin}) => {
-    const {update} = useUpdatePlaceIcon(isAdmin);
+    const { update, updateError } = useUpdatePlaceIcon(isAdmin);
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [iconIndex, setIconIndex] = useState<number | null>(null);
@@ -51,6 +51,7 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
             {isEditing && (
                 <Form ref={formRef} onKeyDown={handleKeyDown}>
                     <Form.Label>アイコンに設定する画像を選択してください</Form.Label>
+                    {updateError && <Alert variant="danger">{updateError}</Alert>}
                     {animePhotoList && 
                         <div>
                             <div className="d-flex flex-row flex-nowrap overflow-auto">

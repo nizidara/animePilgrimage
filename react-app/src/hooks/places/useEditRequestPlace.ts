@@ -8,11 +8,14 @@ import { requestPlaceData, responseRequestPlaceData } from "../../type/api/place
 //post place request
 export const useEditRequestPlace = () => {
     const [responseData, setResponseData] = useState<responseRequestPlaceData | null>(null);
+    const [editError, setEditError] = useState<string | null>(null);
     const animePhotoRef = useRef<string[]>([]);
     const navigation = useNavigate();
 
     //post
     const edit = useCallback((formData : editPlaceFormData, placeId: string, animePhoto: string[]) => {
+        setEditError(null);
+
         const editData : requestPlaceData = {
             ...formData,
             place_id: placeId,
@@ -23,8 +26,12 @@ export const useEditRequestPlace = () => {
 
         animePhotoRef.current = animePhoto;
 
-        axios.post(`${fastAPIURL}/places/request`, editData).then((res) => {
+        axios.post(`${fastAPIURL}/places/request`, editData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setEditError("送信中にエラーが発生しました");
         })
     }, [setResponseData])
 
@@ -35,5 +42,5 @@ export const useEditRequestPlace = () => {
         }
     }, [responseData, navigation])
 
-    return {edit};
+    return { edit, editError };
 }

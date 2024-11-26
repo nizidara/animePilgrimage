@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useState } from "react"
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostRealPhoto } from "../../../hooks/photos/usePostRealPhoto";
 
@@ -13,7 +13,7 @@ type FormProps = {
 };
 
 export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onRealPhotoPosted, isAdmin}) => {
-    const {post} = usePostRealPhoto(isAdmin);
+    const { post, postError } = usePostRealPhoto(isAdmin);
 
     const [imageError, setImageError] = useState<string>("");
 
@@ -58,6 +58,7 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setForm
             <Form ref={formRef} onKeyDown={handleKeyDown}>
                 <Form.Group className="mb-3" controlId="addFormRealImages">
                     <Form.Label className="me-2">現地画像を追加する（最大10枚）</Form.Label>
+                    {postError && <Alert variant="danger">{postError}</Alert>}
                     {imageError && <span className="text-danger">{imageError}</span>}<br />
                     <Form.Label>
                         <FileUploadIcon />

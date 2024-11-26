@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, memo, useState } from "react"
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row } from "react-bootstrap";
 import { usePostComment } from "../../../hooks/comments/usePostComment";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 
@@ -10,7 +10,7 @@ type commentFormData = {
 
 export const CommentForm: FC<commentFormData> = memo((props) => {
     const {placeId, onCommentPosted} = props
-    const {post} = usePostComment();
+    const {post, postError} = usePostComment();
 
     const [comment, setComment] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -53,6 +53,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
             <Form>
                 <Form.Group controlId="commentFormComment">
                     <Form.Label>コメント</Form.Label>
+                    {postError && <Alert variant="danger">{postError}</Alert>}
                     <Form.Control as="textarea" name="comment" value={comment} maxLength={140} onChange={onChangeComment} />
                     <Form.Text className="text-muted d-flex justify-content-end align-items-center">
                         {comment.length} / 140

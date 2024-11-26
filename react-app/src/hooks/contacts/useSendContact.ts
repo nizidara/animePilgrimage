@@ -8,10 +8,13 @@ import { sendContactFormData } from "../../type/form/contact";
 //post contact
 export const useSendContact = () => {
     const [responseData, setResponseData] = useState<responseContactData | null>(null);
+    const [sendError, setSendError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const send = useCallback((formData : sendContactFormData) => {
+        setSendError(null);
+        
         const sendData : sendContactData = {
             ...formData,
             contact_date: new Date().toISOString(),
@@ -20,8 +23,12 @@ export const useSendContact = () => {
             user_id: null
         }
 
-        axios.post(`${fastAPIURL}/contacts`, sendData).then((res) => {
+        axios.post(`${fastAPIURL}/contacts`, sendData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setSendError("送信中にエラーが発生しました")
         })
     }, [setResponseData])
 
@@ -32,5 +39,5 @@ export const useSendContact = () => {
         }
     }, [responseData, navigation])
 
-    return {send};
+    return {send, sendError};
 }

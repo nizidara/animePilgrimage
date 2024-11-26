@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 
@@ -20,7 +20,7 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
     const animeTitle = anime ? anime.title : "";
     const regionName = region ? region.region_name : "";
 
-    const {edit} = useEditRequestPlace();
+    const { edit, editError } = useEditRequestPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     const onClickSend = () => edit(formData, placeId, animePhoto);
@@ -28,8 +28,8 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>修正リクエスト内容確認</h2>
+            {editError && <Alert variant="danger">{editError}</Alert>}
             <p>聖地情報の修正リクエストの内容をご確認ください。</p>
-            
             <EditPlaceDetailDisplay 
                 name={formData.name} 
                 anime_title={animeTitle}

@@ -1,5 +1,5 @@
 import { memo, FC, useState, useCallback, useRef } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { DeleteRequestCommentForm } from "../../organisms/form/DeleteRequestCommentForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseCommentData } from "../../../type/api/comment";
@@ -16,7 +16,7 @@ export const DeleteRequestComment: FC = memo(() =>{
     const commentId = comment.comment_id;
     const buttonFlag = false;
 
-    const {post} = useDeleteRequestComment();
+    const {request, requestError} = useDeleteRequestComment();
 
     //formData
     const [formData, setFormData] = useState<deleteCommentFormData>({ contents: ''});
@@ -31,7 +31,7 @@ export const DeleteRequestComment: FC = memo(() =>{
         if (formRef.current) {
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                post(formData, commentId);
+                request(formData, commentId);
             }
         }
     }
@@ -41,6 +41,7 @@ export const DeleteRequestComment: FC = memo(() =>{
         <Container>
             <h2>コメント削除・通報申請</h2>
             <CommentCard comment={comment} buttonFlag={buttonFlag} />
+            {requestError && <Alert variant="danger">{requestError}</Alert>}
             <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
             <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
         </Container>

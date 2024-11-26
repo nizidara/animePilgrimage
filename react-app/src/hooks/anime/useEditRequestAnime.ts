@@ -8,10 +8,13 @@ import { editAnimeFormData } from "../../type/form/anime";
 //post anime
 export const useEditRequestAnime = () => {
     const [responseData, setResponseData] = useState<responseEditAnimeData | null>(null);
+    const [editError, setEditError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const edit = useCallback((animeData : editAnimeFormData, animeId : number) => {
+        setEditError(null);
+        
         const editData : editAnimeData = {
             ...animeData,
             anime_id: animeId,
@@ -30,8 +33,12 @@ export const useEditRequestAnime = () => {
             }
         });
 
-        axios.post(`${fastAPIURL}/anime/edit`, formData).then((res) => {
+        axios.post(`${fastAPIURL}/anime/edit`, formData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setEditError("送信中にエラーが発生しました")
         })
     }, [setResponseData])
 
@@ -42,5 +49,5 @@ export const useEditRequestAnime = () => {
         }
     }, [responseData, navigation])
 
-    return {edit};
+    return {edit, editError};
 }

@@ -8,10 +8,13 @@ import { registerPlaceFormData } from "../../type/form/place";
 //post anime
 export const useRegisterPlace = () => {
     const [responseData, setResponseData] = useState<responsePlaceData | null>(null);
+    const [registerError, setRegisterError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const register = useCallback((placeData : registerPlaceFormData) => {
+        setRegisterError(null);
+
         const { images, ...registerData} : registerPlaceData = {
             ...placeData,
             flag: 1, //display only
@@ -32,8 +35,12 @@ export const useRegisterPlace = () => {
             formData.append('images', image);
         });
 
-        axios.post(`${fastAPIURL}/places`, formData).then((res) => {
+        axios.post(`${fastAPIURL}/places`, formData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setRegisterError("送信中にエラーが発生しました");
         })
     }, [setResponseData])
 
@@ -44,5 +51,5 @@ export const useRegisterPlace = () => {
         }
     }, [responseData, navigation])
 
-    return {register};
+    return { register, registerError };
 }

@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -17,7 +17,7 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
     const animeTitle = anime ? anime.title : "";
     const regionName = region ? region.region_name : "";
 
-    const { register } = useRegisterPlace();
+    const { register, registerError } = useRegisterPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     const onClickSend = () => register(formData);
@@ -25,8 +25,8 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>登録内容確認</h2>
+            {registerError && <Alert variant="danger">{registerError}</Alert>}
             <p>登録する内容をご確認ください。</p>
-            
             <RegisterPlaceDetailDisplay 
                 name={formData.name} 
                 anime_id={formData.anime_id} 

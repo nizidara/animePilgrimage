@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Alert, Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useNavigate } from "react-router-dom";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -23,7 +23,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
     
-    const {edit} = useAdminEditPlace();
+    const { edit, editError } = useAdminEditPlace();
     const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
     const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
     const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
@@ -76,6 +76,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
     return (
         <Container>
             <h2>聖地情報編集</h2>
+            {editError && <Alert variant="danger">{editError}</Alert>}
             <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             {placeId && <>

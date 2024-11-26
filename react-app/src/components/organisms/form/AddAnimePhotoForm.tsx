@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useState } from "react"
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostAnimePhoto } from "../../../hooks/photos/usePostAnimePhoto";
 
@@ -13,7 +13,7 @@ type FormProps = {
 };
 
 export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFormData, formRef, onAnimePhotoPosted, isAdmin}) => {
-    const {post} = usePostAnimePhoto(isAdmin);
+    const { post, postError } = usePostAnimePhoto(isAdmin);
 
     const [imageError, setImageError] = useState<string>("");
 
@@ -58,6 +58,7 @@ export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFor
             <Form ref={formRef} onKeyDown={handleKeyDown}>
                 <Form.Group className="mb-3" controlId="addFormAnimeImages">
                     <Form.Label className="me-2">アニメ画像を追加する（最大10枚）</Form.Label>
+                    {postError && <Alert variant="danger">{postError}</Alert>}
                     {imageError && <span className="text-danger">{imageError}</span>}<br />
                     <Form.Label>
                         <FileUploadIcon />

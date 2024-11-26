@@ -7,10 +7,13 @@ import { postRealPhotoData, responseRealPhotoData } from "../../type/api/photo";
 //post realPhoto
 export const usePostRealPhoto = (isAdmin: boolean) => {
     const [responseData, setResponseData] = useState<responseRealPhotoData[] | null>(null);
+    const [postError, setPostError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const post = useCallback((placeId : string, images: File[], onRealPhotoPosted: () => void) => {
+        setPostError(null);
+
         const postData : postRealPhotoData = {
             place_id: placeId,
             // now null olny
@@ -38,6 +41,8 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
         }).then((res) => {
             setResponseData(res.data);
             onRealPhotoPosted();
+        }).catch(() => {
+            setPostError("投稿中にエラーが発生しました");
         });
     }, [setResponseData])
 
@@ -49,5 +54,5 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
         }
     }, [responseData, navigation, isAdmin])
 
-    return {post};
+    return { post, postError };
 }

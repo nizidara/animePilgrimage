@@ -8,10 +8,13 @@ import { deleteCommentFormData } from "../../type/form/comment";
 //post delete request comment
 export const useDeleteRequestComment = () => {
     const [responseData, setResponseData] = useState<responseDeleteCommentData | null>(null);
+    const [requestError, setRequestError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
-    const post = useCallback((formData : deleteCommentFormData, commentId : string) => {
+    const request = useCallback((formData : deleteCommentFormData, commentId : string) => {
+        setRequestError(null);
+        
         const postData : deleteCommentData = {
             ...formData,
             comment_id: commentId,
@@ -20,8 +23,12 @@ export const useDeleteRequestComment = () => {
             user_id: null
         }
 
-        axios.post(`${fastAPIURL}/comments/report`, postData).then((res) => {
+        axios.post(`${fastAPIURL}/comments/report`, postData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setRequestError("送信中にエラーが発生しました")
         })
     }, [setResponseData])
 
@@ -32,5 +39,5 @@ export const useDeleteRequestComment = () => {
         }
     }, [responseData, navigation])
 
-    return {post};
+    return {request, requestError};
 }

@@ -15,7 +15,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
     const animeId = location.state.animeId;
     const currentIcon = location.state?.currentIcon;
 
-    const { edit } = useEditRequestAnime();
+    const { edit, editError } = useEditRequestAnime();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     const onClickSend = () => edit(formData, animeId);
@@ -23,6 +23,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
     return (
         <Container>
             <h2>リクエスト内容確認</h2>
+            {editError && <div><span className="text-danger">{editError}</span></div>}
             <EditAnimeDetailDisplay 
                 title={formData.title} 
                 introduction={formData.introduction} 

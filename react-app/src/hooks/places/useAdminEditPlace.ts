@@ -7,10 +7,13 @@ import api from "../../api/axiosInstance";
 //put palce direct
 export const useAdminEditPlace = () => {
     const [responseData, setResponseData] = useState<responsePlaceData | null>(null);
+    const [editError, setEditError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //put
     const edit = useCallback((formData : registerPlaceFormData, placeId: string, createdUserId?: string | null) => {
+        setEditError(null);
+
         const {images, icon_index, ...rest} = formData
         const registerData : editAdminPlaceData = {
             ...rest,
@@ -19,8 +22,12 @@ export const useAdminEditPlace = () => {
             edited_user_id: null    //null only(admin)
         }
 
-        api.put(`/places/edit/admin/${placeId}`, registerData).then((res) => {
+        api.put(`/places/edit/admin/${placeId}`, registerData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setEditError("投稿中にエラーが発生しました");
         })
     }, [setResponseData])
 
@@ -31,5 +38,5 @@ export const useAdminEditPlace = () => {
         }
     }, [responseData, navigation])
 
-    return {edit};
+    return { edit, editError };
 }

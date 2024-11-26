@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Alert, Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "../../../hooks/utilities/useQuery";
@@ -16,7 +16,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     const { anime, loading, error, fetchAnimeDetail } = useGetAnimeDetail(animeId);
     const [icon, setIcon] = useState<string | null>(null);
 
-    const {edit} = useAdminEditAnime();
+    const { edit, editError} = useAdminEditAnime();
     const onClickTop = useCallback(() => navigate("/admin/top"), [navigate]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     
@@ -59,6 +59,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     return (
         <Container>
             <h2>アニメ情報編集</h2>
+            {editError && <Alert variant="danger">{editError}</Alert>}
             <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">

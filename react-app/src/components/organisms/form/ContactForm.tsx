@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, FormEvent, KeyboardEvent, memo, useState } from "react"
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import { useSendContact } from "../../../hooks/contacts/useSendContact";
 import { sendContactFormData } from "../../../type/form/contact";
 
 
 export const ContactForm: FC = memo(() => {
-    const {send} = useSendContact();
+    const { send, sendError } = useSendContact();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -32,6 +32,7 @@ export const ContactForm: FC = memo(() => {
     return (
         <>
             <Form onSubmit={onClickSend} onKeyDown={handleKeyDown}>
+                {sendError && <Alert variant="danger">{sendError}</Alert>}
                 <Form.Group className="mb-3" controlId="contactFormName">
                     <Form.Label>名前※</Form.Label>
                     <Form.Control required type="text" value={name} maxLength={20} onChange={onChangeName} />

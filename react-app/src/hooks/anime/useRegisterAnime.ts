@@ -8,10 +8,13 @@ import { registerAnimeFormData } from "../../type/form/anime";
 //post anime
 export const useRegisterAnime = () => {
     const [responseData, setResponseData] = useState<responseAnimeData | null>(null);
+    const [registerError, setRegisterError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //post
     const register = useCallback((animeData : registerAnimeFormData) => {
+        setRegisterError(null);
+        
         const registerData : registerAnimeData = {
             ...animeData,
             flag: 2 //waiting approval only
@@ -26,8 +29,12 @@ export const useRegisterAnime = () => {
             }
         });
 
-        axios.post(`${fastAPIURL}/anime`, formData).then((res) => {
+        axios.post(`${fastAPIURL}/anime`, formData)
+        .then((res) => {
             setResponseData(res.data);
+        })
+        .catch(() => {
+            setRegisterError("登録時にエラーが発生しました")
         })
     }, [setResponseData])
 
@@ -38,5 +45,5 @@ export const useRegisterAnime = () => {
         }
     }, [responseData, navigation])
 
-    return {register};
+    return {register, registerError};
 }
