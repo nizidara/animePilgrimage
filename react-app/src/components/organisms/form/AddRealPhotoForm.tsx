@@ -31,7 +31,7 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setForm
             const updatedImages = [...formData, ...Array.from(e.target.files)];
             setFormData(updatedImages);
         } else {
-            setImageError("画像は最大4枚までアップロード可能です。");
+            setImageError("画像は最大10枚までアップロード可能です。");
             return;
         }
     };

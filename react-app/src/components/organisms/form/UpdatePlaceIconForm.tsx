@@ -80,7 +80,7 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
                                         </div>}
                                 </Col>
                                 <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                                    <Button variant="primary" disabled={iconIndex !== null && placeIcon?.file_name === animePhotoList[iconIndex].file_name} onClick={onClickUpdate}>更新</Button>
+                                    <Button variant="primary" disabled={iconIndex === null || placeIcon?.file_name === animePhotoList[iconIndex].file_name} onClick={onClickUpdate}>更新</Button>
                                 </Col>
                             </Row>
                         </div>
