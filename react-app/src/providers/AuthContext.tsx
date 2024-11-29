@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<userData | null>(null);
+    const [loading, setLoading] = useState(true);
     const { login } = useLoginUser(); 
     const { getUser } = useGetUser(); 
 
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
+            setLoading(true);
             try{
                 const userData = await getUser();
                 setUser(userData);
@@ -47,6 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } catch {
                     logout();
                 }
+            }finally{
+                setLoading(false);
             }
         };
 
@@ -55,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ user, login: handleLogin, logout }}>
-            {children}
+            {loading? <div>Loading</div>: children}
         </AuthContext.Provider>
     );
 };
