@@ -2,6 +2,7 @@ import { FC, memo } from "react"
 import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { useAuth } from "../../../providers/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
+import { BsSearch } from "react-icons/bs";
 
 export const Header: FC = memo(() => {
     const {user, logout} = useAuth();
@@ -17,8 +18,16 @@ export const Header: FC = memo(() => {
             <Navbar collapseOnSelect expand="lg" bg="dark" data-bs-theme="dark">
                 <Container>
                     <Navbar.Brand as={NavLink} to="/">にじげんたび</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <div className="d-flex align-items-center">
+                        <Nav className="d-lg-none me-3">
+                                <Nav.Link as={NavLink} to="/search/anime"><BsSearch /></Nav.Link>
+                        </Nav>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    </div>
+                    
+                    
                     <Navbar.Collapse id="responsive-navbar-nav">
+                        
                         <Nav className="me-auto">
                             <NavDropdown title="検索" id="nav-dropdown-search">
                                 <NavDropdown.Item as={NavLink} to="/search/anime">アニメ検索</NavDropdown.Item>
@@ -39,7 +48,9 @@ export const Header: FC = memo(() => {
                                     <Nav.Link onClick={handleLogout}>ログアウト</Nav.Link>
                                 </>
                             ):(
-                                <Nav.Link as={NavLink} to="/login">ログイン</Nav.Link>
+                                <>
+                                    {/* <Nav.Link as={NavLink} to="/login">ログイン</Nav.Link> */}
+                                </>
                             )}
                         </Nav>
                     </Navbar.Collapse>
