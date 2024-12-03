@@ -1,11 +1,11 @@
 import { memo, FC, useCallback } from "react";
 import { Button, Card, CardGroup, Container } from "react-bootstrap";
-import { useFastAPITest } from "../../../hooks/useFastAPITest";
+// import { useFastAPITest } from "../../../hooks/useFastAPITest";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Top: FC = memo(() =>{
-    const {GetData, data} = useFastAPITest();
-    const onClickGetData = () => GetData("hello");
+    // const {GetData, data} = useFastAPITest();
+    // const onClickGetData = () => GetData("hello");
 
     const navigate = useNavigate();
 
@@ -27,7 +27,10 @@ export const Top: FC = memo(() =>{
                             アニメタイトル作品の検索や、聖地名の検索のほかに、都道府県別の聖地検索ができます。<br />
                             MAP表示は、作品別はもちろん、検索結果別のMAP表示もでき、色々な作品の聖地を一括で見れます。
                         </Card.Text>
-                        <Button variant="primary" onClick={onClickSearchAnime}>アニメ検索</Button> <Button variant="primary" onClick={onClickSearchPlace}>聖地検索</Button>
+                        <center>
+                            <Button className="mb-2" variant="primary" onClick={onClickSearchAnime}>アニメ検索</Button><br />
+                            <Button variant="primary" onClick={onClickSearchPlace}>聖地検索</Button>
+                        </center>
                     </Card.Body>
                 </Card>
                 <Card bg="light" text="dark">
@@ -47,7 +50,11 @@ export const Top: FC = memo(() =>{
                             放送直後や聖地巡礼前にどんどん追加して、みんなで盛り上げよう！<br />
                             作品が存在しない場合は、アニメ登録から作品申請をお願いします。
                         </Card.Text>
-                        <Button variant="primary" onClick={onClickRegisterPlace}>聖地登録</Button> <Button variant="primary" onClick={onClickRegisterAnime}>アニメ申請</Button>
+                        <center>
+                            <Button className="mb-2" variant="primary" onClick={onClickRegisterPlace}>聖地登録</Button><br />
+                            <Button variant="primary" onClick={onClickRegisterAnime}>アニメ申請</Button>
+                        </center>
+                        
                     </Card.Body>
                 </Card>
             </CardGroup>

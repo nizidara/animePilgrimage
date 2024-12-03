@@ -35,10 +35,10 @@ export const AnimeDetail: FC = memo(() =>{
     return (
         <Container>
             <Row className="mt-2 mb-2">
-                <Col xs={6}>
+                <Col xs={8}>
                     <h2>{anime.title}</h2>
                 </Col>
-                <Col xs={6} className="d-flex justify-content-end align-items-center">
+                <Col xs={4} className="d-flex justify-content-end align-items-center">
                 <Button variant="warning" onClick={() => onClickEdit(anime.anime_id)}>修正</Button>
                 </Col>
             </Row>

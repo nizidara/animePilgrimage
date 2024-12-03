@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, FormEvent, KeyboardEvent, memo, useState } from "react"
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useSendContact } from "../../../hooks/contacts/useSendContact";
 import { sendContactFormData } from "../../../type/form/contact";
 
@@ -52,9 +52,11 @@ export const ContactForm: FC = memo(() => {
                     <Form.Label>メッセージ本文※</Form.Label>
                     <Form.Control required as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents} />
                 </Form.Group>
-                <div className="d-grid gap-2">
-                    <Button variant="primary" type="submit">送信</Button>
-                </div>
+                <Row className="justify-content-md-center mt-2">
+                    <Col md="auto">
+                        <Button variant="primary" type="submit">送信</Button>
+                    </Col>
+                </Row>
             </Form>
             
         </>

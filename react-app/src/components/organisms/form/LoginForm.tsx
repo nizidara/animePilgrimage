@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, FormEvent, memo, useState } from "react"
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { loginData } from "../../../type/api/user";
 import { useAuth } from "../../../providers/AuthContext";
@@ -44,9 +44,11 @@ export const LoginForm: FC = memo(() => {
                     <Form.Control required type="password" value={password} onChange={onChangePassword} autoComplete="current-password"/>
                 </Form.Group>
 
-                <div className="d-grid gap-2">
-                    <Button variant="primary" type="submit">ログイン</Button>
-                </div>
+                <Row className="justify-content-md-center mt-2">
+                    <Col md="auto">
+                        <Button variant="primary" type="submit">ログイン</Button>
+                    </Col>
+                </Row>
             </Form>
             
         </>

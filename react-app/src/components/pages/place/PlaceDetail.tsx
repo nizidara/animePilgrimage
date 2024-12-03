@@ -44,10 +44,10 @@ export const PlaceDetail: FC = memo(() =>{
     return (
         <Container>
             <Row className="mt-2 mb-2">
-                <Col xs={6}>
+                <Col xs={7}>
                     <h2>{place.name}</h2>
                 </Col>
-                <Col xs={6} className="d-flex justify-content-end align-items-center">
+                <Col xs={5} className="d-flex justify-content-end align-items-center">
                     <Button variant="warning" onClick={onClickEdit} className="mx-2">修正</Button> <Button variant="danger" onClick={onClickDelete}>削除</Button>
                 </Col>
             </Row>

@@ -64,10 +64,10 @@ export const PlaceList: FC = memo(() =>{
     return (
         <Container>
             <Row className="mt-2 mb-2">
-                <Col xs={6}>
-                    <h2>{anime?.title}聖地一覧</h2>
+                <Col xs={4}>
+                    <h2>聖地一覧</h2>
                 </Col>
-                <Col xs={6} className="d-flex justify-content-end align-items-center">
+                <Col xs={8} className="d-flex justify-content-end align-items-center">
                     {anime != null && <Button variant="outline-primary" onClick={() => onClickAnime(anime.anime_id)}>#{anime.title}</Button>}
                 </Col>
             </Row>
