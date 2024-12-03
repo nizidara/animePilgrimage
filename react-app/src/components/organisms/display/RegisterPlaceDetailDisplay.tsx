@@ -7,6 +7,7 @@ import { DummyMap } from "../map/DummyMap";
 import { ImagePreview } from "../../molecules/ImagePreview";
 import { PhotoCard } from "../card/PhotoCard";
 import { Icon } from "../../atoms/Icon";
+import { Col, Row } from "react-bootstrap";
 
 type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'file_names'> & {
     anime_id?: number | null;
@@ -26,25 +27,53 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
     
     return (
         <>
-            <p>聖地名:{name}{place_id != null && <div>({place_id})</div>}</p>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>聖地名：</b></Col>
+                <Col xs={12} md={9}>{name}{place_id != null && <div>({place_id})</div>}</Col>
+            </Row>
             {flag != null && <p>表示フラグ:{flag}</p>}
-            <p>アニメタイトル:{anime_title}</p>
-            <p>都道府県:{region_name}</p>
-            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}({latitude}, {longitude})
-            <p>紹介コメント：{comment}</p>
-            <div className="d-flex flex-wrap">
-                {images && images.map((image, index) => <ImagePreview key={index} image={image} />)}
-            </div>
-            {file_names && <PhotoCard file_names={file_names} />}
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>アニメタイトル：</b></Col>
+                <Col xs={12} md={9}>{anime_title}</Col>
+            </Row>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>都道府県：</b></Col>
+                <Col xs={12} md={9}>{region_name}</Col>
+            </Row>
+            
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>MAP</b></Col>
+                <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
+            </Row>
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
+            
+            <Row className="mb-2 mt-2">
+                <Col xs={12} md={3}><b>紹介コメント：</b></Col>
+                <Col xs={12} md={9}>{comment}</Col>
+            </Row>
+            {
+                images && 
+                <>
+                    <p><b>アニメ画像</b></p>
+                    <div className="d-flex flex-wrap">
+                        {images.map((image, index) => <ImagePreview key={index} image={image} />)}
+                    </div>
+                </>
+            }
+            {file_names && 
+                <>
+                    <p><b>アニメ画像</b></p>
+                    <PhotoCard file_names={file_names} />
+                </>}
             {icon_index !== null && icon_index !== undefined && images && 
-                <div>
-                    <p>アイコン画像</p>
+                <div className="mt-2">
+                    <p><b>アイコン画像</b></p>
                     <ImagePreview image={images[icon_index]} />
                 </div>
             }
             {place_icon && 
-                <div>
-                    <p>アイコン画像</p>
+                <div className="mt-2">
+                    <p><b>アイコン画像</b></p>
                     <Icon file_name={place_icon} />
                 </div>
             }

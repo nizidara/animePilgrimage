@@ -16,8 +16,8 @@ type SearchMapProps = {
 export const SearchMap: FC<SearchMapProps> = memo((props) => {
     const [markers, setMarkers] = useState<mapboxgl.Marker[]>([]);
     const [initialMarker, setInitialMarker] = useState<mapboxgl.Marker | null>(null); // 初期マーカー用の状態
-    const [selectedMarker, setSelectedMarker] = useState<mapboxgl.Marker | null>(null);
-    const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null);
+    // const [selectedMarker, setSelectedMarker] = useState<mapboxgl.Marker | null>(null);
+    // const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null);
     const { onSelectCoords, longitude, latitude } = props;
 
     const mapContainer = useRef<HTMLDivElement>(null);
@@ -41,13 +41,13 @@ export const SearchMap: FC<SearchMapProps> = memo((props) => {
             setupMarkerEvents(
                 marker,
                 onSelectCoords,
-                setSelectedMarker,
-                setSelectedCoords
+                //setSelectedMarker,
+                //setSelectedCoords
             );
 
             setInitialMarker(marker); 
             applyScale(marker);
-            setSelectedCoords([longitude, latitude]);
+            //setSelectedCoords([longitude, latitude]);
             onSelectCoords(latitude, longitude);
             
             //clean up
@@ -73,14 +73,14 @@ export const SearchMap: FC<SearchMapProps> = memo((props) => {
             setupMarkerEvents(
                 marker,
                 onSelectCoords,
-                setSelectedMarker,
-                setSelectedCoords
+                //setSelectedMarker,
+                //setSelectedCoords
             );
 
             // 検索結果に基づいてマーカーを選択状態にする
             applyScale(marker);
-            setSelectedMarker(marker);
-            setSelectedCoords([searchResult.lng, searchResult.lat]);
+            //setSelectedMarker(marker);
+            //setSelectedCoords([searchResult.lng, searchResult.lat]);
             onSelectCoords(searchResult.lat, searchResult.lng);
     
             setMarkers([marker]);
@@ -90,13 +90,13 @@ export const SearchMap: FC<SearchMapProps> = memo((props) => {
   
     return (
         <>
-            <div ref={mapContainer} className="map-container"></div>
             <SearchMapBoxForm onSearch={handleSearch} />
-            {selectedCoords && (
+            <div ref={mapContainer} className="map-container"></div>
+            {/* {selectedCoords && (
                 <div>
                 Selected Coordinates: {selectedCoords[1]}, {selectedCoords[0]}
                 </div>
-            )}
+            )} */}
         </>
     );
 });

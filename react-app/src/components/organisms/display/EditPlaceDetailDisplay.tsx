@@ -6,6 +6,7 @@ import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { PhotoCard } from "../card/PhotoCard";
+import { Col, Row } from "react-bootstrap";
 
 type editPlaceDetailData = Omit<responseRequestPlaceData, 'place_id' | 'anime_id' | 'region_id' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -25,16 +26,56 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
     
     return (
         <>
-            {request_place_id != null && <p>お問い合わせID:{request_place_id}</p>}
-            {request_date != null && <p>お問い合わせ日時:<DateTimeFormatter datetime={request_date} /></p>}
-            {user_name != null && <p>ユーザー名:{user_name}({user_id})</p>}
-            <p>聖地名:{name}{place_id != null && <div>({place_id})</div>}</p>
-            <p>アニメタイトル:{anime_title}</p>
-            <p>都道府県:{region_name}</p>
-            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}({latitude}, {longitude})
-            <p>紹介コメント：{comment}</p>
+            {request_place_id != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>お問い合わせID：</b></Col>
+                    <Col xs={12} md={9}>{request_place_id}</Col>
+                </Row>
+            }
+            {request_type != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>リクエストタイプ：</b></Col>
+                    <Col xs={12} md={9}>{request_type}</Col>
+                </Row>
+            }
+            {request_date != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>お問い合わせ日時：</b></Col>
+                    <Col xs={12} md={9}><DateTimeFormatter datetime={request_date} /></Col>
+                </Row>
+            }
+            {user_name != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>ユーザー名：</b></Col>
+                    <Col xs={12} md={9}>{user_name}({user_id})</Col>
+                </Row>
+            }
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>聖地名：</b></Col>
+                <Col xs={12} md={9}>{name}{place_id != null && <div>({place_id})</div>}</Col>
+            </Row>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>アニメタイトル：</b></Col>
+                <Col xs={12} md={9}>{anime_title}</Col>
+            </Row>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>都道府県：</b></Col>
+                <Col xs={12} md={9}>{region_name}</Col>
+            </Row>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>MAP</b></Col>
+                <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
+            </Row>
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
+            <Row className="mb-2 mt-2">
+                <Col xs={12} md={3}><b>紹介コメント：</b></Col>
+                <Col xs={12} md={9}>{comment}</Col>
+            </Row>
             <PhotoCard file_names={file_names} />
-            <p>修正理由：{contents}</p>
+            <Row className="mb-2 mt-2">
+                <Col xs={12} md={3}><b>修正理由：</b></Col>
+                <Col xs={12} md={9}>{contents}</Col>
+            </Row>
         </>
     )
 });

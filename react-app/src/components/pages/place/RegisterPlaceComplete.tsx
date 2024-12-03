@@ -18,7 +18,7 @@ export const RegisterPlaceComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地の登録が完了しました</h2>
+            <h2 className="mt-2">聖地の登録が完了しました</h2>
             <RegisterPlaceDetailDisplay 
                 name={responseData.name} 
                 anime_title={responseData.anime_title} 

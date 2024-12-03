@@ -24,7 +24,7 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
     
     return (
         <Container>
-            <h2>登録内容確認</h2>
+            <h2 className="mt-2">登録内容確認</h2>
             {registerError && <Alert variant="danger">{registerError}</Alert>}
             <p>登録する内容をご確認ください。</p>
             <RegisterPlaceDetailDisplay 

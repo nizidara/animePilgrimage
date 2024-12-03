@@ -27,7 +27,7 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>修正リクエスト内容確認</h2>
+            <h2 className="mt-2">修正リクエスト内容確認</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
             <p>聖地情報の修正リクエストの内容をご確認ください。</p>
             <EditPlaceDetailDisplay 

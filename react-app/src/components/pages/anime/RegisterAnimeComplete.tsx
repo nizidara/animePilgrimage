@@ -12,9 +12,10 @@ export const RegisterAnimeComplete: FC = memo(() =>{
     const responseData = location.state.responseData as responseAnimeData;
     
     const onClickTop = useCallback(() => navigate("/"), [navigate]);
+    
     return (
         <Container>
-            <h2>申請が完了しました。</h2>
+            <h2 className="mt-2">申請が完了しました。</h2>
             <p>新規アニメ作品の申請が完了しました。<br />
             承認され次第、聖地情報の登録が可能になります。</p>
             <RegisterAnimeDetailDisplay title={responseData.title} kana={responseData.kana} introduction={responseData.introduction} />

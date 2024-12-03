@@ -16,7 +16,7 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>修正リクエストを送信しました</h2>
+            <h2 className="mt-2">修正リクエストを送信しました</h2>
 
             <EditPlaceDetailDisplay 
                 name={responseData.name} 

@@ -46,7 +46,7 @@ export const EditRequestAnime: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>作品修正リクエスト</h2>
+            <h2 className="mt-2">作品修正リクエスト</h2>
             <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>

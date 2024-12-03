@@ -19,12 +19,11 @@ export const Header: FC = memo(() => {
                 <Container>
                     <Navbar.Brand as={NavLink} to="/">にじげんたび</Navbar.Brand>
                     <div className="d-flex align-items-center">
-                        <Nav className="d-lg-none me-3">
+                        <Nav className="d-lg-none me-3"> {/* スマホ表示用 */}
                                 <Nav.Link as={NavLink} to="/search/anime"><BsSearch /></Nav.Link>
                         </Nav>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     </div>
-                    
                     
                     <Navbar.Collapse id="responsive-navbar-nav">
                         
@@ -42,6 +41,9 @@ export const Header: FC = memo(() => {
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar.Collapse className="justify-content-end">
+                        <Nav className="d-none d-lg-flex"> {/* デスクトップ表示用 */}
+                            <Nav.Link as={NavLink} to="/search/anime"><BsSearch /></Nav.Link>
+                        </Nav>
                         <Nav>
                             {user ? (
                                 <>

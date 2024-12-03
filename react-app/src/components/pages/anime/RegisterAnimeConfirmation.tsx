@@ -18,7 +18,7 @@ export const RegisterAnimeConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>新規アニメ登録申請 内容確認</h2>
+            <h2 className="mt-2">新規アニメ登録申請 内容確認</h2>
             <p>登録する内容をご確認ください。</p>
             {registerError && <Alert variant="danger">{registerError}</Alert>}
             <RegisterAnimeDetailDisplay title={formData.title} kana={formData.kana} introduction={formData.introduction} icon={formData.icon} />

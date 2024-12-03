@@ -16,7 +16,7 @@ export const EditRequestAnimeComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>修正リクエストが完了しました</h2>
+            <h2 className="mt-2">修正リクエストが完了しました</h2>
             <EditAnimeDetailDisplay 
                 title={responseData.title}
                 introduction={responseData.introduction}

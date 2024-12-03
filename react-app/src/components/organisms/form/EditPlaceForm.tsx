@@ -6,6 +6,7 @@ import { editPlaceFormData } from "../../../type/form/place";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { PhotoCard } from "../card/PhotoCard";
+import { BsInfoCircle } from "react-icons/bs";
 
 type FormProps = {
     onFormChange: (data: editPlaceFormData) => void;
@@ -70,6 +71,9 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                     </Form.Select>
                 </Form.Group>
 
+                <p>MAP※ <small className="text-muted">({formData.latitude}, {formData.longitude})</small><br />
+                <small className="text-muted"><BsInfoCircle /> MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。<br />
+                再検索が必要な場合は、検索フォームに近くのランドマーク名を入力して検索ボタンをクリックし、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
                 {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} longitude={formData.longitude} latitude={formData.latitude} /> : <DummyMap />}
 
                 <Form.Group className="mb-3" controlId="editPlaceFormComment">

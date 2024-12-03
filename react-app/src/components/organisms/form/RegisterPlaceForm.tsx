@@ -7,6 +7,7 @@ import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
+import { BsInfoCircle } from "react-icons/bs";
 
 type FormProps = {
     onFormChange: (data: registerPlaceFormData) => void;
@@ -27,7 +28,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         if (formData.images.length > 0 && formData.icon_index === null ) {
             setFormData(prevInputData => ({...prevInputData, icon_index: 0}));
         }
-      }, [formData.images, formData.icon_index]);
+      }, [formData.images, formData.icon_index, setFormData]);
     
     //入力フォーム更新
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -142,10 +143,14 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                         ))}
                     </Form.Select>
                 </Form.Group>
-
+                
+                <p>MAP※ <small className="text-muted">({formData.latitude}, {formData.longitude})</small><br />
+                <small className="text-muted"><BsInfoCircle /> 検索フォームに近くのランドマーク名を入力して検索ボタンをクリックしてください。<br />
+                クリック後、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
                 {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} /> : <DummyMap />}
+                
 
-                <Form.Group className="mb-3" controlId="registerPlaceFormComment">
+                <Form.Group className="mt-3 mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>

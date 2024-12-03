@@ -13,28 +13,28 @@ export const resetScale = (marker: mapboxgl.Marker) => {
 export const setupMarkerEvents = (
     marker: mapboxgl.Marker,
     onSelectCoords: (lat: number, lng: number) => void,
-    setSelectedMarker: (marker: mapboxgl.Marker) => void,
-    setSelectedCoords: (coords: [number, number]) => void
+    //setSelectedMarker: (marker: mapboxgl.Marker) => void,
+    //setSelectedCoords: (coords: [number, number]) => void
 ) => {
 
     // クリックイベントの設定
     marker.getElement().addEventListener('click', () => {
         applyScale(marker);
-        setSelectedMarker(marker);
-        setSelectedCoords([marker.getLngLat().lng, marker.getLngLat().lat]);
+        //setSelectedMarker(marker);
+        //setSelectedCoords([marker.getLngLat().lng, marker.getLngLat().lat]);
         onSelectCoords(marker.getLngLat().lat, marker.getLngLat().lng);
     });
 
     // ドラッグ開始時の処理
     marker.on('dragstart', () => {
         applyScale(marker);
-        setSelectedMarker(marker);
+        //setSelectedMarker(marker);
     });
 
     // ドラッグ終了時の処理
     marker.on('dragend', function () {
         const lngLat = marker.getLngLat();
-        setSelectedCoords([lngLat.lng, lngLat.lat]);
+        //setSelectedCoords([lngLat.lng, lngLat.lat]);
         onSelectCoords(lngLat.lat, lngLat.lng);
 
         // ドラッグ終了後も選択したマーカーは拡大されたまま
