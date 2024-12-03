@@ -9,7 +9,7 @@ export const Logout: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>ログアウトしました</h2>
+            <h2 className="mt-2">ログアウトしました</h2>
             
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">

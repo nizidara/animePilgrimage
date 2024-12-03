@@ -6,6 +6,7 @@ import { DisplayMap } from "../map/DisplayMap";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
+import { Col, Row } from "react-bootstrap";
 
 type deletePlaceDetailData = Omit<responseRequestPlaceData, 'region_id' | 'region_name' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -24,14 +25,34 @@ export const DeletePlaceDetailDisplay: FC<deletePlaceDetailData> = memo((props) 
     
     return (
         <>
-            {request_place_id != null && <p>お問い合わせID:{request_place_id}</p>}
-            {request_date != null && <p>お問い合わせ日時:<DateTimeFormatter datetime={request_date} /></p>}
-            {user_name != null && <p>ユーザー名:{user_name}({user_id})</p>}
+            {request_place_id != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>お問い合わせID：</b></Col>
+                    <Col xs={12} md={9}>{request_place_id}</Col>
+                </Row>
+            }
+            {request_date != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>お問い合わせ日時：</b></Col>
+                    <Col xs={12} md={9}><DateTimeFormatter datetime={request_date} /></Col>
+                </Row>
+            }
+            {user_name != null && 
+                <Row className="mb-2">
+                    <Col xs={12} md={3}><b>ユーザー名：</b></Col>
+                    <Col xs={12} md={9}>{user_name}({user_id})</Col>
+                </Row>
+            }
             <PlaceSummaryCard name={name} title={anime_title} comment={comment} anime_id={anime_id} place_id={place_id} place_icon={place_icon}/>
-            <div>({latitude}, {longitude})</div>
+            <Row className="mb-2">
+                <Col xs={12} md={3}><b>MAP</b></Col>
+                <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
+            </Row>
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
-            <p>削除申請理由</p>
-            <p>{contents}</p>
+            <Row className="mb-2 mt-2">
+                <Col xs={12} md={3}><b>削除申請理由：</b></Col>
+                <Col xs={12} md={9}>{contents}</Col>
+            </Row>
         </>
     )
 });

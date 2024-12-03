@@ -39,7 +39,7 @@ export const DeleteRequestComment: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>コメント削除・通報申請</h2>
+            <h2 className="mt-2">コメント削除・通報申請</h2>
             <CommentCard comment={comment} buttonFlag={buttonFlag} />
             {requestError && <Alert variant="danger">{requestError}</Alert>}
             <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />

@@ -21,7 +21,7 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>コメント削除・通報申請が完了しました</h2>
+            <h2 className="mt-2">コメント削除・通報申請が完了しました</h2>
             <DeleteCommentDetailDisplay contents={responseData.contents} delete_comment_id={responseData.delete_comment_id} request_date={responseData.request_date} comment={comment} />
             <Row className="justify-content-md-center mt-2">
                 <Col md="auto">

@@ -15,7 +15,7 @@ export const ContactResult: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>お問い合わせが完了しました</h2>
+            <h2 className="mt-2">お問い合わせが完了しました</h2>
             <ContactDetailDisplay 
                 contact_id={responseData.contact_id} 
                 name={responseData.name} 

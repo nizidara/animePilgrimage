@@ -51,9 +51,8 @@ export const DeleteRequestPlace: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>聖地削除リクエスト</h2>
+            <h2 className="mt-2">聖地削除リクエスト</h2>
             <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
-            <br />
             <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
 
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />

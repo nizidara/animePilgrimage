@@ -31,7 +31,7 @@ export const SearchAnime: FC = memo(() =>{
 
     return (
         <Container>
-            <h1 className="mt-1">作品一覧</h1>
+            <h1 className="mt-2">作品一覧</h1>
             <SearchAnimeForm onSearch={handleSearch} />
             <SwitchSearchLink flag={0} />
             <ListGroup>

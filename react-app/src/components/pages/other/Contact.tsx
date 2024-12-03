@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 export const Contact: FC = memo(() =>{
     return (
         <Container>
-            <h1>お問い合わせ</h1>
+            <h2 className="mt-2">お問い合わせ</h2>
             <ContactForm />
         </Container>
         

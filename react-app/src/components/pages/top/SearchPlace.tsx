@@ -27,7 +27,7 @@ export const SearchPlace: FC = memo(() =>{
 
     return (
         <Container>
-            <h1 className="mt-1">聖地検索</h1>
+            <h1 className="mt-2">聖地検索</h1>
             <SearchPlaceForm onSearch={handleSearch} />
 
             <SwitchSearchLink flag={1} />

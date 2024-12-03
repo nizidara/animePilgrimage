@@ -5,7 +5,7 @@ import { LoginForm } from "../../organisms/form/LoginForm";
 export const Login: FC = memo(() =>{
     return (
         <Container>
-            <h2>ログイン</h2>
+            <h2 className="mt-2">ログイン</h2>
             <LoginForm />
         </Container>
     )

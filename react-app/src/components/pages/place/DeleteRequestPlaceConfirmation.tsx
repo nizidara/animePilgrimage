@@ -21,7 +21,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>リクエスト内容確認</h2>
+            <h2 className="mt-2">リクエスト内容確認</h2>
             {deleteRequestError && <Alert variant="danger">{deleteRequestError}</Alert>}
             <p>削除リクエスト内容をご確認ください。</p>
             <DeletePlaceDetailDisplay 

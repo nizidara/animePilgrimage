@@ -9,7 +9,7 @@ export const Guide: FC = memo(() =>{
     return (
         <>
             <Container>
-                <h1>FAQ</h1>
+                <h2 className="mt-2">FAQ</h2>
                 <FAQCard faq={faq}/>
                 <br />
                 <h2>お問い合わせ</h2>

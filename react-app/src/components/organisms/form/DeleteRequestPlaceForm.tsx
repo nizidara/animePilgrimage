@@ -19,7 +19,7 @@ export const DeleteRequestPlaceForm: FC<FormProps> = memo(({ onFormChange, formD
     return (
         <>
             <Form ref={formRef}>
-                <Form.Group className="mb-3" controlId="deletePlaceFormContents">
+                <Form.Group className="mb-3 mt-3" controlId="deletePlaceFormContents">
                     <Form.Label>削除申請理由※</Form.Label>
                     <Form.Control required as="textarea" name="contents" defaultValue={formData.contents} maxLength={1000} onChange={handleChange} />
                     <Form.Text className="text-muted">{formData.contents.length} / 1000 </Form.Text>

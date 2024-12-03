@@ -17,7 +17,7 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
 
     return (
         <Container>
-            <h2>削除リクエストを送信しました</h2>
+            <h2 className="mt-2">削除リクエストを送信しました</h2>
 
             <DeletePlaceDetailDisplay 
                 name={responseData.name}

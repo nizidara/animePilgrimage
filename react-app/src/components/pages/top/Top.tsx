@@ -18,7 +18,7 @@ export const Top: FC = memo(() =>{
         <Container>
             <h2 className="mt-2">見てきた世界を、旅しよう。</h2>
             <p>にじげんたびは、アニメで見てきた世界・キャラクターたちが生きてきた世界を巡る、聖地巡礼向け情報共有サービスです。</p>
-            <h3>にじげんたびでできること</h3>
+            <h3 className="mt-2">にじげんたびでできること</h3>
             <CardGroup className="mt-2">
                 <Card bg="light" text="dark">
                     <Card.Body>
