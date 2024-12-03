@@ -52,13 +52,12 @@ export const ContactForm: FC = memo(() => {
                     <Form.Label>メッセージ本文※</Form.Label>
                     <Form.Control required as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents} />
                 </Form.Group>
-                <Row className="justify-content-md-center mt-2">
-                    <Col md="auto">
+                <Row className="justify-content-center mt-2">
+                    <Col xs="auto">
                         <Button variant="primary" type="submit">送信</Button>
                     </Col>
                 </Row>
             </Form>
-            
         </>
     )
 });

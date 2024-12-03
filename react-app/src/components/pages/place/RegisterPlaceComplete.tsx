@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responsePlaceData } from "../../../type/api/place";
@@ -31,12 +31,23 @@ export const RegisterPlaceComplete: FC = memo(() =>{
                 file_names={responseData.file_names}
             />
 
-            <center>
-                <Button variant="primary" onClick={onClickRegisterPlace} className="mt-2">続けて聖地を登録</Button><br />
-                <Button variant="primary" onClick={onClickAnime} className="mt-2">アニメ情報</Button><br />
-                <Button variant="primary" onClick={onClickPlace} className="mt-2">聖地情報</Button>
-            </center>
-            
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={onClickRegisterPlace}>続けて聖地を登録</Button>
+                </Col>
+            </Row>
+
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={onClickAnime}>アニメ情報</Button>
+                </Col>
+            </Row>
+
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={onClickPlace}>聖地情報</Button>
+                </Col>
+            </Row>
         </Container>
     )
 });

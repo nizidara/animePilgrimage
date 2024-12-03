@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseAnimeData } from "../../../type/api/anime";
@@ -12,18 +12,21 @@ export const RegisterAnimeComplete: FC = memo(() =>{
     const responseData = location.state.responseData as responseAnimeData;
     
     const onClickTop = useCallback(() => navigate("/"), [navigate]);
-    
+
     return (
         <Container>
             <h2 className="mt-2">申請が完了しました。</h2>
             <p>新規アニメ作品の申請が完了しました。<br />
             承認され次第、聖地情報の登録が可能になります。</p>
+            
             <RegisterAnimeDetailDisplay title={responseData.title} kana={responseData.kana} introduction={responseData.introduction} />
             {responseData.file_name && <Icon file_name={responseData.file_name} />}
 
-            <div className="d-grid gap-2">
-                <Button variant="primary" onClick={onClickTop}>TOP</Button>
-            </div>
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                </Col>
+            </Row>
         </Container>
     )
 });

@@ -26,14 +26,14 @@ export const EditRequestAnimeComplete: FC = memo(() =>{
             />
             {responseData.file_name && <Icon file_name={responseData.file_name} />}
 
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={() => onClickAnime(responseData.anime_id)}>アニメ情報に戻る</Button>
                 </Col>
             </Row>
 
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
                 </Col>
             </Row>

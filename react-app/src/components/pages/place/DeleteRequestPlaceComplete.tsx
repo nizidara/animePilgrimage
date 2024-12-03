@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseRequestPlaceData } from "../../../type/api/place";
@@ -34,10 +34,17 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
                 anime_icon={responseData.anime_icon}
             />
 
-            <center>
-            <Button variant="primary" onClick={() => onClickPlace(placeId)} className="mt-2">聖地情報に戻る</Button><br />
-            <Button variant="primary" onClick={onClickTop} className="mt-2">TOPへ</Button>
-            </center>
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={() => onClickPlace(placeId)}>聖地情報に戻る</Button>
+                </Col>
+            </Row>
+
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
+                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                </Col>
+            </Row>
         </Container>
     )
 });

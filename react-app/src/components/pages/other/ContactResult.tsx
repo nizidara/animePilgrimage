@@ -25,14 +25,14 @@ export const ContactResult: FC = memo(() =>{
                 contact_date={responseData.contact_date} 
             />
 
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={onClickTop}>TOPに戻る</Button>
                 </Col>
             </Row>
 
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={onClickGuide}>利用ガイド</Button>
                 </Col>
             </Row>

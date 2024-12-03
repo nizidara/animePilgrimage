@@ -23,8 +23,8 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
         <Container>
             <h2 className="mt-2">コメント削除・通報申請が完了しました</h2>
             <DeleteCommentDetailDisplay contents={responseData.contents} delete_comment_id={responseData.delete_comment_id} request_date={responseData.request_date} comment={comment} />
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={() => onClickPlace(comment.place_id)}>聖地情報に戻る</Button>
                 </Col>
             </Row>

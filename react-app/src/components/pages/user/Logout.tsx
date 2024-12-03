@@ -11,8 +11,8 @@ export const Logout: FC = memo(() =>{
         <Container>
             <h2 className="mt-2">ログアウトしました</h2>
             
-            <Row className="justify-content-md-center mt-2">
-                <Col md="auto">
+            <Row className="justify-content-center mt-2">
+                <Col xs="auto">
                     <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
                 </Col>
             </Row>

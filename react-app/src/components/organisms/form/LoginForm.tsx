@@ -44,13 +44,12 @@ export const LoginForm: FC = memo(() => {
                     <Form.Control required type="password" value={password} onChange={onChangePassword} autoComplete="current-password"/>
                 </Form.Group>
 
-                <Row className="justify-content-md-center mt-2">
-                    <Col md="auto">
+                <Row className="justify-content-center mt-2">
+                    <Col xs="auto">
                         <Button variant="primary" type="submit">ログイン</Button>
                     </Col>
                 </Row>
             </Form>
-            
         </>
     )
 });
