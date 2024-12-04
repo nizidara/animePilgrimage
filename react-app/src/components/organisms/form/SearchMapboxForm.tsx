@@ -28,10 +28,10 @@ export const SearchMapBoxForm: FC<SearchMapboxFormProps> = memo((props) => {
             <Form onKeyDown={handleKeyDown}>
                 <Form.Group as={Row} className="mb-3" controlId="searchPlaceFormName">
                     <Col>
-                        <Form.Control type="search" value={query} placeholder="ランドマーク名を入力してください" onChange={onChangeQuery} />
+                        <Form.Control type="search" value={query} maxLength={200} placeholder="ランドマーク名を入力してください" onChange={onChangeQuery} />
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={2} xl={1} xxl={1}>
-                        <Button onClick={onClickSearch}>検索</Button>
+                        <Button onClick={onClickSearch} disabled={query.length > 200}>検索</Button>
                     </Col>
                 </Form.Group>
             </Form>

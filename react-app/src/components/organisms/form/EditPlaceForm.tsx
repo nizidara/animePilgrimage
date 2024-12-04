@@ -79,7 +79,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                 <Form.Group className="mb-3" controlId="editPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
-                    <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
+                    <Form.Text className={`${formData.comment && formData.comment.length > 200 ? "text-danger" : "text-muted"}`}>{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
                 </Form.Group>
                 
                 {animePhoto.length !==0 && 
@@ -92,7 +92,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                 <Form.Group className="mb-3" controlId="editPlaceFormContents">
                     <Form.Label>リクエスト理由※（作品名の修正・画像削除はこちらに記載してください）</Form.Label>
                     <Form.Control required as="textarea" name="contents" defaultValue={formData.contents} maxLength={1000} onChange={handleChange} />
-                    <Form.Text className="text-muted">{formData.contents ? formData.contents.length : 0} / 1000 </Form.Text>
+                    <Form.Text className={`${formData.contents.length > 1000 ? "text-danger" : "text-muted"}`}>{formData.contents.length} / 1000 </Form.Text>
                 </Form.Group>
             </Form>
         </>

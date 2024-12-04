@@ -33,10 +33,10 @@ export const SearchAnimeForm: FC<FormProps> = memo(({onSearch}) => {
             <Form onSubmit={onSubmit}>
                 <Form.Group as={Row} className="mb-3 d-flex justify-content-between mt-2" controlId="SearchAnimeFormTitle">
                     <Col>
-                        <Form.Control type="search" value={title} placeholder="アニメタイトル絞り込み" onChange={onChangeTitle} />
+                        <Form.Control type="search" value={title} maxLength={50} placeholder="アニメタイトル絞り込み" onChange={onChangeTitle} />
                     </Col>
                     <Col xs="auto">
-                        <Button variant="outline-primary" onClick={onClickSearch}>検索</Button>
+                        <Button variant="outline-primary" onClick={onClickSearch} disabled={title.length > 50}>検索</Button>
                     </Col>
                 </Form.Group>
             </Form>

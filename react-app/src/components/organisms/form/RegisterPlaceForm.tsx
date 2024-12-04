@@ -121,7 +121,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 <Form.Group className="mb-3" controlId="registerPlaceFormName">
                     <Form.Label>聖地名※</Form.Label>
                     <Form.Control required type="text" name="name" defaultValue={formData.name} maxLength={30} onChange={handleChange} />
-                    <Form.Text className="text-muted">{formData.name.length} / 30 </Form.Text>
+                    <Form.Text className={`${formData.name.length > 30 ? "text-danger" : "text-muted"}`}>{formData.name.length} / 30 </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="registerPlaceSelectTitle">
@@ -153,7 +153,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 <Form.Group className="mt-3 mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>
                     <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
-                    <Form.Text className="text-muted">{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
+                    <Form.Text className={`${formData.comment && formData.comment.length > 200 ? "text-danger" : "text-muted"}`}>{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
                 </Form.Group>
                 
                 {!isAdmin && <>

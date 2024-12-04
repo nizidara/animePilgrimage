@@ -47,10 +47,10 @@ export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo(({onSearch}) => {
                 
                 <Form.Group as={Row} className="mb-3" controlId="searchPlaceFormName">
                     <Col>
-                        <Form.Control type="search" value={name} placeholder="聖地名検索" onChange={onChangeName} />
+                        <Form.Control type="search" value={name} maxLength={30} placeholder="聖地名検索" onChange={onChangeName} />
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={2} xl={1} xxl={1}>
-                        <Button variant="outline-primary" onClick={onClickSearch}>検索</Button>
+                        <Button variant="outline-primary" onClick={onClickSearch} disabled={name.length > 30}>検索</Button>
                     </Col>
                 </Form.Group>
             </Form>

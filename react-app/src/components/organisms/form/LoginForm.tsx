@@ -36,17 +36,17 @@ export const LoginForm: FC = memo(() => {
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form.Group className="mb-3" controlId="loginFormLoginId">
                     <Form.Label>ログインID</Form.Label>
-                    <Form.Control required type="text" pattern="[a-zA-Z0-9_]*" title="ログインIDは半角英数字とアンダーバー（_）のみ使用できます" value={loginId} onChange={onChangeLoginId} autoComplete="username" />
+                    <Form.Control required type="text" maxLength={20} pattern="[a-zA-Z0-9_]*" title="ログインIDは半角英数字とアンダーバー（_）のみ使用できます" value={loginId} onChange={onChangeLoginId} autoComplete="username" />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="loginFormPassword">
                     <Form.Label>パスワード</Form.Label>
-                    <Form.Control required type="password" value={password} onChange={onChangePassword} autoComplete="current-password"/>
+                    <Form.Control required type="password" maxLength={32} value={password} onChange={onChangePassword} autoComplete="current-password"/>
                 </Form.Group>
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" type="submit">ログイン</Button>
+                        <Button variant="primary" type="submit" disabled={loginId.length > 20 || password.length > 32}>ログイン</Button>
                     </Col>
                 </Row>
             </Form>
