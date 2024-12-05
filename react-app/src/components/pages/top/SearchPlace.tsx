@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Container, ListGroup, Spinner } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -9,8 +9,12 @@ import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 export const SearchPlace: FC = memo(() =>{
     const [name, setName] = useState<string>();
     const [regionId, setRegionId] = useState<string>();
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const pageSize = 5;
+    
+    const { placeList, totalCount, loading, error } = useGetPlaceList(name, undefined, regionId, currentPage, pageSize);
 
-    const { placeList, loading, error } = useGetPlaceList(name, undefined, regionId);
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     const navigate = useNavigate();
 
@@ -22,8 +26,8 @@ export const SearchPlace: FC = memo(() =>{
         setRegionId(searchRegionId);
       }, []);
 
-    if (loading) return <p>読み込み中...</p>;
-    if (error) return <p>エラー: {error}</p>;
+    if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
+    if (error) return <Container><p>エラー: {error}</p></Container>;
 
     return (
         <Container>
@@ -50,6 +54,17 @@ export const SearchPlace: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
+            <div>
+                <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                    Previous
+                </button>
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                    Next
+                </button>
+            </div>
         </Container>
     )
         
