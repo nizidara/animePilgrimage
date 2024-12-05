@@ -22,9 +22,12 @@ export const PlaceList: FC = memo(() =>{
     const animeId = query.get('anime_id');
     const name = location.state?.name ? location.state.name : null;
     const regionId = location.state?.regionId ? location.state.regionId : null;
+    // const [currentPage, setCurrentPage] = useState<number>(1);
+    const currentPage = 1;
+    const pageSize = 200;
 
     const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList(name, animeId, regionId);
+    const { placeList } = useGetPlaceList(name, animeId, regionId, currentPage, pageSize);
     const geojson = convertPlaceListToGeoJson(placeList);
 
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);

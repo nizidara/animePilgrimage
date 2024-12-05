@@ -12,8 +12,12 @@ export const AnimeDetail: FC = memo(() =>{
 
     const query = useQuery();
     const animeId = query.get('anime_id');
+    // const [currentPage, setCurrentPage] = useState<number>(1);
+    const currentPage = 1;
+    const pageSize = 200;
+
     const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList(undefined, animeId, undefined);
+    const { placeList } = useGetPlaceList(undefined, animeId, undefined, currentPage, pageSize);
 
     const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
     const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);

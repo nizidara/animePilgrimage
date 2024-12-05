@@ -1,16 +1,17 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Button, Container, ListGroup, Spinner } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
+import { PaginationControls } from "../../molecules/PaginationControls";
 
 export const SearchPlace: FC = memo(() =>{
     const [name, setName] = useState<string>();
     const [regionId, setRegionId] = useState<string>();
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const pageSize = 5;
+    const pageSize = 20;
     
     const { placeList, totalCount, loading, error } = useGetPlaceList(name, undefined, regionId, currentPage, pageSize);
 
@@ -24,7 +25,15 @@ export const SearchPlace: FC = memo(() =>{
     const handleSearch = useCallback((searchName: string, searchRegionId: string) => {
         setName(searchName);
         setRegionId(searchRegionId);
-      }, []);
+    }, []);
+
+    const handlePrevious = () => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handleNext = () => {
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    };
 
     if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
     if (error) return <Container><p>エラー: {error}</p></Container>;
@@ -36,9 +45,14 @@ export const SearchPlace: FC = memo(() =>{
 
             <SwitchSearchLink flag={1} />
 
-            <div className="d-flex justify-content-end mb-2">
-                <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
-            </div>
+            <Row className="mb-2">
+                <Col xs={3}>
+                    全{totalCount}件
+                </Col>
+                <Col xs={9} className="d-flex justify-content-end align-items-center">
+                    <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
+                </Col>
+            </Row>
             <ListGroup>
                 {placeList.map(place => (
                     <ListGroup.Item key={place.place_id}>
@@ -54,17 +68,8 @@ export const SearchPlace: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-            <div>
-                <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-                    Previous
-                </button>
-                <span>
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-                    Next
-                </button>
-            </div>
+
+            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onNext={handleNext} />
         </Container>
     )
         

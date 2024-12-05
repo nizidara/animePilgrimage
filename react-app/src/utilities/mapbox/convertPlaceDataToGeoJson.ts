@@ -1,4 +1,3 @@
-import { placeData } from '../../testdatas/testdata';
 import { GeoJson } from '../../type/externalAPI/mapbox';
 
 type placeData = {
