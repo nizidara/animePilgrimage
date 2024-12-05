@@ -22,9 +22,9 @@ async def place_detail(place_id: str, db: AsyncSession = Depends(get_db)):
     return place
  
 # get place list by name or anime title or region
-@router.get("/list/search", response_model=List[place_schema.PlaceResponse])
-async def place_list(name: str = None, anime_id: int = None, region_id: int = None, db: AsyncSession = Depends(get_db)):
-    places = await place_crud.get_place_list(db=db, name=name, anime_id=anime_id, region_id=region_id)
+@router.get("/list/search", response_model=place_schema.PaginatedPlaceResponse)
+async def place_list(name: str = None, anime_id: int = None, region_id: int = None, page: int = 1, page_size: int = 20, db: AsyncSession = Depends(get_db)):
+    places = await place_crud.get_place_list(db=db, name=name, anime_id=anime_id, region_id=region_id, page=page, page_size=page_size)
     if places is None:
         raise HTTPException(status_code=404, detail="Places not found")
     return places
