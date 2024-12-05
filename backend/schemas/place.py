@@ -68,6 +68,12 @@ class PlaceResponse(PlaceBase):
     class Config:
         orm_mode = True
 
+class PaginatedPlaceResponse(BaseModel):
+    total_count: int
+    page: int
+    page_size: int
+    places: List[PlaceResponse]
+
 class PlaceRequestCreate(PlaceBase):
     place_id: str
     request_date: datetime

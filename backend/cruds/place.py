@@ -1,7 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import aliased
+from sqlalchemy import func
 from typing import List, Tuple, Optional
+from fastapi import HTTPException
 import uuid
 
 import cruds.photo as photo_crud
@@ -109,7 +111,7 @@ async def create_request_place(
     return response
 
 # read list
-async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: Optional[int] = None, region_id: Optional[int] = None) -> List[Tuple[place_schema.PlaceResponse]]:
+async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: Optional[int] = None, region_id: Optional[int] = None, page: int = 1, page_size: int = 20) -> place_schema.PaginatedPlaceResponse:
     # get
     Created_User = aliased(user_model.User)
     Edited_User = aliased(user_model.User)
@@ -132,8 +134,19 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
     if name is not None:
         query = query.where(place_model.Place.name.like(f'%{name}%'))
 
+    # Total Count Query
+    total_count_query = select(func.count()).select_from(query.subquery())
+    total_count = (db.execute(total_count_query)).scalar()
+
     # sort by comment_date in descending order
     query = query.order_by(place_model.Place.name)
+
+    # Pagination: calculate offset and limit
+    if page < 1 or page_size < 1:
+        raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
+    
+    offset = (page - 1) * page_size
+    query = query.offset(offset).limit(page_size)
 
     results = db.execute(query).all()
 
@@ -152,7 +165,12 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
                 response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
             response_list.append(place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=[]))
 
-    return response_list
+    return place_schema.PaginatedPlaceResponse(
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        places=response_list
+    )
 
 # read detail
 async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.PlaceResponse:
