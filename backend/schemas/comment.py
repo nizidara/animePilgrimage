@@ -50,6 +50,12 @@ class CommentResponse(CommentBase):
     class Config:
         orm_mode = True
 
+class PaginatedCommentResponse(BaseModel):
+    total_count: int
+    page: int
+    page_size: int
+    comments: List[CommentResponse]
+
 class DeleteCommentCreate(BaseModel):
     comment_id: str
     request_date: datetime
