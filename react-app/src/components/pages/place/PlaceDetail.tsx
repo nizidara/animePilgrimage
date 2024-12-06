@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -13,6 +13,7 @@ import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
+import { PaginationControls } from "../../molecules/PaginationControls";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -20,13 +21,27 @@ export const PlaceDetail: FC = memo(() =>{
 
     const query = useQuery();
     const placeId = query.get('place_id');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const pageSize = 10;
+
     const { place, loading, error } = useGetPlaceDetail(placeId);
-    const { commentList, fetchComments } = useGetCommentList(placeId);
+    const { commentList, totalCount, fetchComments } = useGetCommentList(placeId, currentPage, pageSize);
     const { realPhotoList } = useGetRealPhotoList(placeId);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
     
     const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate, placeId]);
     const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate, placeId]);
     const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
+
+    const handlePrevious = () => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handleNext = () => {
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    };
+
     if (loading) {
         return <div>loading...</div>;
     }
@@ -81,6 +96,8 @@ export const PlaceDetail: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
+
+            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onNext={handleNext} />
             
         </Container>
     )
