@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from typing import List, Tuple, Optional
+from fastapi import HTTPException
 import uuid
 
 import models.comment as comment_model
@@ -96,12 +98,13 @@ async def create_report_comment(
     return response
 
 # read list
-async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, place_id: Optional[str] = None) -> List[Tuple[comment_schema.CommentResponse]]:
+async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, place_id: Optional[str] = None, page: int = 1, page_size: int = 50) -> comment_schema.PaginatedCommentResponse:
     # get    
-    query = select(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
+    query = select(comment_model.Comment, user_model.User.user_name, place_model.Place, func.group_concat(photo_model.RealPhoto.file_name).label("file_names")).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
-        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id)
+        outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
+        group_by(comment_model.Comment.comment_id, user_model.User.user_name, place_model.Place)
     
     # filter by anime_id:
     if anime_id is not None:
@@ -113,49 +116,62 @@ async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, plac
         place_id_bytes = uuid.UUID(place_id).bytes
         query = query.where(comment_model.Comment.place_id == place_id_bytes)
 
+    # Total Count Query
+    total_count_query = select(func.count()).select_from(query.subquery())
+    total_count = (db.execute(total_count_query)).scalar()
+
+    # Pagination: calculate offset and limit
+    if page < 1 or page_size < 1:
+        raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
+    
     # sort by comment_date in descending order
-    query = query.order_by(comment_model.Comment.comment_date.desc())
+    offset = (page - 1) * page_size
+    query = query.order_by(comment_model.Comment.comment_date.desc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
 
     # convert UUID -> str
     response_list = []
-    comment_dict = {}
     if results:
-        for comment, user_name, place, file_name in results:
-            # comment_id=str
+        for comment, user_name, place, file_names in results:
+            # コメント ID を文字列に変換
             if isinstance(comment.comment_id, str):
                 comment_id_str = comment.comment_id
-            # comment_id=byte
             else:
                 comment_id_str = str(uuid.UUID(bytes=comment.comment_id))
 
-            if comment_id_str not in comment_dict:
-                response_dict = comment.__dict__
-                response_dict['comment_id'] = comment_id_str
-                response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
-                if comment.user_id is not None:
-                    response_dict['user_id'] = str(uuid.UUID(bytes=comment.user_id))
-                comment_dict[comment_id_str] = {
-                    'response': comment_schema.CommentResponse(
-                        **response_dict,
-                        anime_id=place.anime_id,
-                        anime_title=place.anime.title,
-                        place_name=place.name,
-                        user_name=user_name,
-                        range_name=comment.range.range_name,
-                        file_names=[]
-                    ),
-                    'file_names': []
-                }
-            if file_name:
-                comment_dict[comment_id_str]['file_names'].append(file_name)
+            # ユーザー ID を文字列に変換
+            user_id_str = None
+            if comment.user_id is not None:
+                user_id_str = str(uuid.UUID(bytes=comment.user_id))
 
-        for comment_id_str, value in comment_dict.items():
-            value['response'].file_names = value['file_names']
-            response_list.append(value['response'])
+            # ファイル名をリストに変換
+            file_names_list = file_names.split(",") if file_names else []
 
-    return response_list
+            # コメントデータを整形
+            response_list.append(
+                comment_schema.CommentResponse(
+                    comment_id=comment_id_str,
+                    comment=comment.comment,
+                    comment_date=comment.comment_date,
+                    range_id=comment.range_id,
+                    range_name=comment.range.range_name,
+                    place_id=str(uuid.UUID(bytes=comment.place_id)),
+                    anime_id=place.anime_id,
+                    anime_title=place.anime.title,
+                    place_name=place.name,
+                    user_name=user_name,
+                    user_id=user_id_str,
+                    file_names=file_names_list,
+                )
+            )
+
+    return comment_schema.PaginatedCommentResponse(
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        comments=response_list
+    )
 
 # read detail
 async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schema.CommentResponse:

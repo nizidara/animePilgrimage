@@ -20,9 +20,9 @@ async def comment_detail(comment_id: str, db: AsyncSession = Depends(get_db)):
     return comment
 
 # get comment List
-@router.get("/list", response_model=List[comment_schema.CommentResponse])
-async def comment_list(place_id: str = None, anime_id: int = None, db: AsyncSession = Depends(get_db)):
-    comments = await comment_crud.get_comment_list(db=db, anime_id=anime_id, place_id=place_id)
+@router.get("/list", response_model=comment_schema.PaginatedCommentResponse)
+async def comment_list(place_id: str = None, anime_id: int = None, page: int = 1, page_size: int = 50,  db: AsyncSession = Depends(get_db)):
+    comments = await comment_crud.get_comment_list(db=db, anime_id=anime_id, place_id=place_id, page=page, page_size=page_size)
     if comments is None:
         raise HTTPException(status_code=404, detail="comment not found")
     return comments
