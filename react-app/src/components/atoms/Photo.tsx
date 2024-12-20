@@ -17,7 +17,7 @@ export const Photo: FC<PhotoProps> = memo((props) =>{
         <>
             {file_name && (
                 <>
-                    <Image src={file_name.startsWith("http") ? file_name : `${process.env.PUBLIC_URL}/${file_name}`} rounded className="square-image-crop" onClick={handleShow} />
+                    <Image src={file_name.startsWith("http") ? file_name : `${process.env.PUBLIC_URL}/${file_name}`} rounded className="square-image-crop mx-1 mb-1" onClick={handleShow} />
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Header closeButton />
                         <Modal.Body>

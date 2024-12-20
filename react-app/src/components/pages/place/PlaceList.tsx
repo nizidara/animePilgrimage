@@ -2,7 +2,6 @@ import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useQuery } from "../../../hooks/utilities/useQuery";
@@ -13,6 +12,7 @@ import { responseRealPhotoData } from "../../../type/api/photo";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
+import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
@@ -92,7 +92,7 @@ export const PlaceList: FC = memo(() =>{
                         anime_id={selectedPlace.anime_id} 
                         place_id={selectedPlace.place_id}
                     />
-                    {realPhotoList && <PhotoCard realPhotoList={realPhotoList} />}
+                    {realPhotoList && <PhotoListDisplay realPhotoList={realPhotoList} />}
                 </>
             )}
             <hr />

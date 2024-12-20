@@ -1,6 +1,5 @@
 import { memo, FC, useCallback, useRef, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
@@ -8,6 +7,7 @@ import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
 import { UpdatePlaceIconForm } from "../../organisms/form/UpdatePlaceIconForm";
 import { useGetPlaceIcon } from "../../../hooks/photos/useGetPlaceIcon";
+import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 
 export const AddPhotoPlace: FC = memo(() =>{
     const navigate = useNavigate();
@@ -41,11 +41,11 @@ export const AddPhotoPlace: FC = memo(() =>{
             <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={false} />
 
             <p>作中写真</p>
-            <PhotoCard animePhotoList={animePhotoList} />
+            <PhotoListDisplay animePhotoList={animePhotoList} />
             <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={false} />
 
             <p>現地写真（みんなの投稿）</p>
-            <PhotoCard realPhotoList={realPhotoList} />
+            <PhotoListDisplay realPhotoList={realPhotoList} />
             <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={false} />
             
         </Container>

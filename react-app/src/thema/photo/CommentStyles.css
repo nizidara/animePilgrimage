@@ -1,17 +1,15 @@
 .square-image-crop {
-    width: 160px;
-    height: 160px;
-    object-fit: cover; /* This ensures the image covers the area while preserving aspect ratio */
-    object-position: center; /* Center the image */
-    padding: 2px; /* Adjust padding as necessary */
-    cursor: pointer; /* Add cursor to indicate the image is clickable */
-  }
+  width: 100%;
+  height: 180px;
+  max-width: 180px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px; /* 角を丸くする */
+  cursor: pointer;
+  transition: transform 0.3s ease; /* 拡大アニメーション */
+}
 
-.square-image-padding {
-    width: 160px;
-    height: 160px;
-    object-fit: contain; /* This ensures the entire image fits within the area */
-    background-color: white; /* Set the background color to your preference */
-    padding: 5px; /* Adjust padding as necessary */
-    cursor: pointer; /* Add cursor to indicate the image is clickable */
-  }
+.square-image-crop:hover {
+  transform: scale(1.05); /* ホバーで拡大 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* ホバー時に影を付ける */
+}

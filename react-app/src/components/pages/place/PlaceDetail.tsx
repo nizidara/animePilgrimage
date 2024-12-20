@@ -2,7 +2,6 @@ import { memo, FC, useCallback, useState } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { PhotoCard } from "../../organisms/card/PhotoCard";
 import { CommentForm } from "../../organisms/form/CommentForm";
 import { CommentCard } from "../../organisms/card/CommentCard";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,7 @@ import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
 import { PaginationControls } from "../../molecules/PaginationControls";
+import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -79,11 +79,11 @@ export const PlaceDetail: FC = memo(() =>{
             />
             <div className="position-relative m-1">
                 <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
-                <PhotoCard file_names={place.file_names} />
+                <PhotoListDisplay file_names={place.file_names} />
                 {realPhotoList.length > 0 &&
                     <div>
                         <p>現地写真（みんなの投稿）</p>
-                        <PhotoCard realPhotoList={realPhotoList} />
+                        <PhotoListDisplay realPhotoList={realPhotoList} />
                     </div>
                 }
             </div>
