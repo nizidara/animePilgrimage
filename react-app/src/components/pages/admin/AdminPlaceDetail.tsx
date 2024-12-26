@@ -15,6 +15,7 @@ import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
 import { DeleteAnimePhotoForm } from "../../organisms/form/DeleteAnimePhotoForm";
 import { DeleteRealPhotoForm } from "../../organisms/form/DeleteRealPhotoForm";
+import { PaginationControls } from "../../molecules/PaginationControls";
 
 export const AdminPlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
@@ -22,11 +23,16 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const query = useQuery();
     const placeId = query.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
+
+    const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
+    const realPhotoPageSize = 12;
     
     const { edit, editError } = useAdminEditPlace();
     const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
-    const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
+    const { realPhotoList, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
     const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
+
+    const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
 
     const [formData, setFormData] = useState<registerPlaceFormData>({name:'', anime_id:0, region_id:0, comment:'', latitude:0, longitude:0, images:[], icon_index:null});
     const formRef = useRef<HTMLFormElement>(null);
@@ -59,6 +65,19 @@ export const AdminPlaceDetail: FC = memo(() =>{
     if (!place) {
         return <div>No place found</div>;
     }
+
+    //handle real photo
+    const handlePhotoPrevious = () => {
+        setCurrentRealPhotoPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handlePhotoNext = () => {
+        setCurrentRealPhotoPage((prev) => Math.min(prev + 1, totalRealPhotoPages));
+    };
+
+    const handlePhotoPageSelect = (page: number) => {
+        setCurrentRealPhotoPage(page);
+    };
     
     const formChange = (data:registerPlaceFormData) => {
         setFormData(data); //update form data
@@ -90,6 +109,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
 
                 <p>現地写真（みんなの投稿）</p>
                 <DeleteRealPhotoForm photoList={realPhotoList} formRef={realImageRef} onPhotoPosted={fetchRealPhotos} />
+                <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
                 <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={true} />
                 <div className="d-flex justify-content-center mt-2">
                     <Button variant="primary" onClick={onClickTop}>TOPへ</Button>

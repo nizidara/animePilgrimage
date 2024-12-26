@@ -46,7 +46,9 @@ export const PlaceList: FC = memo(() =>{
     };
 
     const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
-    const { realPhotoList: fetchedRealPhotoList } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null);
+    const selectedPlacePhotoPage = 1;
+    const selectedPhotoPageSize = 24;
+    const { realPhotoList: fetchedRealPhotoList } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize);
 
     useEffect(() => {
         if (selectedPlace && fetchedRealPhotoList) {

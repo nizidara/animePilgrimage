@@ -8,17 +8,36 @@ import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList
 import { UpdatePlaceIconForm } from "../../organisms/form/UpdatePlaceIconForm";
 import { useGetPlaceIcon } from "../../../hooks/photos/useGetPlaceIcon";
 import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
+import { PaginationControls } from "../../molecules/PaginationControls";
 
 export const AddPhotoPlace: FC = memo(() =>{
     const navigate = useNavigate();
     const location = useLocation();
 
     const placeId = location.state.placeId;
+    const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
+    const realPhotoPageSize = 12;
+
     const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
-    const { realPhotoList, fetchRealPhotos } = useGetRealPhotoList(placeId);
+    const { realPhotoList, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
     const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
+    const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
+
     const onClickBack = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
+
+    //handle real photo
+    const handlePhotoPrevious = () => {
+        setCurrentRealPhotoPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handlePhotoNext = () => {
+        setCurrentRealPhotoPage((prev) => Math.min(prev + 1, totalRealPhotoPages));
+    };
+
+    const handlePhotoPageSelect = (page: number) => {
+        setCurrentRealPhotoPage(page);
+    };
 
     //formData
     const [animeImage, setAnimeImage] = useState<File[]>([]);
@@ -46,6 +65,7 @@ export const AddPhotoPlace: FC = memo(() =>{
 
             <p>現地写真（みんなの投稿）</p>
             <PhotoListDisplay realPhotoList={realPhotoList} />
+            <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
             <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={false} />
             
         </Container>
