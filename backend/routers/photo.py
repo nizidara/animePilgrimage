@@ -30,9 +30,9 @@ async def get_place_icon(place_id: str, db: AsyncSession = Depends(get_db)):
     return icon
 
 # get animephoto list
-@router.get("/anime/list/{place_id}", response_model=List[photo_schema.AnimePhotoResponse])
-async def get_anime_photo_list(place_id: str, db: AsyncSession = Depends(get_db)):
-    photos = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
+@router.get("/anime/list/{place_id}", response_model=photo_schema.PaginatedAnimePhotoResponse)
+async def get_anime_photo_list(place_id: str, page: int = 1, page_size: int = 12, db: AsyncSession = Depends(get_db)):
+    photos = await photo_crud.get_anime_photo_list(db=db, place_id=place_id, page=page, page_size=page_size)
     if photos is None:
         raise HTTPException(status_code=404, detail="anime photo not found")
     return photos
@@ -42,7 +42,7 @@ async def get_anime_photo_list(place_id: str, db: AsyncSession = Depends(get_db)
 async def get_real_photo_list(place_id: str, comment_id: str = None, page: int = 1, page_size: int = 12, db: AsyncSession = Depends(get_db)):
     photos = await photo_crud.get_real_photo_list(db=db, place_id=place_id, comment_id=comment_id, page=page, page_size=page_size)
     if photos is None:
-        raise HTTPException(status_code=404, detail="anime photo not found")
+        raise HTTPException(status_code=404, detail="real photo not found")
     return photos
 
 # post anime photo

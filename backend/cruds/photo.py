@@ -159,15 +159,28 @@ async def get_place_icon(db: AsyncSession, place_id: str) -> photo_schema.PlaceP
     return response
 
 # read anime photo list
-async def get_anime_photo_list(db:AsyncSession, place_id: str) -> List[Tuple[photo_schema.AnimePhotoResponse]]:
+async def get_anime_photo_list(db:AsyncSession, place_id: str, page: int = 1, page_size: int = 12) -> photo_schema.PaginatedAnimePhotoResponse:
     # convert UUID -> str
     place_id_bytes = uuid.UUID(place_id).bytes
-
-    # get
-    results = db.query(photo_model.AnimePhoto, user_model.User.user_name, place_model.Place).\
+    
+    # get    
+    query = select(photo_model.AnimePhoto, user_model.User.user_name, place_model.Place).\
         outerjoin(user_model.User, user_model.User.user_id == photo_model.AnimePhoto.user_id).\
-        outerjoin(place_model.Place, photo_model.AnimePhoto.place_id == place_model.Place.place_id).\
-        filter(photo_model.AnimePhoto.place_id == place_id_bytes).all()
+        outerjoin(place_model.Place, place_model.Place.place_id == photo_model.AnimePhoto.place_id).\
+        filter(photo_model.AnimePhoto.place_id == place_id_bytes)
+    
+    # Total Count Query
+    total_count_query = select(func.count()).select_from(query.subquery())
+    total_count = (db.execute(total_count_query)).scalar()
+
+    # Apply Pagination
+    if page < 1 or page_size < 1:
+        raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
+    
+    offset = (page - 1) * page_size
+    query = query.order_by(photo_model.AnimePhoto.file_name.desc()).offset(offset).limit(page_size)
+
+    results = db.execute(query).all()
 
     # convert UUID -> str
     response_list = []
@@ -180,7 +193,12 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str) -> List[Tuple[pho
                 response_dict['user_id'] = str(uuid.UUID(bytes=photo.user_id))
             response_list.append(photo_schema.AnimePhotoResponse(**response_dict, place_name=place.name, anime_id=place.anime_id, anime_title=place.anime.title, user_name=user_name))
 
-    return response_list
+    return photo_schema.PaginatedAnimePhotoResponse(
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        photos=response_list
+    )
 
 # read real photo list
 async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Optional[str] = None, page: int = 1, page_size: int = 12) -> photo_schema.PaginatedRealPhotoResponse:

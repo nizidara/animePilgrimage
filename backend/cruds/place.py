@@ -203,7 +203,7 @@ async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.Plac
         # get anime photo file names
         anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
         if anime_photo_response:
-            file_names_response = [item.file_name for item in anime_photo_response]
+            file_names_response = [item.file_name for item in anime_photo_response.photos]
 
         response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=file_names_response)
 
@@ -270,7 +270,7 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
         # get anime photo file names
         anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
         if anime_photo_response:
-            file_names_response = [item.file_name for item in anime_photo_response]
+            file_names_response = [item.file_name for item in anime_photo_response.photos]
 
         # convert UUID -> str
         response_dict = place.__dict__
@@ -350,7 +350,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
             # get anime photo file names
             anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=response_dict['place_id'])
             if anime_photo_response:
-                file_names_response = [item.file_name for item in anime_photo_response]
+                file_names_response = [item.file_name for item in anime_photo_response.photos]
             
             response = place_schema.PlaceResponse(**response_dict, region_name=region_name, anime_title=anime_title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=anime_icon, file_names=file_names_response)
 
@@ -402,7 +402,7 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
         # get anime photo file names
         anime_photo_response = await photo_crud.get_anime_photo_list(db=db, place_id=place_id)
         if anime_photo_response:
-            file_names_response = [item.file_name for item in anime_photo_response]
+            file_names_response = [item.file_name for item in anime_photo_response.photos]
 
         response = place_schema.PlaceResponse(**response_dict, region_name=place.region.region_name, anime_title=place.anime.title, created_user_name=created_user_name, edited_user_name=edited_user_name, place_icon=place_icon, anime_icon=place.anime.file_name, file_names=file_names_response)
 
