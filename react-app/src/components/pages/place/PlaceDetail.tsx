@@ -21,33 +21,55 @@ export const PlaceDetail: FC = memo(() =>{
 
     const query = useQuery();
     const placeId = query.get('place_id');
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const pageSize = 10;
+    const [currentCommentPage, setCurrentCommentPage] = useState<number>(1);
+    const commentPageSize = 10;
 
-    const { place, loading, error } = useGetPlaceDetail(placeId);
-    const { commentList, totalCount, fetchComments } = useGetCommentList(placeId, currentPage, pageSize);
-    const { realPhotoList } = useGetRealPhotoList(placeId);
+    const [currentPhotoPage, setCurrentPhotoPage] = useState<number>(1);
+    const photoPageSize = 12;
 
-    const totalPages = Math.ceil(totalCount / pageSize);
+    const { place, loading: placeLoading, error: placeError } = useGetPlaceDetail(placeId);
+    const { commentList, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize);
+    const { realPhotoList, totalCount:photoTotalCount } = useGetRealPhotoList(placeId, currentPhotoPage, photoPageSize);
+
+    const commentTotalPages = Math.ceil(commentTotalCount / commentPageSize);
+    const totalPhotoPages = Math.ceil(photoTotalCount / photoPageSize);
     
     const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate, placeId]);
     const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate, placeId]);
     const onClickAddPhoto = useCallback(() => navigate("/place/photo", {state: {placeId}}), [navigate, placeId]);
 
-    const handlePrevious = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    //handle comment
+    const handleCommentPrevious = () => {
+        setCurrentCommentPage((prev) => Math.max(prev - 1, 1));
     };
     
-    const handleNext = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const handleCommentNext = () => {
+        setCurrentCommentPage((prev) => Math.min(prev + 1, commentTotalPages));
     };
 
-    if (loading) {
+    const handleCommentPageSelect = (page: number) => {
+        setCurrentCommentPage(page);
+    };
+
+    //handle real photo
+    const handlePhotoPrevious = () => {
+        setCurrentPhotoPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handlePhotoNext = () => {
+        setCurrentPhotoPage((prev) => Math.min(prev + 1, totalPhotoPages));
+    };
+
+    const handlePhotoPageSelect = (page: number) => {
+        setCurrentPhotoPage(page);
+    };
+
+    if (placeLoading) {
         return <div>loading...</div>;
     }
     
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (placeError) {
+        return <div>Error: {placeError}</div>;
     }
     
     if (!place) {
@@ -84,6 +106,7 @@ export const PlaceDetail: FC = memo(() =>{
                     <div>
                         <p>現地写真（みんなの投稿）</p>
                         <PhotoListDisplay realPhotoList={realPhotoList} />
+                        <PaginationControls currentPage={currentPhotoPage} totalPages={totalPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
                     </div>
                 }
             </div>
@@ -96,8 +119,7 @@ export const PlaceDetail: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onNext={handleNext} />
+            <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
             
         </Container>
     )

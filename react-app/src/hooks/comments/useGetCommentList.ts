@@ -15,13 +15,13 @@ export const useGetCommentList = (place_id: string | null, page: number = 1, pag
 
         axios.get(`${fastAPIURL}/comments/list?place_id=${place_id}${queryPage}${queryPageSize}`)
             .then(response => {
-            setCommentList(response.data.comments);
-            setTotalCount(response.data.total_count);
-            setLoading(false);
+                setCommentList(response.data.comments);
+                setTotalCount(response.data.total_count);
+                setLoading(false);
             })
             .catch(error => {
-            setError(error.message);
-            setLoading(false);
+                setError(error.message);
+                setLoading(false);
             });
     }, [place_id, page, page_size]);
 

@@ -35,6 +35,10 @@ export const SearchPlace: FC = memo(() =>{
         setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     };
 
+    const handlePageSelect = (page: number) => {
+        setCurrentPage(page);
+    };
+
     if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
     if (error) return <Container><p>エラー: {error}</p></Container>;
 
@@ -69,7 +73,7 @@ export const SearchPlace: FC = memo(() =>{
                 ))}
             </ListGroup>
 
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onNext={handleNext} />
+            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
         </Container>
     )
         

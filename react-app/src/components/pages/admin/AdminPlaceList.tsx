@@ -24,6 +24,10 @@ export const AdminPlaceList: FC = memo(() =>{
         setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     };
 
+    const handlePageSelect = (page: number) => {
+        setCurrentPage(page);
+    };
+
     if (loading) return <p>読み込み中...</p>;
     if (error) return <p>エラー: {error}</p>;
 
@@ -46,7 +50,7 @@ export const AdminPlaceList: FC = memo(() =>{
                 ))}
             </ListGroup>
 
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onNext={handleNext} />
+            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
         </Container>
     )
 });
