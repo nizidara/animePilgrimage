@@ -102,3 +102,9 @@ class RealPhotoResponse(BaseModel):
     
     class Config:
         orm_mode = True
+
+class PaginatedRealPhotoResponse(BaseModel):
+    total_count: int
+    page: int
+    page_size: int
+    photos: List[RealPhotoResponse]

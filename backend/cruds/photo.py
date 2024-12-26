@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.sql.functions import func
 from typing import List, Tuple, Optional
+from fastapi import HTTPException
 import uuid
 
 import models.anime as anime_model
@@ -181,7 +183,7 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str) -> List[Tuple[pho
     return response_list
 
 # read real photo list
-async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Optional[str] = None) -> List[Tuple[photo_schema.RealPhotoResponse]]:
+async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Optional[str] = None, page: int = 1, page_size: int = 12) -> photo_schema.PaginatedRealPhotoResponse:
     # convert UUID -> str
     place_id_bytes = uuid.UUID(place_id).bytes
 
@@ -196,6 +198,17 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Option
         # convert str -> UUID
         comment_id_bytes = uuid.UUID(comment_id).bytes
         query = query.where(photo_model.RealPhoto.comment_id == comment_id_bytes)
+
+    # Total Count Query
+    total_count_query = select(func.count()).select_from(query.subquery())
+    total_count = (db.execute(total_count_query)).scalar()
+
+    # Apply Pagination
+    if page < 1 or page_size < 1:
+        raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
+    
+    offset = (page - 1) * page_size
+    query = query.order_by(photo_model.RealPhoto.file_name.desc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
     
@@ -212,7 +225,12 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Option
                 response_dict['comment_id'] = str(uuid.UUID(bytes=photo.comment_id))
             response_list.append(photo_schema.RealPhotoResponse(**response_dict, place_name=place.name, anime_id=place.anime_id, anime_title=place.anime.title, user_name=user_name))
 
-    return response_list
+    return photo_schema.PaginatedRealPhotoResponse(
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        photos=response_list
+    )
 
 # update anime icon
 async def update_anime_icon(db: AsyncSession, anime_id: int, file_name: str) -> photo_schema.AnimeIconResponse:
