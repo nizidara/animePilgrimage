@@ -14,6 +14,7 @@ import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
 import { PaginationControls } from "../../molecules/PaginationControls";
 import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
+import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -21,18 +22,22 @@ export const PlaceDetail: FC = memo(() =>{
 
     const query = useQuery();
     const placeId = query.get('place_id');
+
     const [currentCommentPage, setCurrentCommentPage] = useState<number>(1);
     const commentPageSize = 10;
-
-    const [currentPhotoPage, setCurrentPhotoPage] = useState<number>(1);
-    const photoPageSize = 12;
+    const [currentAnimePhotoPage, setCurrentAnimePhotoPage] = useState<number>(1);
+    const animePhotoPageSize = 2;
+    const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
+    const realPhotoPageSize = 12;
 
     const { place, loading: placeLoading, error: placeError } = useGetPlaceDetail(placeId);
     const { commentList, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize);
-    const { realPhotoList, totalCount:photoTotalCount } = useGetRealPhotoList(placeId, currentPhotoPage, photoPageSize);
+    const { animePhotoList, totalCount:animePhotoTotalCount } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
+    const { realPhotoList, totalCount:realPhotoTotalCount } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
 
     const commentTotalPages = Math.ceil(commentTotalCount / commentPageSize);
-    const totalPhotoPages = Math.ceil(photoTotalCount / photoPageSize);
+    const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
+    const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
     
     const onClickEdit = useCallback(() => navigate(`/edit_place`, {state: {placeId}}), [navigate, placeId]);
     const onClickDelete = useCallback(() => navigate("/delete_place", {state: {placeId}}), [navigate, placeId]);
@@ -51,17 +56,30 @@ export const PlaceDetail: FC = memo(() =>{
         setCurrentCommentPage(page);
     };
 
-    //handle real photo
-    const handlePhotoPrevious = () => {
-        setCurrentPhotoPage((prev) => Math.max(prev - 1, 1));
+    //handle anime photo
+    const handleAnimePhotoPrevious = () => {
+        setCurrentAnimePhotoPage((prev) => Math.max(prev - 1, 1));
     };
     
-    const handlePhotoNext = () => {
-        setCurrentPhotoPage((prev) => Math.min(prev + 1, totalPhotoPages));
+    const handleAnimePhotoNext = () => {
+        setCurrentAnimePhotoPage((prev) => Math.min(prev + 1, totalAnimePhotoPages));
     };
 
-    const handlePhotoPageSelect = (page: number) => {
-        setCurrentPhotoPage(page);
+    const handleAnimePhotoPageSelect = (page: number) => {
+        setCurrentAnimePhotoPage(page);
+    };
+
+    //handle real photo
+    const handleRealPhotoPrevious = () => {
+        setCurrentRealPhotoPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handleRealPhotoNext = () => {
+        setCurrentRealPhotoPage((prev) => Math.min(prev + 1, totalRealPhotoPages));
+    };
+
+    const handleRealPhotoPageSelect = (page: number) => {
+        setCurrentRealPhotoPage(page);
     };
 
     if (placeLoading) {
@@ -101,12 +119,18 @@ export const PlaceDetail: FC = memo(() =>{
             />
             <div className="position-relative m-1">
                 <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
-                <PhotoListDisplay file_names={place.file_names} />
-                {realPhotoList.length > 0 &&
+                
+                {animePhotoTotalCount > 0 && 
+                    <>
+                        <PhotoListDisplay animePhotoList={animePhotoList} />
+                        <PaginationControls currentPage={currentAnimePhotoPage} totalPages={totalAnimePhotoPages} onPrevious={handleAnimePhotoPrevious} onSelect={handleAnimePhotoPageSelect} onNext={handleAnimePhotoNext} />
+                    </>
+                }
+                {realPhotoTotalCount > 0 &&
                     <div>
                         <p>現地写真（みんなの投稿）</p>
                         <PhotoListDisplay realPhotoList={realPhotoList} />
-                        <PaginationControls currentPage={currentPhotoPage} totalPages={totalPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
+                        <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handleRealPhotoPrevious} onSelect={handleRealPhotoPageSelect} onNext={handleRealPhotoNext} />
                     </div>
                 }
             </div>
@@ -119,7 +143,9 @@ export const PlaceDetail: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-            <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
+            {commentTotalCount > 0 && 
+                <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
+            }
             
         </Container>
     )

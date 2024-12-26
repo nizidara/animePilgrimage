@@ -15,27 +15,44 @@ export const AddPhotoPlace: FC = memo(() =>{
     const location = useLocation();
 
     const placeId = location.state.placeId;
+    const [currentAnimePhotoPage, setCurrentAnimePhotoPage] = useState<number>(1);
+    const animePhotoPageSize = 12;
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
     const realPhotoPageSize = 12;
+    
 
-    const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
+    const { animePhotoList, totalCount:animePhotoTotalCount, fetchAnimePhotos } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
     const { realPhotoList, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
     const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
+    const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
     const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
 
     const onClickBack = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
+    //handle anime photo
+    const handleAnimePhotoPrevious = () => {
+        setCurrentAnimePhotoPage((prev) => Math.max(prev - 1, 1));
+    };
+    
+    const handleAnimePhotoNext = () => {
+        setCurrentAnimePhotoPage((prev) => Math.min(prev + 1, totalAnimePhotoPages));
+    };
+
+    const handleAnimePhotoPageSelect = (page: number) => {
+        setCurrentAnimePhotoPage(page);
+    };
+
     //handle real photo
-    const handlePhotoPrevious = () => {
+    const handleRealPhotoPrevious = () => {
         setCurrentRealPhotoPage((prev) => Math.max(prev - 1, 1));
     };
     
-    const handlePhotoNext = () => {
+    const handleRealPhotoNext = () => {
         setCurrentRealPhotoPage((prev) => Math.min(prev + 1, totalRealPhotoPages));
     };
 
-    const handlePhotoPageSelect = (page: number) => {
+    const handleRealPhotoPageSelect = (page: number) => {
         setCurrentRealPhotoPage(page);
     };
 
@@ -60,12 +77,21 @@ export const AddPhotoPlace: FC = memo(() =>{
             <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={false} />
 
             <p>作中写真</p>
-            <PhotoListDisplay animePhotoList={animePhotoList} />
+            {animePhotoTotalCount > 0 && 
+                <>
+                    <PhotoListDisplay animePhotoList={animePhotoList} />
+                    <PaginationControls currentPage={currentAnimePhotoPage} totalPages={totalAnimePhotoPages} onPrevious={handleAnimePhotoPrevious} onSelect={handleAnimePhotoPageSelect} onNext={handleAnimePhotoNext} />
+                </>
+            }
             <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={false} />
 
             <p>現地写真（みんなの投稿）</p>
-            <PhotoListDisplay realPhotoList={realPhotoList} />
-            <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
+            {realPhotoTotalCount > 0 && 
+                <>
+                    <PhotoListDisplay realPhotoList={realPhotoList} />
+                    <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handleRealPhotoPrevious} onSelect={handleRealPhotoPageSelect} onNext={handleRealPhotoNext} />
+                </>
+            }
             <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={false} />
             
         </Container>

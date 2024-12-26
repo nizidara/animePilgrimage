@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Pagination} from "react-bootstrap";
+import { Pagination } from "react-bootstrap";
 
 type PaginationControlsProps = {
     currentPage:number;

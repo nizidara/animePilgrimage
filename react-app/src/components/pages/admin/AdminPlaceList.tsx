@@ -49,8 +49,12 @@ export const AdminPlaceList: FC = memo(() =>{
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
+            
+            {totalCount > 0 && 
+                <>
+                    <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
+                </>
+            }
         </Container>
     )
 });
