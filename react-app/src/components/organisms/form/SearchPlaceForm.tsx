@@ -1,32 +1,27 @@
-import { ChangeEvent, FC, FormEvent, memo, useCallback, useState } from "react"
+import { ChangeEvent, FC, FormEvent, memo, useState } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 
 type SearchPlaceFormProps = {
+    initialName: string;
+    initialRegionId: string;
     onSearch: (name: string, regionId: string) => void;
   }
 
-export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo(({onSearch}) => {
-    const navigate = useNavigate();
+export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo((props) => {
+    const {initialName, initialRegionId, onSearch } = props
     const { regionList } = useGetRegionList();
 
-    const [name, setName] = useState('');
-    const [regionId, setRegionId] = useState('');
+    const [name, setName] = useState(initialName);
+    const [regionId, setRegionId] = useState(initialRegionId);
 
-    const onChangeName = (e:ChangeEvent<HTMLInputElement>) => setName(e.target.value);
-    const onChangeRegion = (e:ChangeEvent<HTMLSelectElement>) => setRegionId(e.target.value);
+    const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+    const onChangeRegion = (e: ChangeEvent<HTMLSelectElement>) => setRegionId(e.target.value);
 
-    //push Enter
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSearch(name, regionId);
     };
-
-    const onClickSearch = useCallback(() => {
-        onSearch(name, regionId);
-        navigate("/search/place");
-      }, [name, regionId, onSearch, navigate]);
     
     return (
         <>
@@ -50,7 +45,7 @@ export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo(({onSearch}) => {
                         <Form.Control type="search" value={name} maxLength={30} placeholder="聖地名検索" onChange={onChangeName} />
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={2} xl={1} xxl={1}>
-                        <Button variant="outline-primary" onClick={onClickSearch} disabled={name.length > 30}>検索</Button>
+                        <Button variant="outline-primary" type="submit" disabled={name.length > 30}>検索</Button>
                     </Col>
                 </Form.Group>
             </Form>

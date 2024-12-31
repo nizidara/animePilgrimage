@@ -3,21 +3,25 @@ import { Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { PaginationControls } from "../../molecules/PaginationControls";
 
 export const SearchPlace: FC = memo(() =>{
-    const [name, setName] = useState<string>();
-    const [regionId, setRegionId] = useState<string>();
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const initialName = searchParams.get("name") || "";
+    const initialRegionId = searchParams.get("region_id") || "";
+    const currentPage = Number(searchParams.get("page")) || 1;
     const pageSize = 20;
+
+    const [name, setName] = useState(initialName);
+    const [regionId, setRegionId] = useState(initialRegionId);
     
     const { placeList, totalCount, loading, error } = useGetPlaceList(name, undefined, regionId, currentPage, pageSize);
 
     const totalPages = Math.ceil(totalCount / pageSize);
-
-    const navigate = useNavigate();
 
     const onClickMap = useCallback((name?:string | null, regionId?:string | null) => navigate("/place/list", {state: {name, regionId}}), [navigate]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
@@ -25,18 +29,21 @@ export const SearchPlace: FC = memo(() =>{
     const handleSearch = useCallback((searchName: string, searchRegionId: string) => {
         setName(searchName);
         setRegionId(searchRegionId);
-    }, []);
+        setSearchParams({ name: searchName || "", region_id: searchRegionId || "", page: "1" });
+    }, [setSearchParams]);
 
     const handlePrevious = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
+        const page = Math.max(currentPage - 1, 1);
+        setSearchParams({ name, region_id: regionId, page: page.toString() });
     };
     
     const handleNext = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+        const page = Math.min(currentPage + 1, totalPages);
+        setSearchParams({ name, region_id: regionId, page: page.toString() });
     };
 
     const handlePageSelect = (page: number) => {
-        setCurrentPage(page);
+        setSearchParams({ name, region_id: regionId, page: page.toString() });
     };
 
     if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
@@ -45,7 +52,7 @@ export const SearchPlace: FC = memo(() =>{
     return (
         <Container>
             <h1 className="mt-2">聖地検索</h1>
-            <SearchPlaceForm onSearch={handleSearch} />
+            <SearchPlaceForm initialName={name} initialRegionId={regionId} onSearch={handleSearch}  />
 
             <SwitchSearchLink flag={1} />
 
@@ -78,5 +85,4 @@ export const SearchPlace: FC = memo(() =>{
             }
         </Container>
     )
-        
 });
