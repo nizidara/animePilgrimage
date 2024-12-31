@@ -13,8 +13,8 @@ export const useGetContactList = () => {
                 setContacts(response.data);
                 setLoading(false);
             })
-            .catch(error => {
-                setError(error.message);
+            .catch(() => {
+                setError("お問い合わせ取得中にエラーが発生しました");
                 setLoading(false);
             });
     }, []);
