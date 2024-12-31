@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { CommentForm } from "../../organisms/form/CommentForm";
@@ -30,9 +30,9 @@ export const PlaceDetail: FC = memo(() =>{
     const realPhotoPageSize = 12;
 
     const { place, loading: placeLoading, error: placeError } = useGetPlaceDetail(placeId);
-    const { commentList, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize);
-    const { animePhotoList, totalCount:animePhotoTotalCount } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
-    const { realPhotoList, totalCount:realPhotoTotalCount } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+    const { commentList, loading:commentListLoading, error: commentListError, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount:animePhotoTotalCount } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
+    const { realPhotoList, error: realPhotoListError, totalCount:realPhotoTotalCount } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
 
     const commentTotalPages = Math.ceil(commentTotalCount / commentPageSize);
     const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
@@ -81,17 +81,10 @@ export const PlaceDetail: FC = memo(() =>{
         setCurrentRealPhotoPage(page);
     };
 
-    if (placeLoading) {
-        return <div>loading...</div>;
-    }
-    
-    if (placeError) {
-        return <div>Error: {placeError}</div>;
-    }
-    
-    if (!place) {
-        return <div>place not found</div>;
-    }
+    if (placeLoading) return <center><Spinner animation="border" /></center>;    
+    if (placeError) return <Alert variant="danger">{placeError}</Alert>;
+    if (!place) return <div>place not found</div>;
+
 
     const geojson = convertPlaceListToGeoJson([place]);
     
@@ -118,13 +111,15 @@ export const PlaceDetail: FC = memo(() =>{
             />
             <div className="position-relative m-1">
                 <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
-                
+                {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
+                {animePhotoListLoading && <center><Spinner animation="border" /></center>}
                 {animePhotoTotalCount > 0 && 
                     <>
                         <PhotoListDisplay animePhotoList={animePhotoList} />
                         <PaginationControls currentPage={currentAnimePhotoPage} totalPages={totalAnimePhotoPages} onPrevious={handleAnimePhotoPrevious} onSelect={handleAnimePhotoPageSelect} onNext={handleAnimePhotoNext} />
                     </>
                 }
+                {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
                 {realPhotoTotalCount > 0 &&
                     <div>
                         <p>現地写真（みんなの投稿）</p>
@@ -135,13 +130,16 @@ export const PlaceDetail: FC = memo(() =>{
             </div>
             
             <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
-            <ListGroup>
-                {commentList.map(comment => (
-                    <ListGroup.Item key={comment.comment_id}>
-                        <CommentCard comment={comment} buttonFlag={true} />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+            {commentListError && <Alert variant="danger">{commentListError}</Alert>}
+            {commentListLoading ? <center><Spinner animation="border" /></center> :
+                <ListGroup>
+                    {commentList.map(comment => (
+                        <ListGroup.Item key={comment.comment_id}>
+                            <CommentCard comment={comment} buttonFlag={true} />
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            }
             {commentTotalCount > 0 && 
                 <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
             }

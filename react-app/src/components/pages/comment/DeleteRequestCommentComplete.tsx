@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { DeleteCommentDetailDisplay } from "../../organisms/display/DeleteCommentDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseDeleteCommentData } from "../../../type/api/comment";
@@ -11,7 +11,7 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
 
     const responseData = location.state.responseData as responseDeleteCommentData;
 
-    const { comment } = useGetCommenDetail(responseData.comment_id);
+    const { comment, loading, error } = useGetCommenDetail(responseData.comment_id);
     
     const onClickPlace = useCallback((placeId:string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
@@ -22,7 +22,10 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
     return (
         <Container>
             <h2 className="mt-2">コメント削除・通報申請が完了しました</h2>
-            <DeleteCommentDetailDisplay contents={responseData.contents} delete_comment_id={responseData.delete_comment_id} request_date={responseData.request_date} comment={comment} />
+            {error && <Alert variant="danger">{error}</Alert>}
+            {loading ? <center><Spinner animation="border" /></center> :
+                <DeleteCommentDetailDisplay contents={responseData.contents} delete_comment_id={responseData.delete_comment_id} request_date={responseData.request_date} comment={comment} />
+            }
             <Row className="justify-content-center mt-2">
                 <Col xs="auto">
                     <Button variant="primary" onClick={() => onClickPlace(comment.place_id)}>聖地情報に戻る</Button>

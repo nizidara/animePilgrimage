@@ -19,8 +19,8 @@ export const useGetCommentList = (place_id: string | null, page: number = 1, pag
                 setTotalCount(response.data.total_count);
                 setLoading(false);
             })
-            .catch(error => {
-                setError(error.message);
+            .catch(() => {
+                setError("コメント取得中にエラーが発生しました");
                 setLoading(false);
             });
     }, [place_id, page, page_size]);

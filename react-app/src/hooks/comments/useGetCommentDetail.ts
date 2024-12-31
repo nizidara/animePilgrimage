@@ -14,8 +14,8 @@ export const useGetCommenDetail = (comment_id: string | null) => {
             setComment(response.data);
             setLoading(false);
         })
-        .catch(error => {
-            setError(error.message);
+        .catch(() => {
+            setError("コメント取得中にエラーが発生しました");
             setLoading(false);
         });
     }, [comment_id]);
