@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
-import { Alert, Button, Container } from "react-bootstrap";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
@@ -29,14 +29,8 @@ export const AdminAnimeDetail: FC = memo(() =>{
             anime.file_name && setIcon(anime.file_name);
         }
     },[anime])
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
     
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    if (error) return <Alert variant="danger">{error}</Alert>;
     
     if (!animeId) {
         return <div>No Anime found</div>;
@@ -54,12 +48,15 @@ export const AdminAnimeDetail: FC = memo(() =>{
             }
         }
     }
+    
 
     return (
         <Container>
             <h2>アニメ情報編集</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
-            <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
+            {loading ? <center><Spinner animation="border" /></center> :
+                <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
+            }
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">
                 <Button variant="primary" onClick={onClickTop}>TOPへ</Button>

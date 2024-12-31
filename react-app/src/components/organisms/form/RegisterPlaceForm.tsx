@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect, useState } from "react"
 import { SearchMap } from "../map/SearchMap";
-import { Button, Form, Image } from "react-bootstrap";
+import { Alert, Button, Container, Form, Image, Spinner } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
@@ -18,8 +18,8 @@ type FormProps = {
 };
 
 export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef, isAdmin }) => {
-    const { animeList } = useGetAnimeList();
-    const { regionList } = useGetRegionList();
+    const { animeList, loading: animeListLoading, error: animeListError } = useGetAnimeList();
+    const { regionList, loading: regionListLoading, error: regionListError } = useGetRegionList();
 
     const [imageError, setImageError] = useState<string>("");
 
@@ -114,6 +114,10 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
             e.preventDefault();
         }
     };
+
+    if (animeListError) return <Container><Alert variant="danger">{animeListError}</Alert></Container>;
+    if (regionListError) return <Container><Alert variant="danger">{regionListError}</Alert></Container>;
+    if (animeListLoading || regionListLoading) return <Container><center><Spinner animation="border" /></center></Container>;
 
     return (
         <>

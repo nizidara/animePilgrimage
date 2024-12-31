@@ -15,8 +15,8 @@ export const useGetAnimeDetail = (anime_id: string | number | null) => {
             setAnime(response.data);
             setLoading(false);
         })
-        .catch(error => {
-            setError(error.message);
+        .catch(() => {
+            setError("アニメ情報取得中にエラーが発生しました");
             setLoading(false);
         });
         }

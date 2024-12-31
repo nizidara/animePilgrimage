@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useEffect, useRef } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container, Spinner } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
@@ -16,7 +16,7 @@ export const EditRequestAnime: FC = memo(() =>{
     const formRef = useRef<HTMLFormElement>(null);
 
     const animeId = location.state.animeId;
-    const { anime } = useGetAnimeDetail(animeId);
+    const { anime, loading, error } = useGetAnimeDetail(animeId);
 
     useEffect(() => {
         if(anime){
@@ -47,7 +47,10 @@ export const EditRequestAnime: FC = memo(() =>{
     return (
         <Container>
             <h2 className="mt-2">作品修正リクエスト</h2>
-            <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
+            {error && <Alert variant="danger">{error}</Alert>}
+            {loading ? <center><Spinner animation="border" /></center> : 
+                <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
+            }
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>
     )

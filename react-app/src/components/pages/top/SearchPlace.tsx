@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -46,8 +46,7 @@ export const SearchPlace: FC = memo(() =>{
         setSearchParams({ name, region_id: regionId, page: page.toString() });
     };
 
-    if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
-    if (error) return <Container><p>エラー: {error}</p></Container>;
+    if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
     return (
         <Container>
@@ -64,21 +63,23 @@ export const SearchPlace: FC = memo(() =>{
                     <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
                 </Col>
             </Row>
-            <ListGroup>
-                {placeList.map(place => (
-                    <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard 
-                            name={place.name} 
-                            title={place.anime_title} 
-                            comment={place.comment} 
-                            anime_id={place.anime_id} 
-                            onClickDetail={onClickDetail} 
-                            place_id={place.place_id}
-                            place_icon={place.place_icon}
-                        />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+            {loading ? <center><Spinner animation="border" /></center> :
+                <ListGroup>
+                    {placeList.map(place => (
+                        <ListGroup.Item key={place.place_id}>
+                            <PlaceSummaryCard 
+                                name={place.name} 
+                                title={place.anime_title} 
+                                comment={place.comment} 
+                                anime_id={place.anime_id} 
+                                onClickDetail={onClickDetail} 
+                                place_id={place.place_id}
+                                place_icon={place.place_icon}
+                            />
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            }
             
             {totalCount > 0 && 
                 <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />

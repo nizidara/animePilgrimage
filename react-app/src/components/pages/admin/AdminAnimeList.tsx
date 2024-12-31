@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Container, ListGroup } from "react-bootstrap";
+import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,8 @@ export const AdminAnimeList: FC = memo(() =>{
     const navigate = useNavigate();
     const onClickDetail = useCallback((animeId: number) => navigate(`/admin/anime?anime_id=${animeId}`), [navigate]);
 
-    if (loading) return <p>読み込み中...</p>;
-    if (error) return <p>エラー: {error}</p>;
+    if (loading) return <Container><center><Spinner animation="border" /></center></Container>;
+    if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
     return (
         <Container>

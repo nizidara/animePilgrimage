@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect } from "react";
-import { Container, ListGroup } from "react-bootstrap";
+import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { SearchAnimeForm } from "../../organisms/form/SearchAnimeForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
 import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
@@ -24,30 +24,30 @@ export const SearchAnime: FC = memo(() =>{
 
     const navigate = useNavigate();
     const onClickDetail = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-    
 
-    if (loading) return <p>読み込み中...</p>;
-    if (error) return <p>エラー: {error}</p>;
+    if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
     return (
         <Container>
             <h1 className="mt-2">作品一覧</h1>
             <SearchAnimeForm onSearch={handleSearch} />
             <SwitchSearchLink flag={0} />
-            <ListGroup>
-                {filteredAnimeList.map(anime => (
-                    <ListGroup.Item key={anime.anime_id}>
-                        <AnimeSummaryCard 
-                            anime_id={anime.anime_id} 
-                            title={anime.title} 
-                            kana={anime.kana}
-                            flag={anime.flag}
-                            introduction={anime.introduction} 
-                            file_name={anime.file_name}
-                            onClickDetail={onClickDetail}/>
-                    </ListGroup.Item>
-                ))}
+            {loading ? <center><Spinner animation="border" /></center>:
+                <ListGroup>
+                    {filteredAnimeList.map(anime => (
+                        <ListGroup.Item key={anime.anime_id}>
+                            <AnimeSummaryCard 
+                                anime_id={anime.anime_id} 
+                                title={anime.title} 
+                                kana={anime.kana}
+                                flag={anime.flag}
+                                introduction={anime.introduction} 
+                                file_name={anime.file_name}
+                                onClickDetail={onClickDetail}/>
+                        </ListGroup.Item>
+                    ))}
             </ListGroup>
+            }
         </Container>
     )
         

@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, FormEvent, memo, useState } from "react"
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 
 type SearchPlaceFormProps = {
@@ -10,7 +10,7 @@ type SearchPlaceFormProps = {
 
 export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo((props) => {
     const {initialName, initialRegionId, onSearch } = props
-    const { regionList } = useGetRegionList();
+    const { regionList, loading, error } = useGetRegionList();
 
     const [name, setName] = useState(initialName);
     const [regionId, setRegionId] = useState(initialRegionId);
@@ -22,6 +22,9 @@ export const SearchPlaceForm: FC<SearchPlaceFormProps> = memo((props) => {
         e.preventDefault();
         onSearch(name, regionId);
     };
+
+    if (error) return <Alert variant="danger">{error}</Alert>;
+    if (loading) return <center><Spinner animation="border" /></center>;
     
     return (
         <>

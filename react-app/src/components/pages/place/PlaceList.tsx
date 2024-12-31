@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect } from "react";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -25,12 +25,17 @@ export const PlaceList: FC = memo(() =>{
     const currentPage = 1;
     const pageSize = 200;
 
-    const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList(name, animeId, regionId, currentPage, pageSize);
+    const { anime, error:animeError } = useGetAnimeDetail(animeId);
+    const { placeList, loading:PlaceListLoading, error:placeListError } = useGetPlaceList(name, animeId, regionId, currentPage, pageSize);
     const geojson = convertPlaceListToGeoJson(placeList);
 
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
     const [realPhotoList, setRealPhotoList] = useState<responseRealPhotoData[] | null>(null);
+
+    const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
+    const selectedPlacePhotoPage = 1;
+    const selectedPhotoPageSize = 24;
+    const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize);
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
@@ -44,30 +49,16 @@ export const PlaceList: FC = memo(() =>{
         setSelectedPlaceId(null);
     };
 
-    const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
-    const selectedPlacePhotoPage = 1;
-    const selectedPhotoPageSize = 24;
-    const { realPhotoList: fetchedRealPhotoList } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize);
-
     useEffect(() => {
         if (selectedPlace && fetchedRealPhotoList) {
             setRealPhotoList(fetchedRealPhotoList);
         }
     }, [selectedPlace, fetchedRealPhotoList]);
-
-    if(animeId){
-        if (loading) {
-            return <div>Loading...</div>;
-        }
-            
-        if (error) {
-            return <div>Error: {error}</div>;
-        }
-    }
     
     return (
         <Container>
             <Row className="mt-2 mb-2">
+                {animeId && animeError && <Alert variant="danger">{animeError}</Alert>}
                 <Col xs={4}>
                     <h2>聖地一覧</h2>
                 </Col>
@@ -93,6 +84,8 @@ export const PlaceList: FC = memo(() =>{
                         anime_id={selectedPlace.anime_id} 
                         place_id={selectedPlace.place_id}
                     />
+                    {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
+                    {realPhotoListLoading && <center><Spinner animation="border" /></center>}
                     {realPhotoList && <PhotoListDisplay realPhotoList={realPhotoList} />}
                 </>
             )}
@@ -100,22 +93,26 @@ export const PlaceList: FC = memo(() =>{
             
             <div className="d-flex justify-content-end mb-2">
                 <Button variant="success" onClick={onClickRegisterPlace}>登録</Button>
-            </div> 
-            <ListGroup>
-                {placeList.map(place => (
-                    <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard 
-                            name={place.name} 
-                            title={place.anime_title} 
-                            comment={place.comment} 
-                            onClickDetail={onClickDetail} 
-                            anime_id={place.anime_id} 
-                            place_id={place.place_id}
-                            place_icon={place.place_icon}
-                        />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+            </div>
+            {placeListError && <Alert variant="danger">{placeListError}</Alert>}
+            {PlaceListLoading ? <center><Spinner animation="border" /></center>:
+                <ListGroup>
+                    {placeList.map(place => (
+                        <ListGroup.Item key={place.place_id}>
+                            <PlaceSummaryCard 
+                                name={place.name} 
+                                title={place.anime_title} 
+                                comment={place.comment} 
+                                onClickDetail={onClickDetail} 
+                                anime_id={place.anime_id} 
+                                place_id={place.place_id}
+                                place_icon={place.place_icon}
+                            />
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            }
+            
         </Container>
     )
 });

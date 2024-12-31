@@ -1,5 +1,5 @@
 import { memo, FC, useCallback } from "react";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -15,21 +15,16 @@ export const AnimeDetail: FC = memo(() =>{
     const currentPage = 1;
     const pageSize = 200;
 
-    const { anime, loading, error } = useGetAnimeDetail(animeId);
-    const { placeList } = useGetPlaceList(undefined, animeId, undefined, currentPage, pageSize);
+    const { anime, loading: animeLoading, error: animeError } = useGetAnimeDetail(animeId);
+    const { placeList, loading: placeListLoading, error: placeListError } = useGetPlaceList(undefined, animeId, undefined, currentPage, pageSize);
 
     const onClickEdit = useCallback((animeId: number) => navigate(`/edit_anime`, {state: {animeId}}), [navigate]);
     const onClickMap = useCallback((animeId: number) => navigate(`/place/list?anime_id=${animeId}`), [navigate]);
     const onClickRegister = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
     const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
-
-    if (loading) {
-        return <div>loading...</div>;
-    }
     
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    if (animeError) return <Alert variant="danger">{animeError}</Alert>;
+    if (animeLoading) return <center><Spinner animation="border" /></center>;
     
     if (!anime) {
         return <div>No anime found</div>;
@@ -55,24 +50,29 @@ export const AnimeDetail: FC = memo(() =>{
             />
             <hr />
 
+            {placeListError && <Alert variant="danger">{placeListError}</Alert>}
             <div className="d-flex justify-content-end mb-2">
                 <Button variant="primary" onClick={() => onClickMap(anime.anime_id)} className="mx-2" disabled={placeList.length === 0}>MAPを見る</Button> <Button variant="success" onClick={onClickRegister}>登録</Button>
             </div> 
-            <ListGroup>
-                {placeList.map(place => (
-                    <ListGroup.Item key={place.place_id}>
-                        <PlaceSummaryCard 
-                            name={place.name} 
-                            title={place.anime_title} 
-                            comment={place.comment} 
-                            anime_id={place.anime_id} 
-                            place_id={place.place_id}
-                            onClickDetail={onClickDetail}
-                            place_icon={place.place_icon}
-                        />
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+
+            {placeListLoading ? <center><Spinner animation="border" /></center>:
+                <ListGroup>
+                    {placeList.map(place => (
+                        <ListGroup.Item key={place.place_id}>
+                            <PlaceSummaryCard 
+                                name={place.name} 
+                                title={place.anime_title} 
+                                comment={place.comment} 
+                                anime_id={place.anime_id} 
+                                place_id={place.place_id}
+                                onClickDetail={onClickDetail}
+                                place_icon={place.place_icon}
+                            />
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            }
+            
         </Container>
     )
 });
