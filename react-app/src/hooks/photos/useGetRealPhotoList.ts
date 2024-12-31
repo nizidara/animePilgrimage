@@ -20,8 +20,8 @@ export const useGetRealPhotoList = (place_id: string | null, page: number = 1, p
                 setTotalCount(response.data.total_count);
                 setLoading(false);
             })
-            .catch(error => {
-                setError(error.message);
+            .catch(() => {
+                setError("写真取得中にエラーが発生しました");
                 setLoading(false);
             });
         }

@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useRef, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
@@ -21,9 +21,9 @@ export const AddPhotoPlace: FC = memo(() =>{
     const realPhotoPageSize = 12;
     
 
-    const { animePhotoList, totalCount:animePhotoTotalCount, fetchAnimePhotos } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
-    const { realPhotoList, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
-    const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount: animePhotoTotalCount, fetchAnimePhotos } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
+    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount: realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+    const { placeIcon, loading:placeIconLoading, error:placeIconError, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
     const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
     const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
@@ -74,9 +74,14 @@ export const AddPhotoPlace: FC = memo(() =>{
                 </Col>
             </Row>
             
-            <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={false} />
+            {placeIconError && <Alert variant="danger">{placeIconError}</Alert>}
+            {placeIconLoading ? <center><Spinner animation="border" /></center> :
+                <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={false} />
+            }
 
             <p>作中写真</p>
+            {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
+            {animePhotoListLoading && <center><Spinner animation="border" /></center>}
             {animePhotoTotalCount > 0 && 
                 <>
                     <PhotoListDisplay animePhotoList={animePhotoList} />
@@ -86,6 +91,8 @@ export const AddPhotoPlace: FC = memo(() =>{
             <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={false} />
 
             <p>現地写真（みんなの投稿）</p>
+            {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
+            {realPhotoListLoading && <center><Spinner animation="border" /></center>}
             {realPhotoTotalCount > 0 && 
                 <>
                     <PhotoListDisplay realPhotoList={realPhotoList} />

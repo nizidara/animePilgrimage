@@ -15,8 +15,8 @@ export const useGetPlaceIcon = (place_id: string | null) => {
                 setPlaceIcon(response.data);
                 setLoading(false);
             })
-            .catch(error => {
-                setError(error.message);
+            .catch(() => {
+                setError("アイコン取得中にエラーが発生しました");
                 setLoading(false);
             });
         }

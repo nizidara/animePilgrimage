@@ -15,8 +15,8 @@ export const useGetAnimeIcon = (anime_id: number | string | null) => {
                 setAnimeIcon(response.data);
                 setLoading(false);
             })
-            .catch(error => {
-                setError(error.message);
+            .catch(() => {
+                setError("アイコン取得中にエラーが発生しました");
                 setLoading(false);
             });
         }

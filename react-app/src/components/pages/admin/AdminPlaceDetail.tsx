@@ -21,15 +21,15 @@ export const AdminPlaceDetail: FC = memo(() =>{
 
     const [searchParams] = useSearchParams();
     const placeId = searchParams.get('place_id');
-    const { place, loading, error } = useGetPlaceDetail(placeId);
+    const { place, loading:placeLoading, error:placeError } = useGetPlaceDetail(placeId);
 
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
     const realPhotoPageSize = 12;
     
     const { edit, editError } = useAdminEditPlace();
-    const { animePhotoList, fetchAnimePhotos } = useGetAnimePhotoList(placeId);
-    const { realPhotoList, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
-    const { placeIcon, fetchPlaceIcon } = useGetPlaceIcon(placeId);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError,  fetchAnimePhotos } = useGetAnimePhotoList(placeId);
+    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+    const { placeIcon, loading:placeIconLoading, error:placeIconError, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
     const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
 
@@ -53,7 +53,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
     
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     
-    if (error) return <Alert variant="danger">{error}</Alert>;
+    if (placeError) return <Alert variant="danger">{placeError}</Alert>;
     
     if (!place) {
         return <div>No place found</div>;
@@ -89,7 +89,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
         <Container>
             <h2>聖地情報編集</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
-            {loading ? <center><Spinner animation="border" /></center> :
+            {placeLoading ? <center><Spinner animation="border" /></center> :
                 <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
             }
             
@@ -97,14 +97,21 @@ export const AdminPlaceDetail: FC = memo(() =>{
             {placeId && 
                 <>
                     <h2>写真編集フォーム</h2>
-                
-                    <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={true} />
+                    {placeIconError && <Alert variant="danger">{placeIconError}</Alert>}
+                    {placeIconLoading ? <center><Spinner animation="border" /></center> :
+                        <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={true} />
+                    }
 
                     <p>作中写真</p>
-                    <DeleteAnimePhotoForm photoList={animePhotoList} formRef={animeImageRef} onPhotoPosted={fetchAnimePhotos} />
+                    {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
+                    {animePhotoListLoading ? <center><Spinner animation="border" /></center> :
+                        <DeleteAnimePhotoForm photoList={animePhotoList} formRef={animeImageRef} onPhotoPosted={fetchAnimePhotos} />
+                    }
                     <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={true} />
 
                     <p>現地写真（みんなの投稿）</p>
+                    {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
+                    {realPhotoListLoading && <center><Spinner animation="border" /></center>}
                     {realPhotoTotalCount > 0 && 
                         <>
                             <DeleteRealPhotoForm photoList={realPhotoList} formRef={realImageRef} onPhotoPosted={fetchRealPhotos} />
