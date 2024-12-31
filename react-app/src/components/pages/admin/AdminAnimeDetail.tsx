@@ -1,8 +1,7 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Alert, Button, Container } from "react-bootstrap";
 import { RegisterAnimeForm } from "../../organisms/form/RegisterAnimeForm";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "../../../hooks/utilities/useQuery";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { registerAnimeFormData } from "../../../type/form/anime";
@@ -11,8 +10,8 @@ import { useAdminEditAnime } from "../../../hooks/anime/useAdminEditAnime";
 export const AdminAnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const query = useQuery();
-    const animeId = query.get('anime_id');
+    const [searchParams] = useSearchParams();
+    const animeId = searchParams.get('anime_id');
     const { anime, loading, error, fetchAnimeDetail } = useGetAnimeDetail(animeId);
     const [icon, setIcon] = useState<string | null>(null);
 

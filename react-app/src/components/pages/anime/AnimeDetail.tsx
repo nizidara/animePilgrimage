@@ -2,16 +2,15 @@ import { memo, FC, useCallback } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { AnimeIntroductionDisplay } from "../../organisms/display/AnimeIntroductionDisplay";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
-import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 
 export const AnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const query = useQuery();
-    const animeId = query.get('anime_id');
+    const [searchParams] = useSearchParams();
+    const animeId = searchParams.get('anime_id');
     // const [currentPage, setCurrentPage] = useState<number>(1);
     const currentPage = 1;
     const pageSize = 200;

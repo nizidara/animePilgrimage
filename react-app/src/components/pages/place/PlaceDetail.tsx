@@ -4,8 +4,7 @@ import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { CommentForm } from "../../organisms/form/CommentForm";
 import { CommentCard } from "../../organisms/card/CommentCard";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "../../../hooks/utilities/useQuery";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useGetCommentList } from "../../../hooks/comments/useGetCommentList";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
@@ -20,13 +19,13 @@ import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList
 export const PlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const query = useQuery();
-    const placeId = query.get('place_id');
+    const [searchParams] = useSearchParams();
+    const placeId = searchParams.get('place_id');
 
     const [currentCommentPage, setCurrentCommentPage] = useState<number>(1);
     const commentPageSize = 10;
     const [currentAnimePhotoPage, setCurrentAnimePhotoPage] = useState<number>(1);
-    const animePhotoPageSize = 2;
+    const animePhotoPageSize = 12;
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
     const realPhotoPageSize = 12;
 

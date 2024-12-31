@@ -2,9 +2,8 @@ import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
-import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
 import { BsXCircle } from "react-icons/bs";
@@ -17,9 +16,9 @@ import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 export const PlaceList: FC = memo(() =>{
     const navigate = useNavigate();
     
-    const query = useQuery();
+    const [searchParams] = useSearchParams();
     const location = useLocation();
-    const animeId = query.get('anime_id');
+    const animeId = searchParams.get('anime_id');
     const name = location.state?.name ? location.state.name : null;
     const regionId = location.state?.regionId ? location.state.regionId : null;
     // const [currentPage, setCurrentPage] = useState<number>(1);

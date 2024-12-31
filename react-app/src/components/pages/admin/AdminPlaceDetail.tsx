@@ -1,10 +1,9 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
 import { Alert, Button, Container } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
-import { useQuery } from "../../../hooks/utilities/useQuery";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { useAdminEditPlace } from "../../../hooks/places/useAdminEditPlace";
 import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
@@ -20,8 +19,8 @@ import { PaginationControls } from "../../molecules/PaginationControls";
 export const AdminPlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
-    const query = useQuery();
-    const placeId = query.get('place_id');
+    const [searchParams] = useSearchParams();
+    const placeId = searchParams.get('place_id');
     const { place, loading, error } = useGetPlaceDetail(placeId);
 
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
