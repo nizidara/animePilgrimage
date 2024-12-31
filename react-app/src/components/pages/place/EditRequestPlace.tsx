@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useEffect, useRef } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
@@ -16,7 +16,7 @@ export const EditRequestPlace: FC = memo(() =>{
     const formRef = useRef<HTMLFormElement>(null);
 
     const placeId = location.state.placeId;
-    const { place } = useGetPlaceDetail(placeId);
+    const { place, loading, error } = useGetPlaceDetail(placeId);
 
     //animeTitle
     const animeTitle = place?.anime_title || "";
@@ -63,7 +63,10 @@ export const EditRequestPlace: FC = memo(() =>{
                 <h2>聖地修正リクエスト</h2>
                 <Button variant="outline-success" className="float-right" onClick={onClickAddPhoto}>写真追加はこちら</Button>
             </div>
-            {formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} animePhoto={animePhoto} formRef={formRef} />}
+            {error && <Alert variant="danger">{error}</Alert>}
+            {loading ? <center><Spinner animation="border" /></center> :
+                formData.anime_id !== 0 && <EditPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} animeTitle={animeTitle} animePhoto={animePhoto} formRef={formRef} />
+            }
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>
     )

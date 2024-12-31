@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState, useEffect, useRef } from "react";
-import { Alert, Button, Container } from "react-bootstrap";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { RegisterPlaceForm } from "../../organisms/form/RegisterPlaceForm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { registerPlaceFormData } from "../../../type/form/place";
@@ -52,14 +52,8 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const onClickTop = useCallback(() => navigate("/admin/top"), [navigate]);
     
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-
-    if (loading) {
-        return <div>loading...</div>;
-    }
     
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    if (error) return <Alert variant="danger">{error}</Alert>;
     
     if (!place) {
         return <div>No place found</div>;
@@ -95,29 +89,33 @@ export const AdminPlaceDetail: FC = memo(() =>{
         <Container>
             <h2>聖地情報編集</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
-            <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
-            <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
-            {placeId && <>
-                <h2>写真編集フォーム</h2>
+            {loading ? <center><Spinner animation="border" /></center> :
+                <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
+            }
             
-                <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={true} />
+            <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
+            {placeId && 
+                <>
+                    <h2>写真編集フォーム</h2>
+                
+                    <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={true} />
 
-                <p>作中写真</p>
-                <DeleteAnimePhotoForm photoList={animePhotoList} formRef={animeImageRef} onPhotoPosted={fetchAnimePhotos} />
-                <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={true} />
+                    <p>作中写真</p>
+                    <DeleteAnimePhotoForm photoList={animePhotoList} formRef={animeImageRef} onPhotoPosted={fetchAnimePhotos} />
+                    <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={true} />
 
-                <p>現地写真（みんなの投稿）</p>
-                {realPhotoTotalCount > 0 && 
-                    <>
-                        <DeleteRealPhotoForm photoList={realPhotoList} formRef={realImageRef} onPhotoPosted={fetchRealPhotos} />
-                        <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
-                    </>
-                }
-                <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={true} />
-                <div className="d-flex justify-content-center mt-2">
-                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
-                </div>
-            </>
+                    <p>現地写真（みんなの投稿）</p>
+                    {realPhotoTotalCount > 0 && 
+                        <>
+                            <DeleteRealPhotoForm photoList={realPhotoList} formRef={realImageRef} onPhotoPosted={fetchRealPhotos} />
+                            <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handlePhotoPrevious} onSelect={handlePhotoPageSelect} onNext={handlePhotoNext} />
+                        </>
+                    }
+                    <AddRealPhotoForm placeId={placeId} formData={realImage} setFormData={setRealImage} formRef={realImageRef} onRealPhotoPosted={fetchRealPhotos} isAdmin={true} />
+                    <div className="d-flex justify-content-center mt-2">
+                        <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                    </div>
+                </>
             }
             
         </Container>

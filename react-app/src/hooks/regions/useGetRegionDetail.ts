@@ -14,8 +14,8 @@ export const useGetRegionDetail = (region_id: number) => {
             setRegion(response.data);
             setLoading(false);
         })
-        .catch(error => {
-            setError(error.message);
+        .catch(() => {
+            setError("都道府県情報取得中にエラーが発生しました");
             setLoading(false);
         });
     }, [region_id]);

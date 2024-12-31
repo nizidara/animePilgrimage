@@ -115,9 +115,9 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         }
     };
 
-    if (animeListError) return <Container><Alert variant="danger">{animeListError}</Alert></Container>;
-    if (regionListError) return <Container><Alert variant="danger">{regionListError}</Alert></Container>;
-    if (animeListLoading || regionListLoading) return <Container><center><Spinner animation="border" /></center></Container>;
+    if (animeListError) return <Alert variant="danger">{animeListError}</Alert>;
+    if (regionListError) return <Alert variant="danger">{regionListError}</Alert>;
+    if (animeListLoading || regionListLoading) return <center><Spinner animation="border" /></center>;
 
     return (
         <>

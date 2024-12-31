@@ -24,8 +24,8 @@ export const useGetPlaceList = (name?: string | null, anime_id?: string | null, 
             setTotalCount(response.data.total_count);
             setLoading(false);
         })
-        .catch(error => {
-            setError(error.message);
+        .catch(() => {
+            setError("聖地情報取得中にエラーが発生しました");
             setLoading(false);
         });
     }, [name, anime_id, region_id, page, page_size]);

@@ -14,8 +14,8 @@ export const useGetPlaceDetail = (place_id: string | null) => {
             setPlace(response.data);
             setLoading(false);
         })
-        .catch(error => {
-            setError(error.message);
+        .catch(() => {
+            setError("聖地情報取得中にエラーが発生しました");
             setLoading(false);
         });
     }, [place_id]);

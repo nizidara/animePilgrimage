@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, memo, RefObject } from "react"
 import { SearchMap } from "../map/SearchMap";
-import { Form } from "react-bootstrap";
+import { Alert, Form, Spinner } from "react-bootstrap";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 import { editPlaceFormData } from "../../../type/form/place";
 import { mapboxFlag } from "../../../properties/properties";
@@ -18,7 +18,7 @@ type FormProps = {
 };
 
 export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, animeTitle, animePhoto, formRef }) => {
-    const { regionList } = useGetRegionList();
+    const { regionList, loading, error } = useGetRegionList();
     
     //入力フォーム更新
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +46,9 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
             return updatedData;
         });
     };
+
+    if (error) return <Alert variant="danger">{error}</Alert>;
+    if (loading) return <center><Spinner animation="border" /></center>;
 
     return (
         <>

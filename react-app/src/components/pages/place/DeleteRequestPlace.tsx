@@ -1,5 +1,5 @@
 import {memo, FC, useCallback, useRef} from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container, Spinner } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { DeleteRequestPlaceForm } from "../../organisms/form/DeleteRequestPlaceForm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,14 +27,6 @@ export const DeleteRequestPlace: FC = memo(() =>{
     //page transition
     const send = useCallback((place:responsePlaceData) => navigate("/delete_place/confirmation", {state: {place}}), [navigate]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-
-    if (loading) {
-        return <div>loading...</div>;
-    }
-    
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
     
     if (!place) {
         return <div>place not found</div>;
@@ -52,9 +44,13 @@ export const DeleteRequestPlace: FC = memo(() =>{
     return (
         <Container>
             <h2 className="mt-2">聖地削除リクエスト</h2>
-            <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
-            <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
-
+            {error && <Alert variant="danger">{error}</Alert>}
+            {loading ? <center><Spinner animation="border" /></center> :
+                <>
+                    <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
+                    <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
+                </>
+            }
             <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
         </Container>
     )
