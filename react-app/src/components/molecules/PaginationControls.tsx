@@ -9,7 +9,7 @@ type PaginationControlsProps = {
     onNext: () => void;
 };
 
-export const PaginationControls: FC<PaginationControlsProps> = memo((props) =>{
+export const PaginationControls: FC<PaginationControlsProps> = memo((props) => {
 
     const {currentPage, totalPages, onPrevious, onSelect, onNext} = props;
 
@@ -72,7 +72,10 @@ export const PaginationControls: FC<PaginationControlsProps> = memo((props) =>{
         return items;
     };
 
-    return (    
+    //ページ数が1の時はページング無し
+    if(totalPages === 1 && currentPage === 1) return<></>;
+
+    return (
         <Pagination className="justify-content-center mt-3">
             <Pagination.Prev onClick={onPrevious} disabled={currentPage === 1} />
                 {createPageItems()}
