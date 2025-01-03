@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.sql.functions import func
-from typing import List, Tuple, Optional
+from typing import List, Optional
 from fastapi import HTTPException
+from datetime import datetime, timezone
 import uuid
 
 import models.anime as anime_model
@@ -38,7 +39,7 @@ async def create_anime_photo(
 
         # save images
         saved_image_paths = []
-        for image in photo_body.images:
+        for index, image in enumerate(photo_body.images):
             image_filename = f"{uuid.uuid4()}_{image.filename}"
             image_path = base_path / anime_photo_directory / image_filename
             save_path = anime_photo_directory / image_filename
@@ -46,11 +47,13 @@ async def create_anime_photo(
             with image_path.open("wb") as buffer:
                 buffer.write(await image.read())
             
-            saved_image_paths.append(str(save_path))
+            saved_image_paths.append((str(save_path), index))
+
+        current_time = datetime.now(tz=timezone.utc)
 
         # create photo DB
-        for file_name in saved_image_paths:
-            photo = photo_model.AnimePhoto(**photo_dict, file_name=file_name)
+        for file_name, order in saved_image_paths:
+            photo = photo_model.AnimePhoto(**photo_dict, file_name=file_name, created_at=current_time, order=order+1)
 
             # create
             db.add(photo)
@@ -59,7 +62,9 @@ async def create_anime_photo(
 
             # convert UUID -> str
             if photo:
-                response_dict = photo.__dict__
+                response_dict = photo.__dict__.copy()
+                response_dict.pop("created_at", None)
+                response_dict.pop("order", None)
                 response_dict['anime_photo_id'] = str(uuid.UUID(bytes=photo.anime_photo_id))
                 response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
                 if photo.user_id is not None:
@@ -96,7 +101,7 @@ async def create_real_photo(
 
         # save images
         saved_image_paths = []
-        for image in photo_body.images:
+        for index, image in enumerate(photo_body.images):
             image_filename = f"{uuid.uuid4()}_{image.filename}"
             image_path = base_path / upload_directory / image_filename
             save_path = upload_directory / image_filename
@@ -104,11 +109,13 @@ async def create_real_photo(
             with image_path.open("wb") as buffer:
                 buffer.write(await image.read())
             
-            saved_image_paths.append(str(save_path))
+            saved_image_paths.append((str(save_path), index))
+
+        current_time = datetime.now(tz=timezone.utc)
 
         # create photo DB
-        for file_name in saved_image_paths:
-            photo = photo_model.RealPhoto(**photo_dict, file_name=file_name)
+        for file_name, order in saved_image_paths:
+            photo = photo_model.RealPhoto(**photo_dict, file_name=file_name, created_at=current_time, order=order+1)
 
             # create
             db.add(photo)
@@ -117,7 +124,9 @@ async def create_real_photo(
 
             # convert UUID -> str
             if photo:
-                response_dict = photo.__dict__
+                response_dict = photo.__dict__.copy()
+                response_dict.pop("created_at", None)
+                response_dict.pop("order", None)
                 response_dict['real_photo_id'] = str(uuid.UUID(bytes=photo.real_photo_id))
                 response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
                 if photo.user_id is not None:
@@ -178,7 +187,7 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str, page: int = 1, pa
         raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
     
     offset = (page - 1) * page_size
-    query = query.order_by(photo_model.AnimePhoto.file_name.desc()).offset(offset).limit(page_size)
+    query = query.order_by(photo_model.AnimePhoto.created_at.desc(), photo_model.AnimePhoto.order.asc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
 
@@ -186,7 +195,9 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str, page: int = 1, pa
     response_list = []
     if results:
         for photo, user_name, place in results:
-            response_dict = photo.__dict__
+            response_dict = photo.__dict__.copy()
+            response_dict.pop("created_at", None)
+            response_dict.pop("order", None)
             response_dict['anime_photo_id'] = str(uuid.UUID(bytes=photo.anime_photo_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
             if photo.user_id is not None:
@@ -226,7 +237,7 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Option
         raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
     
     offset = (page - 1) * page_size
-    query = query.order_by(photo_model.RealPhoto.file_name.desc()).offset(offset).limit(page_size)
+    query = query.order_by(photo_model.RealPhoto.created_at.asc(), photo_model.RealPhoto.order.asc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
     
@@ -234,7 +245,9 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Option
     response_list = []
     if results:
         for photo, user_name, place in results:
-            response_dict = photo.__dict__
+            response_dict = photo.__dict__.copy()
+            response_dict.pop("created_at", None)
+            response_dict.pop("order", None)
             response_dict['real_photo_id'] = str(uuid.UUID(bytes=photo.real_photo_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=photo.place_id))
             if photo.user_id is not None:
