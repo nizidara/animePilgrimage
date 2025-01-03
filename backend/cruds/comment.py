@@ -100,7 +100,14 @@ async def create_report_comment(
 # read list
 async def get_comment_list(db:AsyncSession, anime_id: Optional[int] = None, place_id: Optional[str] = None, page: int = 1, page_size: int = 50) -> comment_schema.PaginatedCommentResponse:
     # get    
-    query = select(comment_model.Comment, user_model.User.user_name, place_model.Place, func.group_concat(photo_model.RealPhoto.file_name).label("file_names")).\
+    query = select(
+        comment_model.Comment, 
+        user_model.User.user_name, 
+        place_model.Place, 
+        func.group_concat(
+            photo_model.RealPhoto.file_name.op("ORDER BY")(photo_model.RealPhoto.order.asc())
+        ).label("file_names")
+    ).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
         outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
@@ -179,11 +186,12 @@ async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schem
     comment_id_bytes = uuid.UUID(comment_id).bytes
  
     # get
-    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
+    results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name, photo_model.RealPhoto.order).\
         outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
         outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
         outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
-        filter(comment_model.Comment.comment_id == comment_id_bytes).all()
+        filter(comment_model.Comment.comment_id == comment_id_bytes).\
+        order_by(photo_model.RealPhoto.order.asc()).all()
     
     # convert UUID -> str
     response = None
@@ -191,7 +199,7 @@ async def get_comment_detail(db: AsyncSession, comment_id: str) -> comment_schem
         comment, user_name, place = results[0][:3]
         file_names = [result[3] for result in results if result[3] is not None]
 
-        response_dict = comment.__dict__
+        response_dict = comment.__dict__.copy()
         response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
         response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
         if comment.user_id is not None:
@@ -248,11 +256,12 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
     response = None
     if request:
         # get
-        results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name).\
+        results = db.query(comment_model.Comment, user_model.User.user_name, place_model.Place, photo_model.RealPhoto.file_name, photo_model.RealPhoto.order).\
             outerjoin(user_model.User, comment_model.Comment.user_id == user_model.User.user_id).\
             outerjoin(place_model.Place, place_model.Place.place_id == comment_model.Comment.place_id).\
             outerjoin(photo_model.RealPhoto, comment_model.Comment.comment_id == photo_model.RealPhoto.comment_id).\
-            filter(comment_model.Comment.comment_id == request.comment_id).all()
+            filter(comment_model.Comment.comment_id == request.comment_id).\
+            order_by(photo_model.RealPhoto.order.asc()).all()
 
         if results:
             comment, user_name, place = results[0][:3]
@@ -264,7 +273,7 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
             db.commit()
             
             # convert UUID -> str
-            response_dict = comment.__dict__
+            response_dict = comment.__dict__.copy()
             response_dict['comment_id'] = str(uuid.UUID(bytes=comment.comment_id))
             response_dict['place_id'] = str(uuid.UUID(bytes=comment.place_id))
             if comment.user_id is not None:
