@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, SmallInteger, Text, Float, Double
 from sqlalchemy.dialects.mysql import VARBINARY
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from database.db import Base
 import uuid
@@ -13,6 +14,7 @@ class Place(Base):
     longitude = Column(Double, nullable=False)
     comment = Column(String(200), nullable=True, comment='this column is used to describe a scene which appeared in anime and so on')
     flag = Column(SmallInteger, nullable=True, default=2, comment='flag = 0: Do not display, flag = 1: Display, flag = 2: Waiting approval')
+    created_at = Column(DateTime, nullable=False, server_default=func.now(), comment='timestamp when photo is created')
     region_id = Column(Integer, ForeignKey('regions.region_id', ondelete='NO ACTION', onupdate='CASCADE'), nullable=False, default=0, comment='FK')
     anime_id = Column(Integer, ForeignKey('anime.anime_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
     created_user_id = Column(VARBINARY(16), ForeignKey('users.user_id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True, comment='this column is FK, and it used when to create delete function')
