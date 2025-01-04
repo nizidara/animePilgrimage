@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import aliased
 from sqlalchemy import func
+from datetime import datetime, timezone
 from typing import List, Tuple, Optional
 from fastapi import HTTPException
 import uuid
@@ -33,7 +34,8 @@ async def create_place(
             place_dict['edited_user_id'] = uuid.UUID(place_body.edited_user_id).bytes
             edited_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['edited_user_id']).first()
             edited_user_name = edited_user.user_name
-    place = place_model.Place(**place_dict)
+    current_time = datetime.now(tz=timezone.utc)
+    place = place_model.Place(**place_dict, created_at=current_time)
 
     # create
     db.add(place)
@@ -68,7 +70,8 @@ async def create_place(
     # convert UUID -> str
     response = None
     if place:
-        response_dict = place.__dict__
+        response_dict = place.__dict__.copy()
+        response_dict.pop("created_at", None)
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
@@ -157,7 +160,8 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
     response_list = []
     if results:
         for place, created_user_name, edited_user_name, _, place_icon in results:
-            response_dict = place.__dict__
+            response_dict = place.__dict__.copy()
+            response_dict.pop("created_at", None)
             response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
             if place.created_user_id is not None:
                 response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
@@ -193,7 +197,8 @@ async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.Plac
     file_names_response = []
     if result:
         place, created_user_name, edited_user_name, _, place_icon = result
-        response_dict = place.__dict__
+        response_dict = place.__dict__.copy()
+        response_dict.pop("created_at", None)
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
@@ -273,7 +278,8 @@ async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place
             file_names_response = [item.file_name for item in anime_photo_response.photos]
 
         # convert UUID -> str
-        response_dict = place.__dict__
+        response_dict = place.__dict__.copy()
+        response_dict.pop("created_at", None)
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
@@ -338,7 +344,8 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
     
             # convert UUID -> str
             edited_user_name = None
-            response_dict = place.__dict__
+            response_dict = place.__dict__.copy()
+            response_dict.pop("created_at", None)
             response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
             if place.created_user_id is not None:
                 response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
@@ -384,7 +391,8 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
         place_icon = None
         file_names_response = []
         
-        response_dict = place.__dict__
+        response_dict = place.__dict__.copy()
+        response_dict.pop("created_at", None)
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
