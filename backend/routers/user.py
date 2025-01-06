@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Request
 from fastapi.security import OAuth2PasswordRequestForm
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from jose import JWTError, jwt
+from jose import JWTError
 
 import schemas.user as user_schema
 import cruds.user as user_crud
@@ -14,6 +16,8 @@ from properties.properties import samesite
 router = APIRouter(prefix="/users", tags=["users"])
 
 user_model.Base.metadata.create_all(bind=engine)
+
+limiter = Limiter(key_func=get_remote_address)
 
 #get user info in auth
 @router.get("/auth", response_model=user_schema.CurrentUserResponse)
@@ -53,12 +57,13 @@ async def user_detail(db: AsyncSession = Depends(get_db)):
 
 # login
 @router.post("/login", response_model=user_schema.LoginResponse)
-async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+@limiter.limit("5/minute")
+async def login(request: Request, response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     login_body = user_schema.UserLogin(login_id=form_data.username, password=form_data.password)
     user = await user_crud.login_user(db=db, login_body=login_body)
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     
     access_token = await auth.create_access_token({"id":user.user_id})
     refresh_token = await auth.create_refresh_token({"id": user.user_id})
