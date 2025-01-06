@@ -23,7 +23,7 @@ export const RegisterAnimeDetailDisplay: FC<registerAnimeFormData> = memo((props
             {icon && 
                 <>
                     <p><b>アイコン画像</b></p>
-                    <ImagePreview image={icon} />
+                    <ImagePreview image={URL.createObjectURL(icon)} />
                 </>
             }
         </>

@@ -14,12 +14,24 @@ type FormProps = {
 };
 
 export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setFormData, formRef, anime_icon }) => {
+    const [previewUrl, setPreviewUrl] = useState<string>(formData.icon ? URL.createObjectURL(formData.icon) : "");
     const [imageError, setImageError] = useState<string>("");
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevInputData => ({ ...prevInputData, [name]: value }));
         onFormChange({ ...formData, [name]: value });
+    };
+
+    // プレビュー画像のURLを生成する関数
+    const generatePreviewUrl = (file: File | null) => {
+        if(file){
+            const url = URL.createObjectURL(file);
+            setPreviewUrl(url);
+        }else{
+            setPreviewUrl("")
+        }
+        
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,11 +47,13 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
         setFormData(prevInputData => ({ ...prevInputData, icon: file }));
         onFormChange({ ...formData, icon: file });
+        generatePreviewUrl(file);
     };
 
     const handleRemoveIcon = () => {
         setFormData(prevInputData => ({ ...prevInputData, icon: null }));
         onFormChange({ ...formData, icon: null });
+        generatePreviewUrl(null);
     };
 
     return (
@@ -78,7 +92,7 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
                     </Form.Label>
                     <Form.Control type="file" accept="image/*" name="icon" hidden onChange={handleFileChange} />
                 </Form.Group>
-                {formData.icon && <ImagePreview image={formData.icon} handleRemoveIcon={handleRemoveIcon} />}
+                {formData.icon && <ImagePreview image={previewUrl} handleRemoveIcon={handleRemoveIcon} />}
             </Form>
         </>
     )

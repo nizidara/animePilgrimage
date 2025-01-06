@@ -65,7 +65,7 @@ export const EditAnimeDetailDisplay: FC<editDetailData> = memo((props) => {
             {new_icon && (
                 <div>
                     <p className="mt-2"><b>修正用アイコン</b></p>
-                    <ImagePreview image={new_icon} />
+                    <ImagePreview image={URL.createObjectURL(new_icon)} />
                 </div>
             )}
         </>

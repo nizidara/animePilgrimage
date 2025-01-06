@@ -14,9 +14,18 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
 
     const [comment, setComment] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const [imageError, setImageError] = useState<string>("");
 
     const onChangeComment = (e:ChangeEvent<HTMLInputElement>) => setComment(e.target.value);
+    
+    // プレビュー画像のURLを生成する関数
+    const generatePreviewUrls = (files: File[]) => {
+        const urls = files.map(file => URL.createObjectURL(file));
+        setPreviewUrls([...previewUrls, ...urls]);
+    };
+
+    // ファイル選択時の処理
     const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && selectedImages.length + e.target.files.length <= 4) {
             const newFiles = Array.from(e.target.files);
@@ -27,18 +36,28 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
             }
 
             setImageError("");
+            setSelectedImages([...selectedImages, ...newFiles]);
 
-            setSelectedImages([...selectedImages, ...Array.from(e.target.files)]);
+            // 新しく選択された画像のプレビューURLを生成
+            generatePreviewUrls(newFiles);
         } else {
             setImageError("画像は最大4枚までアップロード可能です。");
-            return;
         }
     };
 
+    // 画像削除時の処理
     const removeImage = (index: number) => {
         const updatedImages = [...selectedImages];
+        const updatedUrls = [...previewUrls];
+
+        // Blob URLを解放
+        URL.revokeObjectURL(previewUrls[index]);
+
         updatedImages.splice(index, 1);
+        updatedUrls.splice(index, 1);
+
         setSelectedImages(updatedImages);
+        setPreviewUrls(updatedUrls);
     };
 
     const onClickSend = () => {
@@ -70,9 +89,9 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                             <Form.Control type="file" accept="image/*" multiple hidden onChange={onImageChange} />
                         </Form.Group>
                         <div className="d-flex flex-wrap">
-                            {selectedImages.map((image, index) => (
+                            {previewUrls.map((url, index) => (
                                 <div key={index} className="position-relative m-1">
-                                    <Image src={URL.createObjectURL(image)} thumbnail width={200} height={200} />
+                                    <Image src={url} thumbnail width={200} height={200} />
                                     <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={() => removeImage(index)}>×</Button>
                                 </div>
                             ))}

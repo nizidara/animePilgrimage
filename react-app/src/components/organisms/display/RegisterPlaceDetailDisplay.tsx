@@ -56,7 +56,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
                 <>
                     <p><b>アニメ画像</b></p>
                     <div className="d-flex flex-wrap">
-                        {images.map((image, index) => <ImagePreview key={index} image={image} />)}
+                        {images.map((image, index) => <ImagePreview key={index} image={URL.createObjectURL(image)} />)}
                     </div>
                 </>
             }
@@ -68,7 +68,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
             {icon_index !== null && icon_index !== undefined && images && 
                 <div className="mt-2">
                     <p><b>アイコン画像</b></p>
-                    <ImagePreview image={images[icon_index]} />
+                    <ImagePreview image={URL.createObjectURL(images[icon_index])} />
                 </div>
             }
             {place_icon && 
