@@ -12,7 +12,7 @@ password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
 database = os.getenv('DB_NAME')
 
-DB_URL = f"mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8"
+DB_URL = f"mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8mb4"
 
 #frontend setting(dev)
 origins = [
