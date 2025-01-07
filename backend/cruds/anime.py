@@ -5,6 +5,7 @@ import uuid
 import models.anime as anime_model
 import models.user as user_model
 import schemas.anime as anime_schema
+from pathlib import Path
 
 from properties.properties import base_path, icon_directory
 
@@ -139,7 +140,13 @@ async def approve_edit_request_anime(db: AsyncSession, request_anime_id: int) ->
         if anime:
             anime.title = edit.title
             anime.introduction = edit.introduction
-            anime.file_name = edit.file_name
+            
+            if edit.file_name:
+                if anime.file_name:
+                    old_file_path = Path(base_path / anime.file_name)
+                    if old_file_path.exists():
+                        old_file_path.unlink() 
+                anime.file_name = edit.file_name
             
             # update
             db.commit()
@@ -161,6 +168,12 @@ async def update_anime(db: AsyncSession, anime_id: int, anime_body: anime_schema
         
         # save new icon if not null
         if anime_body.icon:
+            # delete icon file
+            if anime.file_name:
+                old_file_path = Path(base_path / anime.file_name)
+                if old_file_path.exists():
+                    old_file_path.unlink() 
+
             image_filename = f"{uuid.uuid4()}_{anime_body.icon.filename}"
             image_path = base_path / icon_directory / image_filename
             file_name = icon_directory / image_filename

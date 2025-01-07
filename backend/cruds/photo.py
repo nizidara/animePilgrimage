@@ -4,6 +4,7 @@ from sqlalchemy.sql.functions import func
 from typing import List, Optional
 from fastapi import HTTPException
 from datetime import datetime, timezone
+from pathlib import Path
 import uuid
 
 import models.anime as anime_model
@@ -268,6 +269,11 @@ async def update_anime_icon(db: AsyncSession, anime_id: int, file_name: str) -> 
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     response = None
     if anime:
+        if anime.file_name:
+            old_file_path = Path(base_path / anime.file_name)
+            if old_file_path.exists():
+                old_file_path.unlink()
+
         anime.file_name = file_name
         db.commit()
         db.refresh(anime)
@@ -318,6 +324,9 @@ async def delete_anime_photo(db: AsyncSession, anime_photo_id: str) -> photo_mod
     # delete
     photo = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first()
     if photo:
+        delete_path = Path(base_path / photo.file_name)
+        if delete_path.exists():
+            delete_path.unlink() 
         db.delete(photo)
         db.commit()
     return photo
@@ -330,6 +339,9 @@ async def delete_real_photo(db: AsyncSession, real_photo_id: str) -> photo_model
     # delete
     photo = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.real_photo_id == real_photo_id_bytes).first()
     if photo:
+        delete_path = Path(base_path / photo.file_name)
+        if delete_path.exists():
+            delete_path.unlink() 
         db.delete(photo)
         db.commit()
     return photo
