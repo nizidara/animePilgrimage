@@ -4,6 +4,7 @@ from sqlalchemy import func
 from typing import List, Tuple, Optional
 from fastapi import HTTPException
 import uuid
+from pathlib import Path
 
 import models.comment as comment_model
 import models.user as user_model
@@ -12,6 +13,8 @@ import models.photo as photo_model
 import schemas.comment as comment_schema
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
+
+from properties.properties import base_path
 
 # create comment
 async def create_comment(
@@ -265,9 +268,15 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
 
         if results:
             comment, user_name, place = results[0][:3]
-            file_names = [result[3] for result in results if result[3] is not None]
-            range_name = comment.range.range_name
 
+            # delete image file
+            file_names = [result[3] for result in results if result[3] is not None]
+            for file_name in file_names:
+                delete_path = Path(base_path / file_name)
+                if delete_path.exists():
+                    delete_path.unlink() 
+                    
+            range_name = comment.range.range_name
             # delete comment (delete_comments DB is casecade on delete)
             db.delete(comment)
             db.commit()
@@ -290,6 +299,12 @@ async def delete_comment(db: AsyncSession, comment_id: str) -> comment_model.Com
     # delete
     comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == comment_id_bytes).first()
     if comment:
+        photos = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.comment_id == comment_id_bytes).all()
+        for photo in photos:
+            if photo:
+                delete_path = Path(base_path / photo.file_name)
+                if delete_path.exists():
+                    delete_path.unlink() 
         db.delete(comment)
         db.commit()
     return comment

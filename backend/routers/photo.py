@@ -71,7 +71,7 @@ async def create_real_photos(request: Request, photo_body: photo_schema.RealPhot
 async def update_anime_icon(request: Request, anime_id: int, file_name: str, db: AsyncSession = Depends(get_db)):
     icon = await photo_crud.update_anime_icon(db=db, anime_id=anime_id, file_name=file_name)
     if icon is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
+        raise HTTPException(status_code=404, detail="Anime Icon not found")
     return icon
 
 # update or post place icon
@@ -80,7 +80,7 @@ async def update_anime_icon(request: Request, anime_id: int, file_name: str, db:
 async def update_place_icon(request: Request, place_icon_body: photo_schema.PlacePhotoIconCreate, db: AsyncSession = Depends(get_db)):
     icon = await photo_crud.update_place_icon(db=db, place_icon_body=place_icon_body)
     if icon is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
+        raise HTTPException(status_code=404, detail="Place Icon not found")
     return icon
 
 # delete anime photo file DB
