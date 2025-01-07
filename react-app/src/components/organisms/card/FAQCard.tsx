@@ -10,8 +10,8 @@ export const FAQCard: FC<faqList> = memo((props) => {
             <Accordion alwaysOpen>
                 {faq.map((item, index) => (
                     <Accordion.Item key={index} eventKey={item.question}>
-                        <Accordion.Header>{item.question}</Accordion.Header>
-                        <Accordion.Body>{item.answer}</Accordion.Body>
+                        <Accordion.Header style={{ whiteSpace: 'pre-line' }}>{item.question}</Accordion.Header>
+                        <Accordion.Body style={{ whiteSpace: 'pre-line' }}>{item.answer}</Accordion.Body>
                     </Accordion.Item>
                 ))}
             </Accordion>

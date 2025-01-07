@@ -49,7 +49,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
             
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>紹介コメント：</b></Col>
-                <Col xs={12} md={9}>{comment}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>
             </Row>
             {
                 images && 

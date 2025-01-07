@@ -109,7 +109,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         setFormData(prevInputData => ({...prevInputData, icon_index: index}));
     };
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
         }
@@ -121,10 +121,10 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
     return (
         <>
-            <Form ref={formRef} onKeyDown={handleKeyDown}>
+            <Form ref={formRef}>
                 <Form.Group className="mb-3" controlId="registerPlaceFormName">
                     <Form.Label>聖地名※</Form.Label>
-                    <Form.Control required type="text" name="name" defaultValue={formData.name} maxLength={30} onChange={handleChange} />
+                    <Form.Control required type="text" name="name" defaultValue={formData.name} maxLength={30} onChange={handleChange} onKeyDown={handleKeyDown} />
                     <Form.Text className={`${formData.name.length > 30 ? "text-danger" : "text-muted"}`}>{formData.name.length} / 30 </Form.Text>
                 </Form.Group>
 

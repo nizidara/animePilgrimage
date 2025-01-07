@@ -18,7 +18,7 @@ export const RegisterAnimeDetailDisplay: FC<registerAnimeFormData> = memo((props
             </Row>
             <Row className="mb-2">
                 <Col xs={12} md={3}><b>作品紹介：</b></Col>
-                <Col xs={12} md={9}>{introduction}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{introduction}</Col>
             </Row>
             {icon && 
                 <>

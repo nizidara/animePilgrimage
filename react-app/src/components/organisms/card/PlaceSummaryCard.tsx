@@ -33,7 +33,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
-                                    <Card.Text>
+                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
                                         {comment != null && comment}
                                     </Card.Text>
                                     
@@ -48,7 +48,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                             </Col>
                             <Col>
                                     <Card.Title>{name}</Card.Title> 
-                                    <Card.Text>
+                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
                                         {comment != null && comment}
                                     </Card.Text>
                                     

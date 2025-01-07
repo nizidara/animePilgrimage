@@ -22,7 +22,7 @@ export const ContactSummaryCard: FC<contactCards> = memo((props) => {
                     <small className="text-muted">{user_name != null && user_name} <DateTimeFormatter datetime={contact_date} /></small>
                 </Card.Header>
                 <Card.Body className="d-flex justify-content-between">
-                    <Card.Text>{title}</Card.Text> {status}
+                    <Card.Text style={{ whiteSpace: 'pre-line' }}>{title}</Card.Text> {status}
                  </Card.Body>
             </Card>
         </>

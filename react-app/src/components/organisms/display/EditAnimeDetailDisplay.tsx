@@ -49,11 +49,11 @@ export const EditAnimeDetailDisplay: FC<editDetailData> = memo((props) => {
             </Row>
             <Row className="mb-2">
                 <Col xs={12} md={3}><b>作品紹介：</b></Col>
-                <Col xs={12} md={9}>{introduction}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{introduction}</Col>
             </Row>
             <Row className="mb-2">
                 <Col xs={12} md={3}><b>修正理由：</b></Col>
-                <Col xs={12} md={9}>{contents}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
             </Row>
             {current_icon && 
                     <div>

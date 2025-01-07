@@ -32,7 +32,7 @@ export const DeleteCommentDetailDisplay: FC<deleteCommentDetailData> = memo((pro
             }
             <Row className="mb-2">
                 <Col xs={12} md={3}><b>削除申請理由：</b></Col>
-                <Col xs={12} md={9}>{contents}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
             </Row>
         </>
     )

@@ -22,7 +22,7 @@ export const AnimeSummaryCard: FC<AnimeSummaryData> = memo((props) => {
                             </Col>
                             <Col>
                                     <Card.Title>{title}</Card.Title>
-                                    <Card.Text>
+                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
                                         {introduction}
                                     </Card.Text>
                             </Col>

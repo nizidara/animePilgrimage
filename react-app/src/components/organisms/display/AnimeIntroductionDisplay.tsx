@@ -15,7 +15,7 @@ export const AnimeIntroductionDisplay: FC<responseAnimeData> = memo((props) => {
                                 <Icon file_name={file_name} />
                             </Col>
                             <Col>
-                                    <Card.Text>
+                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
                                         {introduction}
                                     </Card.Text>
                             </Col>

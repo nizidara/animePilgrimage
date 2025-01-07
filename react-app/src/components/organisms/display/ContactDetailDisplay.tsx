@@ -46,7 +46,7 @@ export const ContactDetailDisplay: FC<contactDetailData> = memo((props) => {
             </Row>
             <Row className="mb-2">
                 <Col xs={12} md={3}><b>お問い合わせ内容：</b></Col>
-                <Col xs={12} md={9}>{contents}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
             </Row>
         </>
     )

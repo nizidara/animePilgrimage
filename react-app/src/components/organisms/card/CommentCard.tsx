@@ -26,7 +26,7 @@ export const CommentCard: FC<Comment> = memo((props) => {
                     {buttonFlag && <Button variant="danger" className="float-right" onClick={onClickDeleteComment}>削除</Button>}
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text>{comment.comment}</Card.Text>
+                    <Card.Text style={{ whiteSpace: 'pre-line' }}>{comment.comment}</Card.Text>
                     {comment.file_names && comment.file_names.map((file, index) => (
                         <Photo key={index} file_name={file} />
                     ))}

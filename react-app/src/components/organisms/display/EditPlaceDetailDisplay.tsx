@@ -69,12 +69,12 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>紹介コメント：</b></Col>
-                <Col xs={12} md={9}>{comment}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>
             </Row>
             <PhotoCard file_names={file_names} />
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>修正理由：</b></Col>
-                <Col xs={12} md={9}>{contents}</Col>
+                <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
             </Row>
         </>
     )

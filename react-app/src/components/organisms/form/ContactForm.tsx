@@ -15,7 +15,7 @@ export const ContactForm: FC = memo(() => {
     const onChangeName = (e:ChangeEvent<HTMLInputElement>) => setName(e.target.value);
     const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
     const onChangeTitle = (e:ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
-    const onChangeContents = (e:ChangeEvent<HTMLInputElement>) => setContents(e.target.value);
+    const onChangeContents = (e:ChangeEvent<HTMLTextAreaElement>) => setContents(e.target.value);
     
     const sendContents = {name, email, title, contents} as sendContactFormData;
     const onClickSend = (e: FormEvent) => {
@@ -24,7 +24,7 @@ export const ContactForm: FC = memo(() => {
     }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
             e.preventDefault();
         }
     };
@@ -50,7 +50,7 @@ export const ContactForm: FC = memo(() => {
 
                 <Form.Group className="mb-3" controlId="contactFormContents">
                     <Form.Label>メッセージ本文※</Form.Label>
-                    <Form.Control required as="textarea" rows={3} value={contents} maxLength={10000} onChange={onChangeContents} />
+                    <Form.Control required as="textarea" value={contents} maxLength={10000} onChange={onChangeContents} />
                 </Form.Group>
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
