@@ -114,7 +114,7 @@ async def create_request_place(
     return response
 
 # read list
-async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: Optional[int] = None, region_id: Optional[int] = None, page: int = 1, page_size: int = 20) -> place_schema.PaginatedPlaceResponse:
+async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: Optional[int] = None, region_id: Optional[int] = None, flag: Optional[int] = 1, page: int = 1, page_size: int = 20) -> place_schema.PaginatedPlaceResponse:
     # get
     Created_User = aliased(user_model.User)
     Edited_User = aliased(user_model.User)
@@ -125,6 +125,10 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
         outerjoin(photo_model.PlaceIcon, place_model.Place.place_id == photo_model.PlaceIcon.place_id).\
         outerjoin(photo_model.AnimePhoto, photo_model.PlaceIcon.anime_photo_id == photo_model.AnimePhoto.anime_photo_id)
     
+    # filter by flag
+    if flag is not None:
+        query = query.where(place_model.Place.flag == flag)
+
     # filter by anime_id:
     if anime_id is not None:
         query = query.where(place_model.Place.anime_id == anime_id)

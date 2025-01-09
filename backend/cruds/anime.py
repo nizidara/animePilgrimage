@@ -5,6 +5,7 @@ import uuid
 
 import models.anime as anime_model
 import models.user as user_model
+import models.place as place_model
 import schemas.anime as anime_schema
 from pathlib import Path
 
@@ -133,6 +134,20 @@ async def update_anime_flag(db: AsyncSession, anime_id: int, flag: int) -> anime
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     if anime:
         anime.flag = flag
+
+        # if update flag 0 or 2, place.flag = 1 update 9
+        if flag in [0, 2]:
+            db.query(place_model.Place).filter(
+                place_model.Place.anime_id == anime_id,  
+                place_model.Place.flag == 1              
+            ).update({place_model.Place.flag: 9})  
+        # if update flag 1, place.flag = 9 update 1
+        elif flag ==1:
+            db.query(place_model.Place).filter(
+                place_model.Place.anime_id == anime_id,  
+                place_model.Place.flag == 9
+            ).update({place_model.Place.flag: 1})
+
         db.commit()
         db.refresh(anime)
     return anime

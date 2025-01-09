@@ -35,6 +35,18 @@ async def place_list(request: Request, name: str = None, anime_id: int = None, r
         raise HTTPException(status_code=404, detail="Places not found")
     return places
 
+# get place list by name or anime title or region all flag
+@router.get("/list/admin", response_model=place_schema.PaginatedPlaceResponse)
+@limiter.limit("50/minute")
+async def place_list(request: Request, name: str = None, anime_id: int = None, region_id: int = None, page: int = 1, page_size: int = 20, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        places = await place_crud.get_place_list(db=db, name=name, anime_id=anime_id, region_id=region_id, flag=None, page=page, page_size=page_size)
+        if places is None:
+            raise HTTPException(status_code=404, detail="Places not found")
+    return places
+
 # get request place info detail
 @router.get("/request/detail/{request_place_id}", response_model=place_schema.PlaceRequestResponse)
 @limiter.limit("50/minute")
@@ -68,10 +80,13 @@ async def create_place_request(request: Request, place_body: place_schema.PlaceR
 # update place.flag = 1 for display, place.flag = 0 for not display
 @router.put("/{place_id}", response_model=place_schema.PlaceResponse)
 @limiter.limit("10/minute")
-async def update_place_flag(request: Request, place_id: str, flag: int, db: AsyncSession = Depends(get_db)):
-    place = await place_crud.update_place_flag(db, place_id=place_id, flag=flag)
-    if place is None:
-        raise HTTPException(status_code=404, detail="Place not found")
+async def update_place_flag(request: Request, place_id: str, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        place = await place_crud.update_place_flag(db, place_id=place_id, flag=flag)
+        if place is None:
+            raise HTTPException(status_code=404, detail="Place not found")
     return place
 
 # update place info to approve edit request
