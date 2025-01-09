@@ -49,7 +49,7 @@ class PlaceCreate(PlaceBase):
         )
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlaceResponse(PlaceBase):
     flag: int
@@ -66,7 +66,7 @@ class PlaceResponse(PlaceBase):
     file_names: List[str] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PaginatedPlaceResponse(BaseModel):
     total_count: int
@@ -83,7 +83,7 @@ class PlaceRequestCreate(PlaceBase):
     user_id: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlaceRequestResponse(PlaceRequestCreate):
     request_place_id: int
@@ -93,7 +93,7 @@ class PlaceRequestResponse(PlaceRequestCreate):
     user_name: Optional[str] = "no name"
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlaceAdminEdit(PlaceBase):
     flag: int
@@ -102,4 +102,4 @@ class PlaceAdminEdit(PlaceBase):
     edited_user_id: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True

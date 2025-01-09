@@ -10,7 +10,7 @@ class UserLogin(UserBase):
     password: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserLoginResponse(UserBase):
     user_id: str
@@ -23,23 +23,23 @@ class UserLoginResponse(UserBase):
     user_attribute_name: Optional[str] = "not user"
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class LoginResponse(BaseModel):
     message: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserIdResponse(BaseModel):
     user_id: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CurrentUserResponse(UserIdResponse):
     user_name: str
     user_attribute_name: Optional[str] = "not user"
 
     class Config:
-        orm_mode = True
+        from_attributes = True

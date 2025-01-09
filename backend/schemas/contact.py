@@ -15,11 +15,11 @@ class ContactCreate(ContactBase):
     user_id: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ContactResponse(ContactCreate):
     contact_id: int
     user_name: Optional[str] = "No Name"
 
     class Config:
-        orm_mode = True
+        from_attributes = True

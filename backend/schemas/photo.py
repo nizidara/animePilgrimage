@@ -7,21 +7,21 @@ class AnimeIconCreate(BaseModel):
     file_name: Optional[str] = ""
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimeIconResponse(AnimeIconCreate):
     anime_id: int
     title: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlacePhotoIconCreate(BaseModel):
     anime_photo_id: str
     place_id: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlacePhotoIconResponse(PlacePhotoIconCreate):
     place_id: str
@@ -29,7 +29,7 @@ class PlacePhotoIconResponse(PlacePhotoIconCreate):
     place_name: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimePhotoCreate(BaseModel):
     images: List[UploadFile]
@@ -50,7 +50,7 @@ class AnimePhotoCreate(BaseModel):
         )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimePhotoResponse(BaseModel):
     file_name: str
@@ -63,7 +63,7 @@ class AnimePhotoResponse(BaseModel):
     user_name: Optional[str] = "no name"
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RealPhotoCreate(BaseModel):
     images: List[UploadFile]
@@ -87,7 +87,7 @@ class RealPhotoCreate(BaseModel):
         )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RealPhotoResponse(BaseModel):
     file_name: str
@@ -101,7 +101,7 @@ class RealPhotoResponse(BaseModel):
     user_name: Optional[str] = "no name"
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PaginatedAnimePhotoResponse(BaseModel):
     total_count: int
