@@ -1,11 +1,11 @@
 import { memo, FC, useCallback } from "react";
 import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
-import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
+import { useAdminGetAnimeList } from "../../../hooks/anime/useAdminGetAnimeList";
 import { useNavigate } from "react-router-dom";
 
 export const AdminAnimeList: FC = memo(() =>{
-    const { animeList, loading, error } = useGetAnimeList();
+    const { animeList, loading, error } = useAdminGetAnimeList();
 
     const navigate = useNavigate();
     const onClickDetail = useCallback((animeId: number) => navigate(`/admin/anime?anime_id=${animeId}`), [navigate]);
