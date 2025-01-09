@@ -13,7 +13,7 @@ class Place(Base):
     latitude = Column(Double, nullable=False)
     longitude = Column(Double, nullable=False)
     comment = Column(String(200), nullable=True, comment='this column is used to describe a scene which appeared in anime and so on')
-    flag = Column(SmallInteger, nullable=True, default=2, comment='flag = 0: Do not display, flag = 1: Display, flag = 2: Waiting approval')
+    flag = Column(SmallInteger, nullable=True, default=2, comment='flag = 0: Do not display, flag = 1: Display, flag = 2: Waiting approval, flag = 9: Others')
     created_at = Column(DateTime, nullable=False, server_default=func.now(), comment='timestamp when photo is created')
     region_id = Column(Integer, ForeignKey('regions.region_id', ondelete='NO ACTION', onupdate='CASCADE'), nullable=False, default=0, comment='FK')
     anime_id = Column(Integer, ForeignKey('anime.anime_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, comment='FK')
