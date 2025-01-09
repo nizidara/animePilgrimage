@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Tuple
+from sqlalchemy.future import select
+from typing import List, Optional, Tuple
 import uuid
 
 import models.anime as anime_model
@@ -84,8 +85,13 @@ async def get_anime_detail(db: AsyncSession, anime_id: int) -> anime_schema.Anim
     return db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
 
 # read list
-async def get_anime_list(db:AsyncSession) -> List[Tuple[anime_schema.AnimeResponse]]:
-    return db.query(anime_model.Anime).order_by(anime_model.Anime.kana).all()
+async def get_anime_list(db:AsyncSession, flag: Optional[int] = 1) -> List[Tuple[anime_schema.AnimeResponse]]:
+    query = select(anime_model.Anime).order_by(anime_model.Anime.kana)
+
+    if flag is not None:
+        query = query.where(anime_model.Anime.flag == flag)
+
+    return db.execute(query).scalars().all()
 
 # read request edit anime detail
 async def get_request_anime_detail(db: AsyncSession, request_anime_id: int) -> anime_schema.AnimeEditResponse:

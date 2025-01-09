@@ -34,7 +34,7 @@ class CommentCreate(CommentBase):
         )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CommentResponse(CommentBase):
     range_id: int
@@ -48,7 +48,7 @@ class CommentResponse(CommentBase):
     file_names: List[str] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PaginatedCommentResponse(BaseModel):
     total_count: int
@@ -68,4 +68,4 @@ class DeleteCommentResponse(DeleteCommentCreate):
     user_name: Optional[str] ="no name"
 
     class Config:
-        orm_mode = True
+        from_attributes = True

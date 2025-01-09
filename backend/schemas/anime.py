@@ -33,7 +33,7 @@ class AnimeCreate(AnimeBase):
         )
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimeResponse(AnimeBase):
     kana: str
@@ -42,7 +42,7 @@ class AnimeResponse(AnimeBase):
     file_name: Optional[str] = ""
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimeEditCreate(AnimeBase):
     anime_id: int
@@ -78,7 +78,7 @@ class AnimeEditCreate(AnimeBase):
         )
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AnimeEditResponse(AnimeBase):
     anime_id: int
@@ -91,4 +91,4 @@ class AnimeEditResponse(AnimeBase):
     file_name: Optional[str] = ""
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -44,7 +44,19 @@ async def anime_list(request: Request, title: str = None, db: AsyncSession = Dep
         raise HTTPException(status_code=404, detail="Anime not found")
     return anime_list
 
-# get request anime list
+# get anime info all flags
+@router.get("/list/admin", response_model=List[anime_schema.AnimeResponse])
+@limiter.limit("10/minute")
+async def anime_list(request: Request, title: str = None, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime_list = await anime_crud.get_anime_list(db=db, flag=None)
+        if anime_list is None:
+            raise HTTPException(status_code=404, detail="Anime not found")
+    return anime_list
+
+# get edit request anime list
 @router.get("/list/edit", response_model=List[anime_schema.AnimeEditResponse])
 @limiter.limit("10/minute")
 async def edit_anime_list(request: Request, db: AsyncSession = Depends(get_db)):
@@ -69,10 +81,13 @@ async def create_anime_edit(request: Request, edit_body: anime_schema.AnimeEditC
 # update anime.flag = 1 for display or anime.flag = 0 for not display
 @router.put("/{anime_id}", response_model=anime_schema.AnimeResponse)
 @limiter.limit("10/minute")
-async def update_anime_flag(request: Request, anime_id: int, flag: int, db: AsyncSession = Depends(get_db)):
-    anime = await anime_crud.update_anime_flag(db, anime_id=anime_id, flag=flag)
-    if anime is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
+async def update_anime_flag(request: Request, anime_id: int, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime = await anime_crud.update_anime_flag(db, anime_id=anime_id, flag=flag)
+        if anime is None:
+            raise HTTPException(status_code=404, detail="Anime not found")
     return anime
 
 # update anime.title or anime.introduction or amine.icon for edit function
