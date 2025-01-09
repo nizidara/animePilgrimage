@@ -6,6 +6,8 @@ import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { registerAnimeFormData } from "../../../type/form/anime";
 import { useAdminEditAnime } from "../../../hooks/anime/useAdminEditAnime";
+import { FlagBadge } from "../../atoms/FlagBadge";
+import { UpdateAnimeFlagForm } from "../../organisms/form/UpdateAnimeFlagForm";
 
 export const AdminAnimeDetail: FC = memo(() =>{
     const navigate = useNavigate();
@@ -21,6 +23,7 @@ export const AdminAnimeDetail: FC = memo(() =>{
     
     const [formData, setFormData] = useState<registerAnimeFormData>({title:'', kana:'', introduction:''});
     const formRef = useRef<HTMLFormElement>(null);
+    const animeFlagRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if(anime){
@@ -55,7 +58,14 @@ export const AdminAnimeDetail: FC = memo(() =>{
             <h2>アニメ情報編集</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
             {loading ? <center><Spinner animation="border" /></center> :
-                <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
+                <>
+                    {anime && 
+                    <>
+                        <FlagBadge flag={anime.flag} />
+                        <UpdateAnimeFlagForm animeId={anime.anime_id} currentflag={anime.flag} formRef={animeFlagRef} onAnimeFlagUpdated={fetchAnimeDetail} />
+                    </>}
+                    <RegisterAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={icon} />
+                </>
             }
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
             <div className="d-flex justify-content-center mt-2">

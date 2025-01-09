@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useEffect, useState } from "react"
 import { SearchMap } from "../map/SearchMap";
-import { Alert, Button, Container, Form, Image, Spinner } from "react-bootstrap";
+import { Alert, Button, Form, Image, Spinner } from "react-bootstrap";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
 import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
