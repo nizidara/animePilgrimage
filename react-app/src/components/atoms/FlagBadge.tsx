@@ -14,5 +14,8 @@ export const FlagBadge: FC<FlagBadgeProps> = memo((props) => {
     if (flag === 2) {
         return <Badge bg="warning">承認待ち</Badge>; // 黄色いバッジ
     }
+    if (flag === 9) {
+        return <Badge bg="secondary">その他</Badge>; // 黄色いバッジ
+    }
     return null; // flagが1の場合は何も表示しない
 });

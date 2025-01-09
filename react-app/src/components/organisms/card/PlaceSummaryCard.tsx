@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import '../../../thema/card/CardStyles.css';
 import { Icon } from "../../atoms/Icon";
+import { FlagBadge } from "../../atoms/FlagBadge";
 
 type PlaceSummary = {
     name:string;
@@ -13,12 +14,13 @@ type PlaceSummary = {
     onClickDetail?: (placeId: string) => void;
     place_id: string;
     place_icon?: string | null;
+    flag?: number | null;
 }
 
 export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
     const navigate = useNavigate();
 
-    const {name, title, comment, anime_id, onClickDetail, place_id, place_icon} = props;
+    const {name, title, comment, anime_id, onClickDetail, place_id, place_icon, flag} = props;
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
 
@@ -32,11 +34,13 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                                 <Icon file_name={place_icon} />
                             </Col>
                             <Col>
-                                    <Card.Title>{name}</Card.Title> 
-                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
-                                        {comment != null && comment}
-                                    </Card.Text>
-                                    
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <Card.Title>{name}</Card.Title>
+                                    {(flag === 0 || flag === 2 || flag === 9) && <FlagBadge flag={flag} />}
+                                </div> 
+                                <Card.Text style={{ whiteSpace: 'pre-line' }}>
+                                    {comment != null && comment}
+                                </Card.Text>
                             </Col>
                         </Row>
                     </Card.Body>
@@ -47,11 +51,13 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                                 <Icon file_name={place_icon} />
                             </Col>
                             <Col>
-                                    <Card.Title>{name}</Card.Title> 
-                                    <Card.Text style={{ whiteSpace: 'pre-line' }}>
-                                        {comment != null && comment}
-                                    </Card.Text>
-                                    
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <Card.Title>{name}</Card.Title>
+                                    {(flag === 0 || flag === 2 || flag === 9) && <FlagBadge flag={flag} />}
+                                </div> 
+                                <Card.Text style={{ whiteSpace: 'pre-line' }}>
+                                    {comment != null && comment}
+                                </Card.Text>
                             </Col>
                         </Row>
                 </Card.Body>

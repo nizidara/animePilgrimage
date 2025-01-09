@@ -1,15 +1,15 @@
 import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useNavigate } from "react-router-dom";
 import { PaginationControls } from "../../molecules/PaginationControls";
+import { useAdminGetPlaceList } from "../../../hooks/places/useAdminGetPlaceList";
 
 export const AdminPlaceList: FC = memo(() =>{
     const [currentPage, setCurrentPage] = useState<number>(1);
     const pageSize = 20;
 
-    const { placeList, totalCount, loading, error } = useGetPlaceList(undefined, undefined, undefined, currentPage, pageSize);
+    const { placeList, totalCount, loading, error } = useAdminGetPlaceList(undefined, undefined, undefined, currentPage, pageSize);
 
     const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -44,6 +44,7 @@ export const AdminPlaceList: FC = memo(() =>{
                                 place_id={place.place_id}
                                 onClickDetail={onClickDetail}
                                 place_icon={place.place_icon}
+                                flag={place.flag}
                             />
                         </ListGroup.Item>
                     ))}
