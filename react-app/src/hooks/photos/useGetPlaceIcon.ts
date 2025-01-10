@@ -15,14 +15,8 @@ export const useGetPlaceIcon = (place_id: string | null) => {
                 setPlaceIcon(response.data);
                 setLoading(false);
             })
-            .catch((err) => {
-                if (axios.isAxiosError(err) && err.response?.status === 404) {
-                    // 404エラーの場合はエラーを無視
-                    setPlaceIcon(undefined);
-                } else {
-                    // 他のエラーはエラー状態として扱う
-                    setError("アイコン取得中にエラーが発生しました");
-                }
+            .catch(() => {
+                setError("アイコン取得中にエラーが発生しました");
                 setLoading(false);
             });
         }
