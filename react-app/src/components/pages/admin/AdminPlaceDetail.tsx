@@ -15,13 +15,15 @@ import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
 import { DeleteAnimePhotoForm } from "../../organisms/form/DeleteAnimePhotoForm";
 import { DeleteRealPhotoForm } from "../../organisms/form/DeleteRealPhotoForm";
 import { PaginationControls } from "../../molecules/PaginationControls";
+import { FlagBadge } from "../../atoms/FlagBadge";
+import { UpdatePlaceFlagForm } from "../../organisms/form/UpdatePlaceFlagForm";
 
 export const AdminPlaceDetail: FC = memo(() =>{
     const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
     const placeId = searchParams.get('place_id');
-    const { place, loading:placeLoading, error:placeError } = useGetPlaceDetail(placeId);
+    const { place, loading:placeLoading, error:placeError, fetchPlaceDetail } = useGetPlaceDetail(placeId);
 
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
     const realPhotoPageSize = 12;
@@ -38,6 +40,7 @@ export const AdminPlaceDetail: FC = memo(() =>{
 
     const [animeImage, setAnimeImage] = useState<File[]>([]);
     const [realImage, setRealImage] = useState<File[]>([]);
+    const placeFlagRef = useRef<HTMLFormElement>(null);
     const placeIconRef = useRef<HTMLFormElement>(null);
     const animeImageRef = useRef<HTMLFormElement>(null);
     const realImageRef = useRef<HTMLFormElement>(null);
@@ -90,7 +93,15 @@ export const AdminPlaceDetail: FC = memo(() =>{
             <h2>聖地情報編集</h2>
             {editError && <Alert variant="danger">{editError}</Alert>}
             {placeLoading ? <center><Spinner animation="border" /></center> :
-                <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
+                <>
+                    {place && 
+                    <>
+                        <FlagBadge flag={place.flag} />
+                        <UpdatePlaceFlagForm placeId={place.place_id} currentflag={place.flag} formRef={placeFlagRef} onPlaceFlagUpdated={fetchPlaceDetail} />
+                    </>}
+                    <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={true} />
+                </>
+                
             }
             
             <BackAndNextButtons backName="戻る" nextName="確定" onClickBack={onClickBack} onClickNext={onClickDecide} />
