@@ -1,15 +1,19 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
+import { Alert, Container, Form, ListGroup, Spinner } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
 import { PaginationControls } from "../../molecules/PaginationControls";
 import { useAdminGetPlaceList } from "../../../hooks/places/useAdminGetPlaceList";
+import { useAdminGetAnimeList } from "../../../hooks/anime/useAdminGetAnimeList";
+import { SearchAdminPlaceForm } from "../../organisms/form/SearchAdminPlaceForm";
 
 export const AdminPlaceList: FC = memo(() =>{
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [selectedAnimeId, setSelectedAnimeId] = useState<string | null>(null);
     const pageSize = 20;
 
-    const { placeList, totalCount, loading, error } = useAdminGetPlaceList(undefined, undefined, undefined, currentPage, pageSize);
+    const { placeList, totalCount, loading, error } = useAdminGetPlaceList(undefined, selectedAnimeId, undefined, currentPage, pageSize);
+    const { animeList, loading: animeListLoading, error: animeListError } = useAdminGetAnimeList();
 
     const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -28,9 +32,24 @@ export const AdminPlaceList: FC = memo(() =>{
         setCurrentPage(page);
     };
 
+    const handleAnimeChange = (animeId: string | null) => {
+        setSelectedAnimeId(animeId);
+        setCurrentPage(1);
+    };
+
     return (
         <Container>
             <h2>登録済聖地一覧</h2>
+            {animeListError && <Alert variant="danger">アニメ一覧の取得に失敗しました。</Alert>}
+            {animeListLoading ? (
+                <center><Spinner animation="border" /></center>
+            ) : (
+                <SearchAdminPlaceForm
+                    animeList={animeList}
+                    selectedAnimeId={selectedAnimeId}
+                    onAnimeChange={handleAnimeChange}
+                />
+            )}
             {error && <Alert variant="danger">{error}</Alert>}
             {loading ? <center><Spinner animation="border" /></center> :
                 <ListGroup>
