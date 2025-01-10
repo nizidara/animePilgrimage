@@ -3,6 +3,7 @@ import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { responseAnimePhotoData, responsePlaceIconData } from "../../../type/api/photo";
 import { Icon } from "../../atoms/Icon";
 import { useUpdatePlaceIcon } from "../../../hooks/photos/useUpdatePlaceIcon";
+import { BsInfoCircle } from "react-icons/bs";
 
 type FormProps = {
     animePhotoList?: responseAnimePhotoData[];
@@ -42,6 +43,9 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
             {placeIcon && 
                 <div>
                     <p>現在のアイコン</p>
+                    {placeIcon.file_name === "" && 
+                    <p><small className="text-muted"><BsInfoCircle /> アイコン画像未設定の場合は、「アイコンを変更する」ボタンから選択してください。<br />
+                    「アイコンを変更する」ボタンが非表示の場合は，アニメ画像を追加するから画像を追加後に「アイコンを変更する」から選択してください。</small></p>}
                     <Icon file_name={placeIcon.file_name} />
                 </div>
             }
