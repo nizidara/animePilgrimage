@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { requestPlaceData, responsePlaceData, responseRequestPlaceData } from "../../type/api/place";
 import { deletePlaceFormData } from "../../type/form/place";
+import { useAuth } from "../../providers/AuthContext";
 
 //post place request
 export const useDeleteRequestPlace = () => {
@@ -11,6 +12,7 @@ export const useDeleteRequestPlace = () => {
     const [deleteRequestError, setDeleteRequestError] = useState<string | null>(null);
     const placeIconRef = useRef<string | null>(null);
     const navigation = useNavigate();
+    const {user} = useAuth();
 
     //post
     const deleteRequest = useCallback((formData : deletePlaceFormData, place: responsePlaceData) => {
@@ -21,7 +23,7 @@ export const useDeleteRequestPlace = () => {
             ...place,
             request_date: new Date().toISOString(),
             request_type: 1,    //delete request only
-            user_id: null   //now null only
+            user_id: user ? user.user_id : null
         }
 
         if (place.place_icon) {
@@ -35,7 +37,7 @@ export const useDeleteRequestPlace = () => {
         .catch(() => {
             setDeleteRequestError("送信中にエラーが発生しました");
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {

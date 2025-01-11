@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { editAnimeData, responseEditAnimeData } from "../../type/api/anime";
 import { editAnimeFormData } from "../../type/form/anime";
+import { useAuth } from "../../providers/AuthContext";
 
-//post anime
+//post request anime
 export const useEditRequestAnime = () => {
     const [responseData, setResponseData] = useState<responseEditAnimeData | null>(null);
     const [editError, setEditError] = useState<string | null>(null);
     const navigation = useNavigate();
+    const {user} = useAuth();
 
     //post
     const edit = useCallback((animeData : editAnimeFormData, animeId : number) => {
@@ -20,8 +22,7 @@ export const useEditRequestAnime = () => {
             anime_id: animeId,
             request_date: new Date().toISOString(),
             request_type: 0,    //edit request only
-            //現時点ではuser_idはnull限定
-            user_id: null
+            user_id: user ? user.user_id : null
         }
 
         const formData = new FormData();
@@ -40,7 +41,7 @@ export const useEditRequestAnime = () => {
         .catch(() => {
             setEditError("送信中にエラーが発生しました")
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {

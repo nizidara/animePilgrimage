@@ -4,7 +4,7 @@ export type loginData = {
 }
 
 export type userData = {
-    user_id: number;
+    user_id: string;
     user_name: string;
     user_attribute_name: 'not member' | 'admin' | 'normal member' | 'special member' | 'others';
 }

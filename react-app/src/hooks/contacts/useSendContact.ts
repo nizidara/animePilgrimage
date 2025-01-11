@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom"
 import { responseContactData, sendContactData} from "../../type/api/contact";
 import { fastAPIURL } from "../../properties/properties";
 import { sendContactFormData } from "../../type/form/contact";
+import { useAuth } from "../../providers/AuthContext";
 
 //post contact
 export const useSendContact = () => {
     const [responseData, setResponseData] = useState<responseContactData | null>(null);
     const [sendError, setSendError] = useState<string | null>(null);
     const navigation = useNavigate();
+    const {user} = useAuth();
 
     //post
     const send = useCallback((formData : sendContactFormData) => {
@@ -19,8 +21,7 @@ export const useSendContact = () => {
             ...formData,
             contact_date: new Date().toISOString(),
             status: 0,
-            //現時点ではuser_idはnull限定
-            user_id: null
+            user_id: user ? user.user_id : null
         }
 
         axios.post(`${fastAPIURL}/contacts`, sendData)
@@ -30,7 +31,7 @@ export const useSendContact = () => {
         .catch(() => {
             setSendError("送信中にエラーが発生しました")
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { editPlaceFormData } from "../../type/form/place";
 import { requestPlaceData, responseRequestPlaceData } from "../../type/api/place";
+import { useAuth } from "../../providers/AuthContext";
 
 //post place request
 export const useEditRequestPlace = () => {
@@ -11,6 +12,7 @@ export const useEditRequestPlace = () => {
     const [editError, setEditError] = useState<string | null>(null);
     const animePhotoRef = useRef<string[]>([]);
     const navigation = useNavigate();
+    const {user} = useAuth();
 
     //post
     const edit = useCallback((formData : editPlaceFormData, placeId: string, animePhoto: string[]) => {
@@ -21,7 +23,7 @@ export const useEditRequestPlace = () => {
             place_id: placeId,
             request_date: new Date().toISOString(),
             request_type: 0,    //edit request only
-            user_id: null   //now null only
+            user_id: user ? user.user_id : null
         }
 
         animePhotoRef.current = animePhoto;
@@ -33,7 +35,7 @@ export const useEditRequestPlace = () => {
         .catch(() => {
             setEditError("送信中にエラーが発生しました");
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {

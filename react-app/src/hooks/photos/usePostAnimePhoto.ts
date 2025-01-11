@@ -3,12 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { fastAPIURL } from "../../properties/properties";
 import { postAnimePhotoData, responseAnimePhotoData } from "../../type/api/photo";
+import { useAuth } from "../../providers/AuthContext";
 
 //post AnimePhoto
 export const usePostAnimePhoto = (isAdmin:boolean) => {
     const [responseData, setResponseData] = useState<responseAnimePhotoData[] | null>(null);
     const [postError, setPostError] = useState<string | null>(null);
     const navigation = useNavigate();
+    const {user} = useAuth();
 
     //post
     const post = useCallback((placeId : string, images: File[], onAnimePhotoPosted: () => void) => {
@@ -16,8 +18,7 @@ export const usePostAnimePhoto = (isAdmin:boolean) => {
 
         const postData : postAnimePhotoData = {
             place_id: placeId,
-            // now null olny
-            user_id: null
+            user_id: user ? user.user_id : null
         }
 
         const formData = new FormData();
@@ -43,7 +44,7 @@ export const usePostAnimePhoto = (isAdmin:boolean) => {
         }).catch(() => {
             setPostError("投稿中にエラーが発生しました")
         });
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
