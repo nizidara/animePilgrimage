@@ -86,7 +86,7 @@ async def update_place_icon(request: Request, place_icon_body: photo_schema.Plac
 # delete anime photo file DB
 @router.delete("/anime/{anime_photo_id}")
 @limiter.limit("10/minute")
-async def delete_anime_photo(request: Request, anime_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def delete_anime_photo(request: Request, anime_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
@@ -98,7 +98,7 @@ async def delete_anime_photo(request: Request, anime_photo_id: str, current_user
 # delete real photo file DB
 @router.delete("/reals/{real_photo_id}")
 @limiter.limit("10/minute")
-async def delete_real_photo(request: Request, real_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def delete_real_photo(request: Request, real_photo_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:

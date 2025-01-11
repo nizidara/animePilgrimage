@@ -19,9 +19,27 @@ user_model.Base.metadata.create_all(bind=engine)
 
 limiter = Limiter(key_func=get_remote_address)
 
-#get user info in auth
+#get user info in auth optional
 @router.get("/auth", response_model=user_schema.CurrentUserResponse)
-async def get_current_user(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
+async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
+    if access_token is None:
+        return None
+    
+    try:
+        payload = await auth.decode_token(access_token)
+        user_id: str = payload.get("id")
+        
+        if user_id is None:
+            return None
+        
+        return await user_crud.auth_user(db=db, user_id=user_id)
+        
+    except JWTError:
+        return None
+
+#get user info in auth require
+@router.get("/auth", response_model=user_schema.CurrentUserResponse)
+async def get_current_user_required(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
     if access_token is None:
         raise HTTPException(status_code=401, detail="Access token not found")
     

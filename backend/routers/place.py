@@ -38,7 +38,7 @@ async def place_list(request: Request, name: str = None, anime_id: int = None, r
 # get place list by name or anime title or region all flag
 @router.get("/list/admin", response_model=place_schema.PaginatedPlaceResponse)
 @limiter.limit("50/minute")
-async def place_list(request: Request, name: str = None, anime_id: int = None, region_id: int = None, page: int = 1, page_size: int = 20, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def place_list(request: Request, name: str = None, anime_id: int = None, region_id: int = None, page: int = 1, page_size: int = 20, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
@@ -80,7 +80,7 @@ async def create_place_request(request: Request, place_body: place_schema.PlaceR
 # update place.flag = 1 for display, place.flag = 0 for not display
 @router.put("/{place_id}", response_model=place_schema.PlaceResponse)
 @limiter.limit("10/minute")
-async def update_place_flag(request: Request, place_id: str, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def update_place_flag(request: Request, place_id: str, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
@@ -101,7 +101,7 @@ async def approve_place_edit(request: Request, request_place_id: int, db: AsyncS
 # update place info direct
 @router.put("/edit/admin/{place_id}", response_model=place_schema.PlaceResponse)
 @limiter.limit("10/minute")
-async def palce_edit_admin(request: Request, place_id: str, place_body: place_schema.PlaceAdminEdit, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def palce_edit_admin(request: Request, place_id: str, place_body: place_schema.PlaceAdminEdit, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:

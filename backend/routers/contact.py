@@ -31,7 +31,7 @@ async def contact_detail(request: Request, contact_id: int, db: AsyncSession = D
 # get contact list
 @router.get("/list", response_model=List[contact_schema.ContactResponse])
 @limiter.limit("5/minute")  
-async def get_contact(request: Request, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def get_contact(request: Request, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     return await contact_crud.get_contact_list(db)
