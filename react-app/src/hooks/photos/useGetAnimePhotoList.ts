@@ -3,7 +3,7 @@ import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
 import { responseAnimePhotoData } from "../../type/api/photo";
 
-export const useGetAnimePhotoList = (place_id: string | null, page: number = 1, page_size: number = 12) => {
+export const useGetAnimePhotoList = (place_id: string | null, page: number = 1, page_size: number = 12, canFetch: boolean) => {
     const [animePhotoList, setAnimePhotoList] = useState<responseAnimePhotoData[]>([]);
     const [totalCount, setTotalCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export const useGetAnimePhotoList = (place_id: string | null, page: number = 1, 
         const queryPage = `?page=${page}`;
         const queryPageSize = `&page_size=${page_size}`;
 
-        if(place_id){
+        if(place_id && canFetch){
             axios.get(`${fastAPIURL}/photos/anime/list/${place_id}${queryPage}${queryPageSize}`)
             .then(response => {
                 setAnimePhotoList(response.data.photos);
@@ -25,7 +25,7 @@ export const useGetAnimePhotoList = (place_id: string | null, page: number = 1, 
                 setLoading(false);
             });
         }
-    }, [place_id, page, page_size]);
+    }, [place_id, page, page_size, canFetch]);
 
     useEffect(() => {
         fetchAnimePhotos();

@@ -1,4 +1,4 @@
-import { memo, FC, useCallback, useState } from "react";
+import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
@@ -29,10 +29,24 @@ export const PlaceDetail: FC = memo(() =>{
     const [currentRealPhotoPage, setCurrentRealPhotoPage] = useState<number>(1);
     const realPhotoPageSize = 12;
 
+    // Step 1: Place detail hook
     const { place, loading: placeLoading, error: placeError } = useGetPlaceDetail(placeId);
-    const { commentList, loading:commentListLoading, error: commentListError, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize);
-    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount:animePhotoTotalCount } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
-    const { realPhotoList, error: realPhotoListError, totalCount:realPhotoTotalCount } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+
+    // Step 2: Conditional state for other hooks
+    const [canFetchDetails, setCanFetchDetails] = useState(false);
+
+    useEffect(() => {
+        // Allow fetching other data only if there are no errors in place detail
+        if (!placeLoading && !placeError && place) {
+            setCanFetchDetails(true);
+        } else {
+            setCanFetchDetails(false);
+        }
+    }, [placeLoading, placeError, place]);
+
+    const { commentList, loading:commentListLoading, error: commentListError, totalCount: commentTotalCount, fetchComments } = useGetCommentList(placeId, currentCommentPage, commentPageSize, canFetchDetails);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount:animePhotoTotalCount } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize, canFetchDetails);
+    const { realPhotoList, error: realPhotoListError, totalCount:realPhotoTotalCount } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize, canFetchDetails);
 
     const commentTotalPages = Math.ceil(commentTotalCount / commentPageSize);
     const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);

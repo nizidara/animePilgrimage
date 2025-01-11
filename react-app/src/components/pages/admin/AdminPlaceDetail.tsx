@@ -29,8 +29,8 @@ export const AdminPlaceDetail: FC = memo(() =>{
     const realPhotoPageSize = 12;
     
     const { edit, editError } = useAdminEditPlace();
-    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError,  fetchAnimePhotos } = useGetAnimePhotoList(placeId);
-    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError,  fetchAnimePhotos } = useGetAnimePhotoList(placeId, undefined, undefined, true);
+    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount:realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize, true);
     const { placeIcon, loading:placeIconLoading, error:placeIconError, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
     const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);

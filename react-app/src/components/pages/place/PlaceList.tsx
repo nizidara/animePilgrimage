@@ -35,7 +35,7 @@ export const PlaceList: FC = memo(() =>{
     const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
     const selectedPlacePhotoPage = 1;
     const selectedPhotoPageSize = 24;
-    const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize);
+    const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize, true);
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
     const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);

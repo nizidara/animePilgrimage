@@ -3,7 +3,7 @@ import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
 import { responseCommentData } from "../../type/api/comment";
 
-export const useGetCommentList = (place_id: string | null, page: number = 1, page_size: number = 20) => {
+export const useGetCommentList = (place_id: string | null, page: number = 1, page_size: number = 20, canFetch: boolean) => {
     const [commentList, setCommentList] = useState<responseCommentData[]>([]);
     const [totalCount, setTotalCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
@@ -13,7 +13,8 @@ export const useGetCommentList = (place_id: string | null, page: number = 1, pag
         const queryPage = `&page=${page}`;
         const queryPageSize = `&page_size=${page_size}`;
 
-        axios.get(`${fastAPIURL}/comments/list?place_id=${place_id}${queryPage}${queryPageSize}`)
+        if(place_id && canFetch){
+            axios.get(`${fastAPIURL}/comments/list?place_id=${place_id}${queryPage}${queryPageSize}`)
             .then(response => {
                 setCommentList(response.data.comments);
                 setTotalCount(response.data.total_count);
@@ -23,7 +24,8 @@ export const useGetCommentList = (place_id: string | null, page: number = 1, pag
                 setError("コメント取得中にエラーが発生しました");
                 setLoading(false);
             });
-    }, [place_id, page, page_size]);
+        }
+    }, [place_id, page, page_size, canFetch]);
 
     useEffect(() => {
         fetchComments();

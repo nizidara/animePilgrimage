@@ -21,8 +21,8 @@ export const AddPhotoPlace: FC = memo(() =>{
     const realPhotoPageSize = 12;
     
 
-    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount: animePhotoTotalCount, fetchAnimePhotos } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize);
-    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount: realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize);
+    const { animePhotoList, loading: animePhotoListLoading, error: animePhotoListError, totalCount: animePhotoTotalCount, fetchAnimePhotos } = useGetAnimePhotoList(placeId, currentAnimePhotoPage, animePhotoPageSize, true);
+    const { realPhotoList, loading: realPhotoListLoading, error: realPhotoListError, totalCount: realPhotoTotalCount, fetchRealPhotos } = useGetRealPhotoList(placeId, currentRealPhotoPage, realPhotoPageSize, true);
     const { placeIcon, loading:placeIconLoading, error:placeIconError, fetchPlaceIcon } = useGetPlaceIcon(placeId);
 
     const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
