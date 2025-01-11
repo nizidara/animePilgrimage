@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from typing import List
+from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.place as place_crud
@@ -20,10 +20,15 @@ limiter = Limiter(key_func=get_remote_address)
 # get place info detail
 @router.get("/detail/{place_id}", response_model=place_schema.PlaceResponse)
 @limiter.limit("50/minute")
-async def place_detail(request: Request, place_id: str, db: AsyncSession = Depends(get_db)):
+async def place_detail(request: Request, place_id: str, current_user: Optional[user_schema.CurrentUserResponse] = Depends(user_router.get_current_user_optional), db: AsyncSession = Depends(get_db)):
     place = await place_crud.get_place_detail(db, place_id=place_id) 
     if place is None:
         raise HTTPException(status_code=404, detail="Place not found")
+    if place.flag != 1:
+        if not current_user:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        if current_user.user_attribute_name != "admin":
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     return place
  
 # get place list by name or anime title or region
