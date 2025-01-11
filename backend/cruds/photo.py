@@ -166,6 +166,8 @@ async def get_place_icon(db: AsyncSession, place_id: str) -> photo_schema.PlaceP
             response_dict['place_id'] = str(uuid.UUID(bytes=icon.place_id))
             response_dict['anime_photo_id'] = str(uuid.UUID(bytes=icon.anime_photo_id))
             response = photo_schema.PlacePhotoIconResponse(**response_dict, file_name=file_name, place_name=place_name)
+    else:
+        response = photo_schema.PlacePhotoIconResponse(anime_photo_id="", place_id=place_id, file_name="", place_name="")
     return response
 
 # read anime photo list

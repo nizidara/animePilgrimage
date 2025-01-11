@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from typing import List
+from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import cruds.anime as anime_crud
@@ -20,10 +20,16 @@ limiter = Limiter(key_func=get_remote_address)
 # get anime info detail
 @router.get("/detail/{anime_id}", response_model=anime_schema.AnimeResponse)
 @limiter.limit("50/minute")
-async def anime_detail(request: Request, anime_id: int, db: AsyncSession = Depends(get_db)):
+async def anime_detail(request: Request, anime_id: int, current_user: Optional[user_schema.CurrentUserResponse] = Depends(user_router.get_current_user_optional), db: AsyncSession = Depends(get_db)):
     anime = await anime_crud.get_anime_detail(db=db, anime_id=anime_id)
     if anime is None:
         raise HTTPException(status_code=404, detail="Anime not found")
+    
+    if anime.flag != 1:
+        if not current_user:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        if current_user.user_attribute_name != "admin":
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     return anime
 
 # get edit request anime info detail
@@ -47,7 +53,7 @@ async def anime_list(request: Request, title: str = None, db: AsyncSession = Dep
 # get anime info all flags
 @router.get("/list/admin", response_model=List[anime_schema.AnimeResponse])
 @limiter.limit("10/minute")
-async def anime_list(request: Request, title: str = None, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def anime_list(request: Request, title: str = None, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
@@ -81,7 +87,7 @@ async def create_anime_edit(request: Request, edit_body: anime_schema.AnimeEditC
 # update anime.flag = 1 for display or anime.flag = 0 for not display
 @router.put("/{anime_id}", response_model=anime_schema.AnimeResponse)
 @limiter.limit("10/minute")
-async def update_anime_flag(request: Request, anime_id: int, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), db: AsyncSession = Depends(get_db)):
+async def update_anime_flag(request: Request, anime_id: int, flag: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
@@ -102,7 +108,7 @@ async def approve_anime_edit(request: Request, request_anime_id: int, db: AsyncS
 # update anime info excluding anime_id 
 @router.put("/edit/admin/{anime_id}", response_model=anime_schema.AnimeResponse)
 @limiter.limit("10/minute")
-async def anime_edit_admin(request: Request, anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user), anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
+async def anime_edit_admin(request: Request, anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), anime_body: anime_schema.AnimeCreate = Depends(anime_schema.AnimeCreate.as_form), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
     else:
