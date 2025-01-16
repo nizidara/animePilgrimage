@@ -66,13 +66,13 @@ export const EditAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, setF
 
                 <Form.Group className="mb-3" controlId="editFormIntroduction">
                     <Form.Label>作品紹介</Form.Label>
-                    <Form.Control as="textarea" name="introduction" defaultValue={formData.introduction ? formData.introduction : ""} maxLength={200} onChange={handleChange} />
+                    <Form.Control as="textarea" name="introduction" defaultValue={formData.introduction ? formData.introduction : ""} maxLength={200} onChange={handleChange} rows={3} />
                     <Form.Text className={`${formData.introduction && formData.introduction.length > 200 ? "text-danger" : "text-muted"}`}>{formData.introduction ? formData.introduction.length : 0} / 200 </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="editFormContents">
                     <Form.Label>リクエスト理由※（タイトル修正はこちらに記載してください）</Form.Label>
-                    <Form.Control required as="textarea" name="contents" defaultValue={formData.contents} maxLength={1000} onChange={handleChange} />
+                    <Form.Control required as="textarea" name="contents" defaultValue={formData.contents} maxLength={1000} onChange={handleChange} rows={5} />
                     <Form.Text className={`${formData.contents.length > 1000 ? "text-danger" : "text-muted"}`}>{formData.contents.length} / 1000 </Form.Text>
                 </Form.Group>
 

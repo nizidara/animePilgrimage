@@ -73,7 +73,7 @@ export const RegisterAnimeForm: FC<FormProps> = memo(({ onFormChange, formData, 
 
                 <Form.Group className="mb-3" controlId="registerFormIntroduction">
                     <Form.Label>作品紹介</Form.Label>
-                    <Form.Control as="textarea" name="introduction" defaultValue={formData.introduction ? formData.introduction : ""} maxLength={200} onChange={handleChange} />
+                    <Form.Control as="textarea" name="introduction" defaultValue={formData.introduction ? formData.introduction : ""} maxLength={200} onChange={handleChange} rows={3} />
                     <Form.Text className={`${formData.introduction && formData.introduction.length > 200 ? "text-danger" : "text-muted"}`}>{formData.introduction ? formData.introduction.length : 0} / 200 </Form.Text>
                 </Form.Group>
 

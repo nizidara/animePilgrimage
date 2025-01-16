@@ -73,7 +73,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                 <Form.Group controlId="commentFormComment">
                     <Form.Label>コメント</Form.Label>
                     {postError && <Alert variant="danger">{postError}</Alert>}
-                    <Form.Control as="textarea" name="comment" value={comment} maxLength={300} onChange={onChangeComment} />
+                    <Form.Control as="textarea" name="comment" value={comment} maxLength={300} onChange={onChangeComment} rows={3}/>
                     <Form.Text className={`d-flex justify-content-end align-items-center ${comment.length > 140 ? "text-danger" : "text-muted"}`}>
                         {comment.length} / 140
                     </Form.Text>

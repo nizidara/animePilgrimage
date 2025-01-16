@@ -50,7 +50,7 @@ export const ContactForm: FC = memo(() => {
 
                 <Form.Group className="mb-3" controlId="contactFormContents">
                     <Form.Label>メッセージ本文※</Form.Label>
-                    <Form.Control required as="textarea" value={contents} maxLength={10000} onChange={onChangeContents} />
+                    <Form.Control required as="textarea" value={contents} maxLength={10000} onChange={onChangeContents} rows={5} />
                 </Form.Group>
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
