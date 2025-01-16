@@ -37,13 +37,15 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
         geojson.features.forEach(marker => {
             const el = document.createElement('div');
             el.className = 'marker';
-            el.style.backgroundImage = marker.properties.icon ? `url(${marker.properties.icon})` : `url(${defaultMarkerIcon})`;
+            el.style.backgroundImage = marker.properties.icon ? (marker.properties.icon.startsWith("http") ? `url(${marker.properties.icon}` : `url(${process.env.PUBLIC_URL}/${marker.properties.icon.replace(/\\/g, '/')})`) : `url(${defaultMarkerIcon})`;
             if (map.current) {
+                const descriptionWithBreaks = marker.properties.description && marker.properties.description.replace(/\n/g, '<br>');
+
                 new mapboxgl.Marker(el)
                     .setLngLat(marker.geometry.coordinates) //緯度経度
                     .setPopup( //ポップアップ
                         new mapboxgl.Popup({ offset: 25 })
-                            .setHTML(`<h3>${marker.properties.title}</h3><p>${marker.properties.description}</p>`)
+                            .setHTML(`<h3>${marker.properties.title}</h3><p>${descriptionWithBreaks}</p>`)
                     )
                     .addTo(map.current)
                     .getElement().addEventListener('click', () => {
