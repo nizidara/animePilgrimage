@@ -23,7 +23,7 @@ export const DeleteRequestCommentForm: FC<FormProps> = memo((props) => {
             <Form ref={formRef}>
                 <Form.Group className="mb-3" controlId="deleteCommentFormContents">
                     <Form.Label>削除・通報理由※</Form.Label>
-                    <Form.Control required as="textarea" name="contents" value={formData.contents} maxLength={1000} onChange={handleChange} />
+                    <Form.Control required as="textarea" name="contents" value={formData.contents} maxLength={1000} onChange={handleChange} rows={5} />
                     <Form.Text className={`${formData.contents.length > 1000 ? "text-danger" : "text-muted"}`}>{formData.contents.length} / 1000 </Form.Text>
                 </Form.Group>
             </Form>
