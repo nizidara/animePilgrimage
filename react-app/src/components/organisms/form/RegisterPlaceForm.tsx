@@ -21,12 +21,31 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
     const { animeList, loading: animeListLoading, error: animeListError } = useGetAnimeList();
     const { regionList, loading: regionListLoading, error: regionListError } = useGetRegionList();
 
+    const [previewUrls, setPreviewUrls] = useState<string[]>(formData.images.length > 0 ? [...formData.images.map(file => URL.createObjectURL(file))] :[]);
+    const [iconUrl, setIconUrl] = useState<string>(formData.images.length > 0 && formData.icon_index !== null ? URL.createObjectURL(formData.images[formData.icon_index]) : "");
     const [imageError, setImageError] = useState<string>("");
+
+    // プレビュー画像のURLを生成する関数
+    const generatePreviewUrls = (files: File[]) => {
+        const urls = files.map(file => URL.createObjectURL(file));
+        setPreviewUrls([...previewUrls, ...urls]);
+    };
+
+    // プレビュー画像のURLを生成する関数
+    const generateIconUrl = (file: File | null) => {
+        if(file){
+            const url = URL.createObjectURL(file);
+            setIconUrl(url);
+        }else{
+            setIconUrl("")
+        }
+    };
 
     useEffect(() => {
         // 画像が追加され、かつアイコンが未設定の場合に、最初の画像をアイコンに設定
         if (formData.images.length > 0 && formData.icon_index === null ) {
             setFormData(prevInputData => ({...prevInputData, icon_index: 0}));
+            generateIconUrl(formData.images[0]);
         }
       }, [formData.images, formData.icon_index, setFormData]);
     
@@ -78,6 +97,9 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 onFormChange(updatedData);
                 return updatedData;
             });
+
+            // 新しく選択された画像のプレビューURLを生成
+            generatePreviewUrls(newFiles);
         } else {
             setImageError("画像は最大10枚までアップロード可能です。");
             return;
@@ -88,13 +110,23 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
         //画像削除時，選択アイコン変更
         if (formData.icon_index === index) {
             setFormData(prevInputData => ({...prevInputData, icon_index: null}));
+            // Blob URLを解放
+            URL.revokeObjectURL(iconUrl);
+            setIconUrl("");
         } else if (formData.icon_index !== undefined && formData.icon_index !== null && formData.icon_index > index) {
             const updateIndex = formData.icon_index - 1;
             setFormData(prevInputData => ({...prevInputData, icon_index: updateIndex}));
+            generateIconUrl(formData.images[updateIndex]);
         }
 
         const updatedImages = [...formData.images];
+        const updatedUrls = [...previewUrls];
+
+        // Blob URLを解放
+        URL.revokeObjectURL(previewUrls[index]);
+
         updatedImages.splice(index, 1);
+        updatedUrls.splice(index, 1);
         setFormData(prevData => {
             const updatedData = {
                 ...prevData,
@@ -103,10 +135,12 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
             onFormChange(updatedData);
             return updatedData;
         });
+        setPreviewUrls(updatedUrls);
     };
 
     const handleIconSelect = (index: number) => {
         setFormData(prevInputData => ({...prevInputData, icon_index: index}));
+        generateIconUrl(formData.images[index]);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -150,13 +184,13 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 
                 <p>MAP※ <small className="text-muted">({formData.latitude}, {formData.longitude})</small><br />
                 <small className="text-muted"><BsInfoCircle /> 検索フォームに近くのランドマーク名を入力して検索ボタンをクリックしてください。<br />
-                クリック後、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
+                検索後、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
                 {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} /> : <DummyMap />}
                 
 
                 <Form.Group className="mt-3 mb-3" controlId="registerPlaceFormComment">
                     <Form.Label>紹介コメント※</Form.Label>
-                    <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} />
+                    <Form.Control required as="textarea" name="comment" defaultValue={formData.comment ? formData.comment : ""} maxLength={200} onChange={handleChange} rows={3} />
                     <Form.Text className={`${formData.comment && formData.comment.length > 200 ? "text-danger" : "text-muted"}`}>{formData.comment ? formData.comment.length : 0} / 200 </Form.Text>
                 </Form.Group>
                 
@@ -170,7 +204,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                         <Form.Control type="file" accept="image/*" multiple hidden onChange={handleImageChange} />
                     </Form.Group>
                     <div className="d-flex flex-wrap">
-                        {formData.images.map((image, index) => (
+                        {previewUrls.map((url, index) => (
                             <div key={index} className="position-relative m-1">
                                 <div className="position-absolute top-0 start-0">
                                     <Form.Check
@@ -183,7 +217,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                                     />
                                 </div>
                                 <div className="mt-4 position-relative">
-                                    <Image src={URL.createObjectURL(image)} thumbnail width={200} height={200} />
+                                    <Image src={url} thumbnail width={200} height={200} />
                                     <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={() => handleRemoveImage(index)}>×</Button>
                                 </div>
                             </div>
@@ -194,7 +228,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                         <div className="mt-3">
                             <p>アイコン画像</p>
                             <Image
-                                src={URL.createObjectURL(formData.images[formData.icon_index])}
+                                src={iconUrl}
                                 thumbnail
                                 width={200}
                                 height={200}
@@ -202,7 +236,6 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                         </div>
                     )}
                 </>}
-                
             </Form>
         </>
     )
