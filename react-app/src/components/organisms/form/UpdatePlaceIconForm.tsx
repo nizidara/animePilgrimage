@@ -58,24 +58,25 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
                     {updateError && <Alert variant="danger">{updateError}</Alert>}
                     {animePhotoList && 
                         <div>
-                            <div className="d-flex flex-row flex-nowrap overflow-auto">
+                            <div className="d-flex flex-wrap">
                                 {animePhotoList.map((photo, index) => (
                                     <div key={index} className="position-relative m-1">
+                                        
                                             <Form.Check
-                                                type="radio"
-                                                name="iconImage"
-                                                id={`iconImage-${index}`}
-                                                label="アイコンに設定"
-                                                checked={iconIndex === index}
-                                                onChange={() => handleIconSelect(index)}
+                                                    type="radio"
+                                                    name="iconImage"
+                                                    id={`iconImage-${index}`}
+                                                    label="アイコンに設定"
+                                                    checked={iconIndex === index}
+                                                    onChange={() => handleIconSelect(index)}
                                             />
-                                        <div className="mt-3 position-relative">
-                                            <Icon file_name={photo.file_name} />
+                                            <div className="mt-3 position-relative">
+                                                <Icon file_name={photo.file_name} />
+                                            </div>
                                         </div>
-                                    </div>
                                 ))}
                             </div>
-                            <Row className="mb-3">
+                            <Row className="mb-5 mt-3">
                                 <Col>
                                     {iconIndex !== null && 
                                         <div>

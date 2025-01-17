@@ -56,7 +56,7 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setForm
     return (
         <>
             <Form ref={formRef} onKeyDown={handleKeyDown}>
-                <Form.Group className="mb-3" controlId="addFormRealImages">
+                <Form.Group className="mb-3 mt-3" controlId="addFormRealImages">
                     <Form.Label className="me-2">現地画像を追加する（最大10枚）</Form.Label>
                     {postError && <Alert variant="danger">{postError}</Alert>}
                     {imageError && <span className="text-danger">{imageError}</span>}<br />
