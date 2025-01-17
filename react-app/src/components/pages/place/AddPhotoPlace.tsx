@@ -79,7 +79,7 @@ export const AddPhotoPlace: FC = memo(() =>{
                 <UpdatePlaceIconForm animePhotoList={animePhotoList} placeIcon={placeIcon} formRef={placeIconRef} onPlaceIconUpdated={fetchPlaceIcon} isAdmin={false} />
             }
 
-            <p>作中写真</p>
+            <p className="mt-3">作中写真</p>
             {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
             {animePhotoListLoading && <center><Spinner animation="border" /></center>}
             {animePhotoTotalCount > 0 && 
@@ -90,7 +90,7 @@ export const AddPhotoPlace: FC = memo(() =>{
             }
             <AddAnimePhotoForm placeId={placeId} formData={animeImage} setFormData={setAnimeImage} formRef={animeImageRef} onAnimePhotoPosted={fetchAnimePhotos} isAdmin={false} />
 
-            <p>現地写真（みんなの投稿）</p>
+            <p className="mt-3">現地写真（みんなの投稿）</p>
             {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
             {realPhotoListLoading && <center><Spinner animation="border" /></center>}
             {realPhotoTotalCount > 0 && 
