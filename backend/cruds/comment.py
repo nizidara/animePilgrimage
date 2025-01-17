@@ -13,6 +13,7 @@ import models.photo as photo_model
 import schemas.comment as comment_schema
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
+import logic.input as input_logic
 
 from properties.properties import base_path
 
@@ -33,6 +34,8 @@ async def create_comment(
             comment_dict['user_id'] = uuid.UUID(comment_body.user_id).bytes
             user = db.query(user_model.User).filter(user_model.User.user_id == comment_dict['user_id']).first()
             user_name = user.user_name
+        if comment_body.comment:
+            comment_dict['comment'] = input_logic.normalize_break(comment_body.comment)
     comment = comment_model.Comment(**comment_dict)
 
     # create comment DB
@@ -76,6 +79,7 @@ async def create_report_comment(
     if comment_body:
         delete_comment_dict = comment_body.model_dump()
         delete_comment_dict['comment_id'] = uuid.UUID(comment_body.comment_id).bytes
+        delete_comment_dict['contents'] = input_logic.normalize_break(comment_body.contents)
         comment = db.query(comment_model.Comment).filter(comment_model.Comment.comment_id == delete_comment_dict['comment_id'] ).first()
         comment_comment = comment.comment
         if comment_body.user_id is not None:

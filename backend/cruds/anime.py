@@ -7,6 +7,7 @@ import models.anime as anime_model
 import models.user as user_model
 import models.place as place_model
 import schemas.anime as anime_schema
+import logic.input as input_logic
 from pathlib import Path
 
 from properties.properties import base_path, icon_directory
@@ -18,6 +19,8 @@ async def request_anime(
     
     anime_dict = anime_request.model_dump()
     anime_dict.pop("icon", None)    # delete icon field
+    if anime_request.introduction:
+        anime_dict['introduction'] = input_logic.normalize_break(anime_request.introduction)
 
     # save icon
     file_name = None
@@ -54,6 +57,9 @@ async def edit_request_anime(
         anime_edit_dict['user_id'] = uuid.UUID(anime_edit.user_id).bytes
         user = db.query(user_model.User).filter(user_model.User.user_id == anime_edit_dict['user_id']).first()
         user_name = user.user_name
+    anime_edit_dict['contents'] = input_logic.normalize_break(anime_edit.contents)
+    if anime_edit.introduction:
+        anime_edit_dict['introduction'] = input_logic.normalize_break(anime_edit.introduction)
     # save icon
     file_name = None
     if anime_edit.icon:
