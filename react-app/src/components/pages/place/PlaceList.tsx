@@ -34,7 +34,7 @@ export const PlaceList: FC = memo(() =>{
 
     const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
     const selectedPlacePhotoPage = 1;
-    const selectedPhotoPageSize = 18;
+    const selectedPhotoPageSize = 12;
     const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize, true);
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
@@ -85,10 +85,13 @@ export const PlaceList: FC = memo(() =>{
                         />
                         <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={handleXClick}>×</Button>
                     </div>
-                    <div className="mt-2"></div>
                     {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
                     {realPhotoListLoading && <center><Spinner animation="border" /></center>}
-                    {realPhotoList && <PhotoListDisplay realPhotoList={realPhotoList} />}
+                    {realPhotoList && realPhotoList.length !== 0 &&
+                        <div>
+                            <p className="mt-3">現地写真（みんなの投稿）</p>
+                            <PhotoListDisplay realPhotoList={realPhotoList} />
+                        </div>}
                 </>
             )}
             <hr />
