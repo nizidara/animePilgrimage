@@ -5,9 +5,9 @@ import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { ImagePreview } from "../../molecules/ImagePreview";
-import { PhotoCard } from "../card/PhotoCard";
 import { Icon } from "../../atoms/Icon";
 import { Col, Row } from "react-bootstrap";
+import { PhotoListDisplay } from "./PhotoListDisplay";
 
 type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'file_names'> & {
     anime_id?: number | null;
@@ -52,7 +52,7 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>
             </Row>
             {
-                images && 
+                images && images?.length !== 0 && 
                 <>
                     <p><b>アニメ画像</b></p>
                     <div className="d-flex flex-wrap">
@@ -60,10 +60,11 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
                     </div>
                 </>
             }
-            {file_names && 
+            {
+                file_names && file_names?.length !== 0 &&
                 <>
                     <p><b>アニメ画像</b></p>
-                    <PhotoCard file_names={file_names} />
+                    <PhotoListDisplay file_names={file_names} />
                 </>}
             {icon_index !== null && icon_index !== undefined && images && 
                 <div className="mt-2">

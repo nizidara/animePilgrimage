@@ -5,8 +5,8 @@ import { responseRequestPlaceData } from "../../../type/api/place";
 import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlaceDataToGeoJson";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
-import { PhotoCard } from "../card/PhotoCard";
 import { Col, Row } from "react-bootstrap";
+import { PhotoListDisplay } from "./PhotoListDisplay";
 
 type editPlaceDetailData = Omit<responseRequestPlaceData, 'place_id' | 'anime_id' | 'region_id' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -71,7 +71,7 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
                 <Col xs={12} md={3}><b>紹介コメント：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>
             </Row>
-            <PhotoCard file_names={file_names} />
+            <PhotoListDisplay file_names={file_names} />
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>修正理由：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>

@@ -5,8 +5,8 @@ import { useGetRegionList } from "../../../hooks/regions/useGetRegionList";
 import { editPlaceFormData } from "../../../type/form/place";
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
-import { PhotoCard } from "../card/PhotoCard";
 import { BsInfoCircle } from "react-icons/bs";
+import { PhotoListDisplay } from "../display/PhotoListDisplay";
 
 type FormProps = {
     onFormChange: (data: editPlaceFormData) => void;
@@ -88,7 +88,7 @@ export const EditPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, setF
                 {animePhoto.length !==0 && 
                     <div>
                         <p>作中写真（写真追加・アイコン修正は左上の<b>「写真追加はこちら」</b>ボタンからお願いします）</p>
-                        <PhotoCard file_names={animePhoto} />
+                        <PhotoListDisplay file_names={animePhoto} />
                     </div>
                 }
 
