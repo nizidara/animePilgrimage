@@ -43,7 +43,7 @@ async def request_edit_anime_detail(request: Request, request_anime_id: int, db:
 
 # get anime info list(sort by kana)
 @router.get("/list/search", response_model=List[anime_schema.AnimeResponse])
-@limiter.limit("50/minute")
+@limiter.limit("100/minute")
 async def anime_list(request: Request, title: str = None, db: AsyncSession = Depends(get_db)):
     anime_list = await anime_crud.get_anime_list(db=db)
     if anime_list is None:

@@ -20,7 +20,7 @@ user_model.Base.metadata.create_all(bind=engine)
 limiter = Limiter(key_func=get_remote_address)
 
 #get user info in auth optional
-@router.get("/auth", response_model=user_schema.CurrentUserResponse)
+@router.get("/auth/optional", response_model=user_schema.CurrentUserResponse)
 async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
     if access_token is None:
         return None
