@@ -34,7 +34,7 @@ export const PlaceList: FC = memo(() =>{
 
     const selectedPlace = placeList.find(place => place.place_id === selectedPlaceId);
     const selectedPlacePhotoPage = 1;
-    const selectedPhotoPageSize = 24;
+    const selectedPhotoPageSize = 18;
     const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize, true);
 
     const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
@@ -74,16 +74,18 @@ export const PlaceList: FC = memo(() =>{
             }
             {selectedPlace && (
                 <>
-                    <div className="d-flex justify-content-end mt-2">
-                        <BsXCircle onClick={handleXClick}/>
-                    </div> 
-                    <PlaceSummaryCard 
-                        name={selectedPlace.name} 
-                        title={selectedPlace.anime_title} 
-                        comment={selectedPlace.comment} 
-                        anime_id={selectedPlace.anime_id} 
-                        place_id={selectedPlace.place_id}
-                    />
+                    <div className="position-relative m-1">
+                        <PlaceSummaryCard 
+                            name={selectedPlace.name} 
+                            title={selectedPlace.anime_title} 
+                            comment={selectedPlace.comment} 
+                            anime_id={selectedPlace.anime_id} 
+                            place_id={selectedPlace.place_id}
+                            onClickDetail={onClickDetail}
+                        />
+                        <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={handleXClick}>×</Button>
+                    </div>
+                    <div className="mt-2"></div>
                     {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
                     {realPhotoListLoading && <center><Spinner animation="border" /></center>}
                     {realPhotoList && <PhotoListDisplay realPhotoList={realPhotoList} />}

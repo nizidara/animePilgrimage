@@ -124,7 +124,7 @@ export const PlaceDetail: FC = memo(() =>{
                 place_icon={place.place_icon}
             />
             <div className="position-relative m-1">
-                <p>作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
+                <p className="mt-2">作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
                 {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
                 {animePhotoListLoading && <center><Spinner animation="border" /></center>}
                 {animePhotoTotalCount > 0 && 
@@ -136,7 +136,7 @@ export const PlaceDetail: FC = memo(() =>{
                 {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
                 {realPhotoTotalCount > 0 &&
                     <div>
-                        <p>現地写真（みんなの投稿）</p>
+                        <p className="mt-5">現地写真（みんなの投稿）</p>
                         <PhotoListDisplay realPhotoList={realPhotoList} />
                         <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handleRealPhotoPrevious} onSelect={handleRealPhotoPageSelect} onNext={handleRealPhotoNext} />
                     </div>
