@@ -64,6 +64,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
         post(comment, placeId, selectedImages, onCommentPosted);
         setComment('');
         setSelectedImages([]);
+        setPreviewUrls([]);
       };
     
     return (
@@ -98,7 +99,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                         </div>
                     </Col>
 
-                    <Col xs="auto" className="d-flex justify-content-end align-items-center">
+                    <Col xs="auto" className="d-flex justify-content-end align-items-end">
                         <Button variant="primary" disabled={(!comment && selectedImages.length === 0) || comment.length > 140} onClick={onClickSend} >投稿</Button>
                     </Col>
                 </Row>
