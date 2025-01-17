@@ -13,6 +13,7 @@ import models.user as user_model
 import models.photo as photo_model
 import schemas.place as place_schema
 import schemas.photo as photo_schema
+import logic.input as input_logic
 
 # create place
 async def create_place(
@@ -34,6 +35,8 @@ async def create_place(
             place_dict['edited_user_id'] = uuid.UUID(place_body.edited_user_id).bytes
             edited_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['edited_user_id']).first()
             edited_user_name = edited_user.user_name
+        if place_body.comment:
+            place_dict['comment'] = input_logic.normalize_break(place_body.comment)
     current_time = datetime.now(tz=timezone.utc)
     place = place_model.Place(**place_dict, created_at=current_time)
 
@@ -91,6 +94,9 @@ async def create_request_place(
     if place_body:
         place_dict = place_body.model_dump()
         place_dict['place_id'] = uuid.UUID(place_body.place_id).bytes
+        place_dict['contents'] = input_logic.normalize_break(place_body.contents)
+        if place_body.comment:
+            place_dict['comment'] = input_logic.normalize_break(place_body.comment)
         if place_body.user_id is not None:
             place_dict['user_id'] = uuid.UUID(place_body.user_id).bytes
             user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['user_id']).first()

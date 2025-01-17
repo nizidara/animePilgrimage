@@ -5,6 +5,7 @@ import uuid
 import models.contact as contact_model
 import models.user as user_model
 import schemas.contact as contact_schema
+import logic.input as input_logic
 
 # create
 async def create_contact(
@@ -18,6 +19,7 @@ async def create_contact(
         contact_dict['user_id'] = uuid.UUID(contact_create.user_id).bytes
         user = db.query(user_model.User).filter(user_model.User.user_id == contact_dict['user_id']).first()
         user_name = user.user_name
+    contact_dict['contents'] = input_logic.normalize_break(contact_create.contents)
     contact = contact_model.Contact(**contact_dict)
 
     # create

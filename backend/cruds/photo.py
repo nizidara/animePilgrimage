@@ -190,7 +190,7 @@ async def get_anime_photo_list(db:AsyncSession, place_id: str, page: int = 1, pa
         raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
     
     offset = (page - 1) * page_size
-    query = query.order_by(photo_model.AnimePhoto.created_at.desc(), photo_model.AnimePhoto.order.asc()).offset(offset).limit(page_size)
+    query = query.order_by(photo_model.AnimePhoto.created_at.asc(), photo_model.AnimePhoto.order.asc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
 
@@ -240,7 +240,7 @@ async def get_real_photo_list(db:AsyncSession, place_id: str, comment_id: Option
         raise HTTPException(status_code=400, detail="Page and page_size must be positive integers")
     
     offset = (page - 1) * page_size
-    query = query.order_by(photo_model.RealPhoto.created_at.asc(), photo_model.RealPhoto.order.asc()).offset(offset).limit(page_size)
+    query = query.order_by(photo_model.RealPhoto.created_at.desc(), photo_model.RealPhoto.order.asc()).offset(offset).limit(page_size)
 
     results = db.execute(query).all()
     
