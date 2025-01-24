@@ -6,7 +6,6 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
-import { BsXCircle } from "react-icons/bs";
 import { responseRealPhotoData } from "../../../type/api/photo";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
 import { mapboxFlag } from "../../../properties/properties";

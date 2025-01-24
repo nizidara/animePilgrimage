@@ -31,7 +31,7 @@ export const useAdminEditPlace = () => {
         .catch(() => {
             setEditError("投稿中にエラーが発生しました");
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {

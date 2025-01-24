@@ -31,7 +31,7 @@ export const useDeleteRequestComment = () => {
         .catch(() => {
             setRequestError("送信中にエラーが発生しました")
         })
-    }, [setResponseData])
+    }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移
     useEffect(() => {
