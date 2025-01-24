@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { mapboxAccessToken } from "../../properties/properties";
 
 export type Suggestion = {
     mapbox_id: string;
@@ -26,7 +27,7 @@ const useMapboxSearch = () => {
         setError(null);
         try {
             const response = await fetch(
-                `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(query)}&language=ja&session_token=${sessionToken}&access_token=pk.eyJ1Ijoic2VhcmNoLW1hY2hpbmUtdXNlci0xIiwiYSI6ImNrb2E2YzZheDA2ZHoydnFxOG95cjNuMWoifQ.TXC7Q4hjr1nktFft_n0Eog`
+                `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(query)}&language=ja&session_token=${sessionToken}&access_token=${mapboxAccessToken}`
             );
             const data = await response.json();
             if (data.suggestions) {
@@ -78,6 +79,7 @@ const useMapboxSearch = () => {
         fetchSuggestions,
         fetchLocationDetails,
         suggestions,
+        setSuggestions,
         loading,
         error,
     };

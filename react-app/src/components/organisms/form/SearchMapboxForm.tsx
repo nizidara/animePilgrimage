@@ -14,12 +14,16 @@ export const SearchMapBoxForm: FC<SearchMapboxFormProps> = memo((props) => {
         fetchSuggestions,
         fetchLocationDetails,
         suggestions,
+        setSuggestions,
         loading,
         error,
     } = useMapboxSearch();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
+        if(query.length === 0) {
+            setSuggestions([]);
+        }
     };
 
     const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
