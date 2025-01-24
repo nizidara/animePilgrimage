@@ -59,9 +59,9 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
     return (
         <>
             <div ref={mapContainer} className="map-container">
-                <div className="sidebar">
+                {/* <div className="sidebar">
                     Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                </div>
+                </div> */}
             </div>
         </>
     );
