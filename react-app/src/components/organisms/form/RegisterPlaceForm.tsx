@@ -184,7 +184,7 @@ export const RegisterPlaceForm: FC<FormProps> = memo(({ onFormChange, formData, 
                 
                 <p>MAP※ <small className="text-muted">({formData.latitude}, {formData.longitude})</small><br />
                 <small className="text-muted"><BsInfoCircle /> 検索フォームに近くのランドマーク名を入力して検索ボタンをクリックしてください。<br />
-                検索後、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
+                検索後、候補地を選択し、MAP上に表示されたマーカーを目的の聖地の場所まで移動させてください。</small></p>
                 {mapboxFlag ? <SearchMap onSelectCoords={handleCoords} latitude={formData.latitude} longitude={formData.longitude} /> : <DummyMap />}
                 
 
