@@ -68,7 +68,7 @@ export const PlaceList: FC = memo(() =>{
 
             {geojson.features.length !== 0 && 
                 mapboxFlag ? 
-                    <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]}/>
+                    <DisplayMap geojson={geojson} onMarkerClick={handleMarkerClick} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={12} />
                     : <DummyMap />
             }
             {selectedPlace && (

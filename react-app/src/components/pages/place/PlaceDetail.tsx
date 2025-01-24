@@ -113,7 +113,7 @@ export const PlaceDetail: FC = memo(() =>{
                 </Col>
             </Row>
 
-            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
 
             <PlaceSummaryCard 
                 name={place.name} 

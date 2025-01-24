@@ -48,7 +48,7 @@ export const DeletePlaceDetailDisplay: FC<deletePlaceDetailData> = memo((props) 
                 <Col xs={12} md={3}><b>MAP</b></Col>
                 <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
             </Row>
-            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} /> : <DummyMap />}
+            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>削除申請理由：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
