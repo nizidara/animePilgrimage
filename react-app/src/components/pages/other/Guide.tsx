@@ -1,10 +1,30 @@
-import { memo, FC } from "react";
+import { memo, FC, useState, useEffect } from "react";
 import { ContactForm } from "../../organisms/form/ContactForm";
 import { Container } from "react-bootstrap";
 import { FAQCard } from "../../organisms/card/FAQCard";
-import { faq } from "../../../testdatas/testdata";
+
+type Faq = {
+    question: string;
+    answer: string;
+};
 
 export const Guide: FC = memo(() =>{
+
+    const [faq, setFaq] = useState<Faq[]>([]);
+
+    useEffect(() => {
+        const fetchFaqs = async () => {
+            try {
+                const response = await fetch("/data/faqs.json"); // JSONファイルのパス
+                const data: Faq[] = await response.json();
+                setFaq(data);
+            } catch (error) {
+                console.error("FAQデータの読み込みに失敗しました:", error);
+            }
+        };
+
+        fetchFaqs();
+    }, []);
     
     return (
         <>
