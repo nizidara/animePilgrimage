@@ -76,7 +76,6 @@ class PaginatedPlaceResponse(BaseModel):
 
 class PlaceRequestCreate(PlaceBase):
     place_id: str
-    request_date: datetime
     request_type: int
     region_id: int
     contents: str
@@ -87,6 +86,7 @@ class PlaceRequestCreate(PlaceBase):
 
 class PlaceRequestResponse(PlaceRequestCreate):
     request_place_id: int
+    request_date: datetime
     region_name: str
     anime_title: str
     anime_icon: Optional[str] = ""

@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Optional, Tuple
+from datetime import datetime, timezone
 import uuid
 
 import models.anime as anime_model
@@ -8,9 +9,7 @@ import models.user as user_model
 import models.place as place_model
 import schemas.anime as anime_schema
 import logic.input as input_logic
-from pathlib import Path
-
-from properties.properties import base_path, icon_directory
+import logic.upload as upload_logic
 
 # create anime
 async def request_anime(
@@ -26,11 +25,9 @@ async def request_anime(
     file_name = None
     if anime_request.icon:
         image_filename = f"{uuid.uuid4()}_{anime_request.icon.filename}"
-        image_path = base_path / icon_directory / image_filename
-        file_name = icon_directory / image_filename
-
-        with image_path.open("wb") as buffer:
-            buffer.write(await anime_request.icon.read())
+        s3_path = f"icons/{image_filename}"
+        s3_url = upload_logic.upload_file_to_s3(anime_request.icon.file, s3_path)
+        file_name = s3_url
 
     anime = anime_model.Anime(**anime_dict, file_name=file_name)
     db.add(anime)
@@ -64,13 +61,13 @@ async def edit_request_anime(
     file_name = None
     if anime_edit.icon:
         image_filename = f"{uuid.uuid4()}_{anime_edit.icon.filename}"
-        image_path = base_path / icon_directory / image_filename
-        file_name = icon_directory / image_filename
+        s3_path = f"icons/{image_filename}"
+        s3_url = upload_logic.upload_file_to_s3(anime_edit.icon.file, s3_path)
+        file_name = s3_url
 
-        with image_path.open("wb") as buffer:
-            buffer.write(await anime_edit.icon.read())
+    current_time = datetime.now(tz=timezone.utc)
 
-    edit = anime_model.RequestAnime(**anime_edit_dict, file_name=file_name)
+    edit = anime_model.RequestAnime(**anime_edit_dict, file_name=file_name, request_date=current_time)
 
     # create
     db.add(edit)
@@ -170,11 +167,9 @@ async def approve_edit_request_anime(db: AsyncSession, request_anime_id: int) ->
             
             if edit.file_name:
                 if anime.file_name:
-                    old_file_path = Path(base_path / anime.file_name)
-                    if old_file_path.exists():
-                        old_file_path.unlink() 
+                    upload_logic.delete_file_from_s3(anime.file_name)
                 anime.file_name = edit.file_name
-            
+
             # update
             db.commit()
             db.refresh(anime)
@@ -197,16 +192,12 @@ async def update_anime(db: AsyncSession, anime_id: int, anime_body: anime_schema
         if anime_body.icon:
             # delete icon file
             if anime.file_name:
-                old_file_path = Path(base_path / anime.file_name)
-                if old_file_path.exists():
-                    old_file_path.unlink() 
+                upload_logic.delete_file_from_s3(anime.file_name)
 
             image_filename = f"{uuid.uuid4()}_{anime_body.icon.filename}"
-            image_path = base_path / icon_directory / image_filename
-            file_name = icon_directory / image_filename
-
-            with image_path.open("wb") as buffer:
-                buffer.write(await anime_body.icon.read())
+            s3_path = f"icons/{image_filename}"
+            s3_url = upload_logic.upload_file_to_s3(anime_body.icon.file, s3_path)
+            file_name = s3_url
             
             anime.file_name = file_name
         
@@ -219,6 +210,10 @@ async def update_anime(db: AsyncSession, anime_id: int, anime_body: anime_schema
 async def delete_anime(db: AsyncSession, anime_id: int) -> anime_model.Anime:
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     if anime:
+        # delete icon file
+        if anime.file_name:
+            upload_logic.delete_file_from_s3(anime.file_name)
+
         db.delete(anime)
         db.commit()
     return anime
@@ -227,6 +222,9 @@ async def delete_anime(db: AsyncSession, anime_id: int) -> anime_model.Anime:
 async def delete_edit_request_anime(db: AsyncSession, request_anime_id: int) -> anime_model.RequestAnime:
     result = db.query(anime_model.RequestAnime).filter(anime_model.RequestAnime.request_anime_id == request_anime_id).first()
     if result:
+        # delete icon file
+        if result.file_name:
+            upload_logic.delete_file_from_s3(result.file_name)
         db.delete(result)
         db.commit()
     return result

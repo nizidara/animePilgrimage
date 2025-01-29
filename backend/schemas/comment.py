@@ -6,7 +6,6 @@ from fastapi import UploadFile, File, Form
 
 class CommentBase(BaseModel):
     comment: str
-    comment_date: datetime
     user_id: Optional[str] = None
 
 class CommentCreate(CommentBase):
@@ -18,7 +17,6 @@ class CommentCreate(CommentBase):
     def as_form(
         cls,
         comment: str = Form(...),
-        comment_date: datetime = Form(...),
         user_id: Optional[str] = Form(None),
         range_id: int = Form(...),
         place_id: str = Form(...),
@@ -26,7 +24,6 @@ class CommentCreate(CommentBase):
     ):
         return cls(
             comment=comment,
-            comment_date=comment_date,
             user_id=user_id,
             range_id=range_id,
             place_id=place_id,
@@ -37,6 +34,7 @@ class CommentCreate(CommentBase):
         from_attributes = True
 
 class CommentResponse(CommentBase):
+    comment_date: datetime
     range_id: int
     place_id: str
     comment_id: str
@@ -58,12 +56,12 @@ class PaginatedCommentResponse(BaseModel):
 
 class DeleteCommentCreate(BaseModel):
     comment_id: str
-    request_date: datetime
     contents: str
     user_id: Optional[str] = None
 
 class DeleteCommentResponse(DeleteCommentCreate):
     delete_comment_id: int
+    request_date: datetime
     comment: str
     user_name: Optional[str] ="no name"
 

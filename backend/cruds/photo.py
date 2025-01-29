@@ -4,7 +4,6 @@ from sqlalchemy.sql.functions import func
 from typing import List, Optional
 from fastapi import HTTPException
 from datetime import datetime, timezone
-from pathlib import Path
 import uuid
 
 import models.anime as anime_model
@@ -12,8 +11,7 @@ import models.photo as photo_model
 import models.place as place_model
 import models.user as user_model
 import schemas.photo as photo_schema
-
-from properties.properties import base_path, upload_directory, anime_photo_directory
+import logic.upload as upload_logic
 
 # create anime photo
 async def create_anime_photo(
@@ -42,13 +40,11 @@ async def create_anime_photo(
         saved_image_paths = []
         for index, image in enumerate(photo_body.images):
             image_filename = f"{uuid.uuid4()}_{image.filename}"
-            image_path = base_path / anime_photo_directory / image_filename
-            save_path = anime_photo_directory / image_filename
+            s3_path = f"anime/{image_filename}"
+            s3_url = upload_logic.upload_file_to_s3(image.file, s3_path)
+            file_name = s3_url
 
-            with image_path.open("wb") as buffer:
-                buffer.write(await image.read())
-            
-            saved_image_paths.append((str(save_path), index))
+            saved_image_paths.append((file_name, index))
 
         current_time = datetime.now(tz=timezone.utc)
 
@@ -104,13 +100,11 @@ async def create_real_photo(
         saved_image_paths = []
         for index, image in enumerate(photo_body.images):
             image_filename = f"{uuid.uuid4()}_{image.filename}"
-            image_path = base_path / upload_directory / image_filename
-            save_path = upload_directory / image_filename
-
-            with image_path.open("wb") as buffer:
-                buffer.write(await image.read())
+            s3_path = f"reals/{image_filename}"
+            s3_url = upload_logic.upload_file_to_s3(image.file, s3_path)
+            file_name = s3_url
             
-            saved_image_paths.append((str(save_path), index))
+            saved_image_paths.append((file_name, index))
 
         current_time = datetime.now(tz=timezone.utc)
 
@@ -271,10 +265,8 @@ async def update_anime_icon(db: AsyncSession, anime_id: int, file_name: str) -> 
     anime = db.query(anime_model.Anime).filter(anime_model.Anime.anime_id == anime_id).first()
     response = None
     if anime:
-        if anime.file_name:
-            old_file_path = Path(base_path / anime.file_name)
-            if old_file_path.exists():
-                old_file_path.unlink()
+        #if anime.file_name:
+        #    upload_logic.delete_file_from_s3(anime.file_name)
 
         anime.file_name = file_name
         db.commit()
@@ -326,9 +318,7 @@ async def delete_anime_photo(db: AsyncSession, anime_photo_id: str) -> photo_mod
     # delete
     photo = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.anime_photo_id == anime_photo_id_bytes).first()
     if photo:
-        delete_path = Path(base_path / photo.file_name)
-        if delete_path.exists():
-            delete_path.unlink() 
+        upload_logic.delete_file_from_s3(photo.file_name)
         db.delete(photo)
         db.commit()
     return photo
@@ -341,9 +331,7 @@ async def delete_real_photo(db: AsyncSession, real_photo_id: str) -> photo_model
     # delete
     photo = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.real_photo_id == real_photo_id_bytes).first()
     if photo:
-        delete_path = Path(base_path / photo.file_name)
-        if delete_path.exists():
-            delete_path.unlink() 
+        upload_logic.delete_file_from_s3(photo.file_name) 
         db.delete(photo)
         db.commit()
     return photo
