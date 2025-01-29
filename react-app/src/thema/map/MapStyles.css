@@ -22,13 +22,44 @@
     height: 50px;
     border-radius: 50%;
     cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
   
 .mapboxgl-popup {
-    max-width: 200px;
+    max-width: 250px; /* ポップアップの最大幅を調整 */
+    border-radius: 12px; /* 角丸にする */
 }
-  
+
 .mapboxgl-popup-content {
-    text-align: center;
     font-family: 'Open Sans', sans-serif;
+    padding: 15px; /* 余白を増やして見やすく */
+    background: #fff; /* 背景色を白に */
+    border-radius: 12px; /* カードっぽくする */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* ふんわりした影 */
+}
+
+.mapboxgl-popup-content h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: center; /* タイトルを中央寄せ */
+}
+
+.mapboxgl-popup-content p {
+    font-size: 12px;
+    color: #666;
+    text-align: left; /* 説明文はデフォルトの左寄せ */
+    margin-top: 10px;
+}
+
+.mapboxgl-popup-close-button {
+    display: none !important; /* × ボタンを非表示 */
+}
+
+.mapboxgl-popup-content img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 8px;
 }

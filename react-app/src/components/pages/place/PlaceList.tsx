@@ -76,6 +76,7 @@ export const PlaceList: FC = memo(() =>{
                     <div className="position-relative m-1">
                         <PlaceSummaryCard 
                             name={selectedPlace.name} 
+                            place_icon={selectedPlace.place_icon}
                             title={selectedPlace.anime_title} 
                             comment={selectedPlace.comment} 
                             anime_id={selectedPlace.anime_id} 
