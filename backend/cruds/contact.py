@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Tuple
+from datetime import datetime, timezone
 import uuid
 
 import models.contact as contact_model
@@ -20,7 +21,10 @@ async def create_contact(
         user = db.query(user_model.User).filter(user_model.User.user_id == contact_dict['user_id']).first()
         user_name = user.user_name
     contact_dict['contents'] = input_logic.normalize_break(contact_create.contents)
-    contact = contact_model.Contact(**contact_dict)
+    
+    current_time = datetime.now(tz=timezone.utc)
+
+    contact = contact_model.Contact(**contact_dict, contact_date=current_time)
 
     # create
     db.add(contact)
