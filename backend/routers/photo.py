@@ -66,13 +66,13 @@ async def create_real_photos(request: Request, photo_body: photo_schema.RealPhot
     return await photo_crud.create_real_photo(db=db, photo_body=photo_body)
 
 # update anime icon
-@router.put("/anime/icons/{anime_id}", response_model=photo_schema.AnimeIconResponse)
-@limiter.limit("5/minute")
-async def update_anime_icon(request: Request, anime_id: int, file_name: str, db: AsyncSession = Depends(get_db)):
-    icon = await photo_crud.update_anime_icon(db=db, anime_id=anime_id, file_name=file_name)
-    if icon is None:
-        raise HTTPException(status_code=404, detail="Anime Icon not found")
-    return icon
+#@router.put("/anime/icons/{anime_id}", response_model=photo_schema.AnimeIconResponse)
+#@limiter.limit("5/minute")
+#async def update_anime_icon(request: Request, anime_id: int, file_name: str, db: AsyncSession = Depends(get_db)):
+#    icon = await photo_crud.update_anime_icon(db=db, anime_id=anime_id, file_name=file_name)
+#    if icon is None:
+#        raise HTTPException(status_code=404, detail="Anime Icon not found")
+#    return icon
 
 # update or post place icon
 @router.put("/places/icons", response_model=photo_schema.PlacePhotoIconResponse)

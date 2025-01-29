@@ -14,6 +14,7 @@ import models.photo as photo_model
 import schemas.place as place_schema
 import schemas.photo as photo_schema
 import logic.input as input_logic
+import logic.upload as upload_logic
 
 # create place
 async def create_place(
@@ -101,8 +102,11 @@ async def create_request_place(
             place_dict['user_id'] = uuid.UUID(place_body.user_id).bytes
             user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['user_id']).first()
             user_name = user.user_name
+        
+        current_time = datetime.now(tz=timezone.utc)
     
-    place = place_model.RequestPlace(**place_dict)
+    place = place_model.RequestPlace(**place_dict, request_date=current_time)
+
     # create
     db.add(place)
     db.commit()
@@ -434,6 +438,17 @@ async def delete_place(db: AsyncSession, place_id: str) -> place_model.Place:
     # delete
     place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_bytes).first()
     if place:
+        # delete place_id in real photo
+        real_photos = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.place_id == place_id_bytes).all()
+        for photo in real_photos:
+            if photo:
+                upload_logic.delete_file_from_s3(photo.file_name)
+        # delete place_id in anime photo
+        anime_photos = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.place_id == place_id_bytes).all()
+        for photo in anime_photos:
+            if photo:
+                upload_logic.delete_file_from_s3(photo.file_name)
+
         db.delete(place)
         db.commit()
     return place

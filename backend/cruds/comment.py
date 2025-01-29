@@ -3,8 +3,8 @@ from sqlalchemy.future import select
 from sqlalchemy import func
 from typing import List, Tuple, Optional
 from fastapi import HTTPException
+from datetime import datetime, timezone
 import uuid
-from pathlib import Path
 
 import models.comment as comment_model
 import models.user as user_model
@@ -14,8 +14,7 @@ import schemas.comment as comment_schema
 import cruds.photo as photo_crud
 import schemas.photo as photo_schema
 import logic.input as input_logic
-
-from properties.properties import base_path
+import logic.upload as upload_logic
 
 # create comment
 async def create_comment(
@@ -36,7 +35,10 @@ async def create_comment(
             user_name = user.user_name
         if comment_body.comment:
             comment_dict['comment'] = input_logic.normalize_break(comment_body.comment)
-    comment = comment_model.Comment(**comment_dict)
+        
+        current_time = datetime.now(tz=timezone.utc)
+
+    comment = comment_model.Comment(**comment_dict, comment_date=current_time)
 
     # create comment DB
     db.add(comment)
@@ -86,7 +88,10 @@ async def create_report_comment(
             delete_comment_dict['user_id'] = uuid.UUID(comment_body.user_id).bytes
             user = db.query(user_model.User).filter(user_model.User.user_id == delete_comment_dict['user_id']).first()
             user_name = user.user_name
-    delete_comment = comment_model.DeleteComment(**delete_comment_dict)
+        
+        current_time = datetime.now(tz=timezone.utc)
+
+    delete_comment = comment_model.DeleteComment(**delete_comment_dict, request_date=current_time)
 
     # create
     db.add(delete_comment)
@@ -276,9 +281,7 @@ async def approve_delete_comment(db: AsyncSession, delete_comment_id: int) -> co
             # delete image file
             file_names = [result[3] for result in results if result[3] is not None]
             for file_name in file_names:
-                delete_path = Path(base_path / file_name)
-                if delete_path.exists():
-                    delete_path.unlink() 
+                upload_logic.delete_file_from_s3(file_name)
                     
             range_name = comment.range.range_name
             # delete comment (delete_comments DB is casecade on delete)
@@ -306,9 +309,7 @@ async def delete_comment(db: AsyncSession, comment_id: str) -> comment_model.Com
         photos = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.comment_id == comment_id_bytes).all()
         for photo in photos:
             if photo:
-                delete_path = Path(base_path / photo.file_name)
-                if delete_path.exists():
-                    delete_path.unlink() 
+                upload_logic.delete_file_from_s3(photo.file_name)
         db.delete(comment)
         db.commit()
     return comment
