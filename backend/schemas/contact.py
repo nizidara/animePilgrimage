@@ -10,7 +10,6 @@ class ContactBase(BaseModel):
     contents: str
 
 class ContactCreate(ContactBase):
-    contact_date: datetime
     status: int
     user_id: Optional[str] = None
 
@@ -19,6 +18,7 @@ class ContactCreate(ContactBase):
 
 class ContactResponse(ContactCreate):
     contact_id: int
+    contact_date: datetime
     user_name: Optional[str] = "No Name"
 
     class Config:

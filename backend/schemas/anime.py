@@ -46,7 +46,6 @@ class AnimeResponse(AnimeBase):
 
 class AnimeEditCreate(AnimeBase):
     anime_id: int
-    request_date: datetime
     request_type: int
     contents: str
     user_id: Optional[str] = None
@@ -59,7 +58,6 @@ class AnimeEditCreate(AnimeBase):
         title: str = Form(...),
         introduction: Optional[str] = Form(""),
         anime_id: int = Form(...),
-        request_date: datetime = Form(...),
         request_type: int = Form(...),
         contents: str = Form(...),
         user_id: Optional[str] = Form(None),
@@ -70,7 +68,6 @@ class AnimeEditCreate(AnimeBase):
             title=title,
             introduction=introduction,
             anime_id=anime_id,
-            request_date=request_date,
             request_type=request_type,
             contents=contents,
             user_id=user_id,
