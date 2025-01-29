@@ -20,7 +20,6 @@ export const useDeleteRequestComment = () => {
         const postData : deleteCommentData = {
             ...formData,
             comment_id: commentId,
-            request_date: new Date().toISOString(),
             user_id: user ? user.user_id : null
         }
 

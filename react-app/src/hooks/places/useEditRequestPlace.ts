@@ -21,7 +21,6 @@ export const useEditRequestPlace = () => {
         const editData : requestPlaceData = {
             ...formData,
             place_id: placeId,
-            request_date: new Date().toISOString(),
             request_type: 0,    //edit request only
             user_id: user ? user.user_id : null
         }

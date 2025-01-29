@@ -20,7 +20,6 @@ export const useEditRequestAnime = () => {
         const editData : editAnimeData = {
             ...animeData,
             anime_id: animeId,
-            request_date: new Date().toISOString(),
             request_type: 0,    //edit request only
             user_id: user ? user.user_id : null
         }

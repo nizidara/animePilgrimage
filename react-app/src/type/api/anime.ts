@@ -6,7 +6,6 @@ export type registerAnimeData = registerAnimeFormData & {
 
 export type editAnimeData = editAnimeFormData & {
     anime_id: number;
-    request_date: string;
     request_type: number;
     user_id?: string | null;
 }
@@ -22,6 +21,7 @@ export type responseAnimeData = {
 
 export type responseEditAnimeData = editAnimeData & {
     request_anime_id: number;
+    request_date: string;
     user_name?: string | null;
     file_name?: string | null
 }

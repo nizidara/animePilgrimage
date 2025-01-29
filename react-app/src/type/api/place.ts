@@ -9,8 +9,7 @@ export type registerPlaceData = registerPlaceFormData & {
 export type editAdminPlaceData = Omit<registerPlaceData, 'images' | 'icon_index'>
 
 export type requestPlaceData = editPlaceFormData & {
-    place_id: string
-    request_date: string;
+    place_id: string;
     request_type: number;
     user_id?: string | null;
 }
@@ -33,6 +32,7 @@ export type responsePlaceData = Omit<registerPlaceData, 'images' | 'icon_index'>
 }
 
 export type responseRequestPlaceData = requestPlaceData & {
+    request_date: string;
     request_place_id: number;
     region_name: string;
     anime_title: string;

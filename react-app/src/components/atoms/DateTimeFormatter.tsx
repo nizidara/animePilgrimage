@@ -11,7 +11,9 @@ export const DateTimeFormatter: FC<DateTimeProps> = memo((props) =>{
     const {datetime} = props;
 
     // ISO形式の日付文字列をDateオブジェクトにパース
-    const parsedDate = parseISO(datetime);
+    const datetimeWithZ = datetime.endsWith('Z') ? datetime : `${datetime}Z`;
+    const parsedDate = parseISO(datetimeWithZ);
+
 
     // 現在地のタイムゾーンを取得
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -19,7 +19,6 @@ export const useSendContact = () => {
         
         const sendData : sendContactData = {
             ...formData,
-            contact_date: new Date().toISOString(),
             status: 0,
             user_id: user ? user.user_id : null
         }

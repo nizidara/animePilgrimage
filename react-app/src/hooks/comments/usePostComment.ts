@@ -21,7 +21,6 @@ export const usePostComment = () => {
         }
         const postData : postCommentData = {
             comment: comment,
-            comment_date: new Date().toISOString(),
             range_id: 0,    //now 0(public) only
             place_id: placeId,
             user_id: user ? user.user_id : null
