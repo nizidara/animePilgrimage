@@ -55,19 +55,25 @@ async def place_list(request: Request, name: str = None, anime_id: int = None, r
 # get request place info detail
 @router.get("/request/detail/{request_place_id}", response_model=place_schema.PlaceRequestResponse)
 @limiter.limit("50/minute")
-async def request_place_detail(request: Request, request_place_id: int, db: AsyncSession = Depends(get_db)):
-    place = await place_crud.get_request_place_detail(db=db, request_place_id=request_place_id) 
-    if place is None:
-        raise HTTPException(status_code=404, detail="Place request not found")
+async def request_place_detail(request: Request, request_place_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        place = await place_crud.get_request_place_detail(db=db, request_place_id=request_place_id) 
+        if place is None:
+            raise HTTPException(status_code=404, detail="Place request not found")
     return place
 
 # get request place list
 @router.get("/request/list", response_model=List[place_schema.PlaceRequestResponse])
 @limiter.limit("50/minute")
-async def request_place_list(request: Request, db: AsyncSession = Depends(get_db)):
-    places = await place_crud.get_request_place_list(db=db)
-    if places is None:
-        raise HTTPException(status_code=404, detail="Places not found")
+async def request_place_list(request: Request, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        places = await place_crud.get_request_place_list(db=db)
+        if places is None:
+            raise HTTPException(status_code=404, detail="Places not found")
     return places
 
 # create place info
@@ -97,10 +103,13 @@ async def update_place_flag(request: Request, place_id: str, flag: int, current_
 # update place info to approve edit request
 @router.put("/edit/{request_place_id}", response_model=place_schema.PlaceResponse)
 @limiter.limit("10/minute")
-async def approve_place_edit(request: Request, request_place_id: int, db: AsyncSession = Depends(get_db)):
-    place = await place_crud.approve_request_place(db, request_place_id=request_place_id)
-    if place is None:
-        raise HTTPException(status_code=404, detail="Place not found")
+async def approve_place_edit(request: Request, request_place_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        place = await place_crud.approve_request_place(db, request_place_id=request_place_id)
+        if place is None:
+            raise HTTPException(status_code=404, detail="Place not found")
     return place
 
 # update place info direct
@@ -127,8 +136,11 @@ async def delete_place(request: Request, place_id: str, db: AsyncSession = Depen
 # delete request place info from DB
 @router.delete("/request/{request_place_id}")
 @limiter.limit("10/minute")
-async def delete_place_request(request: Request, request_place_id: int, db: AsyncSession = Depends(get_db)):
-    place = await place_crud.delete_request_place(db=db, request_place_id=request_place_id)
-    if place is None:
-        raise HTTPException(status_code=404, detail="Place Request not found")
+async def delete_place_request(request: Request, request_place_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        place = await place_crud.delete_request_place(db=db, request_place_id=request_place_id)
+        if place is None:
+            raise HTTPException(status_code=404, detail="Place Request not found")
     return {"message": "Place request deleted successfully"}
