@@ -92,10 +92,13 @@ async def approve_report_comment(request: Request, delete_comment_id: int, curre
 # delete comment from DB
 @router.delete("/{comment_id}")
 @limiter.limit("10/minute")  
-async def delete_comment(request: Request, comment_id: str, db: AsyncSession = Depends(get_db)):
-    comment = await comment_crud.delete_comment(db=db, comment_id=comment_id)
-    if comment is None:
-        raise HTTPException(status_code=404, detail="comment not found")
+async def delete_comment(request: Request, comment_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        comment = await comment_crud.delete_comment(db=db, comment_id=comment_id)
+        if comment is None:
+            raise HTTPException(status_code=404, detail="comment not found")
     return {"message": "comment deleted successfully"}
 
 # delete delete comment from DB
