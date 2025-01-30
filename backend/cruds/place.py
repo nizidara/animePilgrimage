@@ -352,6 +352,19 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 anime_title = place.anime.title
                 anime_icon = place.anime.file_name
 
+                # convert str -> UUID
+                place_id_bytes = uuid.UUID(place.place_id).bytes
+                # delete place_id in real photo
+                real_photos = db.query(photo_model.RealPhoto).filter(photo_model.RealPhoto.place_id == place_id_bytes).all()
+                for photo in real_photos:
+                    if photo:
+                        upload_logic.delete_file_from_s3(photo.file_name)
+                # delete place_id in anime photo
+                anime_photos = db.query(photo_model.AnimePhoto).filter(photo_model.AnimePhoto.place_id == place_id_bytes).all()
+                for photo in anime_photos:
+                    if photo:
+                        upload_logic.delete_file_from_s3(photo.file_name)
+
                 # delete place
                 db.delete(place)
                 db.commit()

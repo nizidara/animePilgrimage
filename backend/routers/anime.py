@@ -35,10 +35,13 @@ async def anime_detail(request: Request, anime_id: int, current_user: Optional[u
 # get edit request anime info detail
 @router.get("/edit/{request_anime_id}", response_model=anime_schema.AnimeEditResponse)
 @limiter.limit("30/minute")
-async def request_edit_anime_detail(request: Request, request_anime_id: int, db: AsyncSession = Depends(get_db)):
-    result = await anime_crud.get_request_anime_detail(db=db, request_anime_id=request_anime_id)
-    if result is None:
-        raise HTTPException(status_code=404, detail="Request Edit Anime not found")
+async def request_edit_anime_detail(request: Request,  request_anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        result = await anime_crud.get_request_anime_detail(db=db, request_anime_id=request_anime_id)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Request Edit Anime not found")
     return result
 
 # get anime info list(sort by kana)
@@ -65,11 +68,13 @@ async def anime_list(request: Request, title: str = None, current_user: user_sch
 # get edit request anime list
 @router.get("/list/edit", response_model=List[anime_schema.AnimeEditResponse])
 @limiter.limit("10/minute")
-async def edit_anime_list(request: Request, db: AsyncSession = Depends(get_db)):
-    anime_list = await anime_crud.get_request_anime_list(db=db)
-
-    if anime_list is None:
-        raise HTTPException(status_code=404, detail="Request Anime not found")
+async def edit_anime_list(request: Request, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime_list = await anime_crud.get_request_anime_list(db=db)
+        if anime_list is None:
+            raise HTTPException(status_code=404, detail="Request Anime not found")
     return anime_list
 
 # create anime info request
@@ -99,10 +104,13 @@ async def update_anime_flag(request: Request, anime_id: int, flag: int, current_
 # update anime.title or anime.introduction or amine.icon for edit function
 @router.put("/edit/{request_anime_id}", response_model=anime_schema.AnimeResponse)
 @limiter.limit("10/minute")
-async def approve_anime_edit(request: Request, request_anime_id: int, db: AsyncSession = Depends(get_db)):
-    anime = await anime_crud.approve_edit_request_anime(db, request_anime_id=request_anime_id)
-    if anime is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
+async def approve_anime_edit(request: Request, request_anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime = await anime_crud.approve_edit_request_anime(db, request_anime_id=request_anime_id)
+        if anime is None:
+            raise HTTPException(status_code=404, detail="Anime not found")
     return anime
 
 # update anime info excluding anime_id 
@@ -120,17 +128,23 @@ async def anime_edit_admin(request: Request, anime_id: int, current_user: user_s
 # delete anime info from DB
 @router.delete("/{anime_id}")
 @limiter.limit("2/minute")
-async def delete_anime(request: Request, anime_id: int, db: AsyncSession = Depends(get_db)):
-    anime = await anime_crud.delete_anime(db=db, anime_id=anime_id)
-    if anime is None:
-        raise HTTPException(status_code=404, detail="Anime not found")
+async def delete_anime(request: Request, anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        anime = await anime_crud.delete_anime(db=db, anime_id=anime_id)
+        if anime is None:
+            raise HTTPException(status_code=404, detail="Anime not found")
     return {"message": "Anime deleted successfully"}
 
 # delete request anime from DB
 @router.delete("/edit/{request_anime_id}")
 @limiter.limit("10/minute")
-async def delete_anime_request(request: Request, request_anime_id: int, db: AsyncSession = Depends(get_db)):
-    result = await anime_crud.delete_edit_request_anime(db=db, request_anime_id=request_anime_id)
-    if result is None:
-        raise HTTPException(status_code=404, detail="Request Edit Anime not found")
+async def delete_anime_request(request: Request, request_anime_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        result = await anime_crud.delete_edit_request_anime(db=db, request_anime_id=request_anime_id)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Request Edit Anime not found")
     return {"message": "Request Edit Anime deleted successfully"}

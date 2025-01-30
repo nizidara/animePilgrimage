@@ -22,10 +22,13 @@ limiter = Limiter(key_func=get_remote_address)
 # get contact detail
 @router.get("/detail/{contact_id}", response_model=contact_schema.ContactResponse)
 @limiter.limit("10/minute")  
-async def contact_detail(request: Request, contact_id: int, db: AsyncSession = Depends(get_db)):
-    contact = await contact_crud.get_contact_detail(db, contact_id=contact_id) 
-    if contact is None:
-        raise HTTPException(status_code=404, detail="Contact not found")
+async def contact_detail(request: Request, contact_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        contact = await contact_crud.get_contact_detail(db, contact_id=contact_id) 
+        if contact is None:
+            raise HTTPException(status_code=404, detail="Contact not found")
     return contact
 
 # get contact list
@@ -49,17 +52,23 @@ async def send_contact(request: Request, contents_body: contact_schema.ContactCr
 ## check contact and update status
 @router.put("/{contact_id}", response_model=contact_schema.ContactResponse)
 @limiter.limit("10/minute")  
-async def check_contact(request: Request, contact_id: int, status: int, db: AsyncSession = Depends(get_db)):
-    contact = await contact_crud.update_contact_status(db, contact_id=contact_id, status=status)
-    if contact is None:
-        raise HTTPException(status_code=404, detail="Contact not found")
+async def check_contact(request: Request, contact_id: int, status: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        contact = await contact_crud.update_contact_status(db, contact_id=contact_id, status=status)
+        if contact is None:
+            raise HTTPException(status_code=404, detail="Contact not found")
     return contact
 
 ## delete contact
 @router.delete("/{contact_id}")
 @limiter.limit("10/minute")  
-async def delete_contact(request: Request, contact_id: int, db: AsyncSession = Depends(get_db)):
-    contact = await contact_crud.delete_contact(db, contact_id)
-    if contact is None:
-        raise HTTPException(status_code=404, detail="Contact not found")
+async def delete_contact(request: Request, contact_id: int, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
+    if current_user.user_attribute_name != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
+        contact = await contact_crud.delete_contact(db, contact_id)
+        if contact is None:
+            raise HTTPException(status_code=404, detail="Contact not found")
     return {"message": "Contact deleted successfully"}
