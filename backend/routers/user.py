@@ -56,22 +56,23 @@ async def get_current_user_required(access_token: str = Cookie(None), db: AsyncS
         raise HTTPException(status_code=401, detail="Access refresh token")
 
 # get user detail
-@router.get("/detail/{user_id}", response_model=user_schema.UserLoginResponse)
-async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
-    user = await user_crud.get_user_detail(db=db, user_id=user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return user
+#@router.get("/detail/{user_id}", response_model=user_schema.UserLoginResponse)
+#async def user_detail(user_id: str, db: AsyncSession = Depends(get_db)):
+#    user = await user_crud.get_user_detail(db=db, user_id=user_id)
+#    if user is None:
+#        raise HTTPException(status_code=404, detail="User not found")
+#
+#    return user
     
 # get users
-@router.get("/list", response_model=List[user_schema.UserLoginResponse])
-async def user_detail(db: AsyncSession = Depends(get_db)):
-    users = await user_crud.get_user_list(db=db)
-    if users is None:
-        raise HTTPException(status_code=404, detail="Users not found")
-
-    return users
+#@router.get("/list", response_model=List[user_schema.UserLoginResponse])
+#async def user_detail(db: AsyncSession = Depends(get_db)):    
+#    users = await user_crud.get_user_list(db=db)
+#    if users is None:
+#        raise HTTPException(status_code=404, detail="Users not found")
+    # print(auth.hash_password("hogehoge")) # auth.pyのhash_password関数を呼び出し(async外す)
+#
+#    return users
 
 # login
 @router.post("/login", response_model=user_schema.LoginResponse)
