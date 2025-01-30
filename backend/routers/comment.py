@@ -59,11 +59,6 @@ async def report_comment_detail(request: Request, current_user: user_schema.Curr
             raise HTTPException(status_code=404, detail="report comments not found")
     return comments
 
-def get_upload_files(files: Optional[List[UploadFile]] = File(None)):
-    if files is None:
-        return []
-    return files
-
 # post comment
 @router.post("", response_model=comment_schema.CommentResponse)
 @limiter.limit("5/minute")  
