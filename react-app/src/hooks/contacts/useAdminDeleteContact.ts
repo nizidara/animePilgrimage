@@ -2,31 +2,31 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import api from "../../api/axiosInstance";
 
-//decline request anime
-export const useAdminDeclineEditAnime = () => {
+//deleteContact
+export const useAdminDeleteContact = () => {
     const [responseData, setResponseData] = useState<any | null>(null);
-    const [declineError, setDeclineError] = useState<string | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
     const navigation = useNavigate();
 
     //delete
-    const decline = useCallback((requestAnimeId: number | string) => {
-        setDeclineError(null);
+    const deleteContact = useCallback((contactId: number | string) => {
+        setDeleteError(null);
 
-        api.delete(`/anime/edit/${requestAnimeId}`)
+        api.delete(`/contacts/${contactId}`)
         .then((res) => {
             setResponseData(res.data);
         })
         .catch(() => {
-            setDeclineError("問い合わせ情報削除中にエラーが発生しました")
+            setDeleteError("問い合わせ情報削除中にエラーが発生しました")
         })
     }, [setResponseData])
 
     // responseがnullで無ければ一覧ページに遷移（要修正：完了ページ）
     useEffect(() => {
         if(responseData!== null){
-            navigation(`/admin/request_anime/list`)
+            navigation(`/admin/contact/list`)
         }
     }, [responseData, navigation])
 
-    return {decline, declineError};
+    return {deleteContact, deleteError};
 }

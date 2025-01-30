@@ -2,6 +2,7 @@ import { FC, memo } from "react"
 import { responseContactData } from "../../../type/api/contact";
 import { DateTimeFormatter } from "../../atoms/DateTimeFormatter";
 import { Col, Row } from "react-bootstrap";
+import { StatusBadge } from "../../atoms/StatusBadge";
 
 type contactDetailData = Omit<responseContactData, 'status'> & {
     status?: number | null;
@@ -29,7 +30,7 @@ export const ContactDetailDisplay: FC<contactDetailData> = memo((props) => {
             {status != null && 
                 <Row className="mb-2">
                     <Col xs={12} md={3}><b>お問い合わせ状況：</b></Col>
-                    <Col xs={12} md={9}>{status}</Col>
+                    <Col xs={12} md={9}>{(status === 0 || status === 1 || status === 2) && <StatusBadge status={status} />}</Col>
                 </Row>
             }
             <Row className="mb-2">

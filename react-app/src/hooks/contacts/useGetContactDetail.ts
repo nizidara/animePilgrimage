@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { responseContactData } from "../../type/api/contact";
-import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
+import api from "../../api/axiosInstance";
 
 export const useGetContactDetail = (contact_id: string | null) => {
     const [contact, setContact] = useState<responseContactData>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    const fetchContactDetail = useCallback(() => {
         if(contact_id){
-            axios.get(`${fastAPIURL}/contacts/detail/${contact_id}`)
+            api.get(`${fastAPIURL}/contacts/detail/${contact_id}`)
             .then(response => {
                 setContact(response.data);
                 setLoading(false);
@@ -22,5 +22,9 @@ export const useGetContactDetail = (contact_id: string | null) => {
         }
     }, [contact_id]);
 
-    return { contact, loading, error };
+    useEffect(() => {
+        fetchContactDetail();
+    }, [fetchContactDetail])
+
+    return { contact, loading, error, fetchContactDetail };
 };

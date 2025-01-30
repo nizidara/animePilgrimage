@@ -8,7 +8,7 @@ export const useAdminDeclineRequestPlace = () => {
     const [declineError, setDeclineError] = useState<string | null>(null);
     const navigation = useNavigate();
 
-    //put
+    //delete
     const decline = useCallback((requestPlaceId: string) => {
         setDeclineError(null);
 

@@ -8,11 +8,11 @@ export const useAdminDeclineReportComment = () => {
     const [declineError, setDeclineError] = useState<string | null>(null);
     const navigation = useNavigate();
 
-    //put
-    const decline = useCallback((deleteCOmmentId: number | string) => {
+    //delete
+    const decline = useCallback((deleteCommentId: number | string) => {
         setDeclineError(null);
 
-        api.delete(`/comments/report/${deleteCOmmentId}`)
+        api.delete(`/comments/report/${deleteCommentId}`)
         .then((res) => {
             setResponseData(res.data);
         })
