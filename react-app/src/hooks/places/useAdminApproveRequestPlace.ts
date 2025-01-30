@@ -22,10 +22,10 @@ export const useAdminApproveRequestPlace = () => {
         })
     }, [setResponseData])
 
-    // responseがnullで無ければ聖地ページに遷移（要修正：完了ページ）
+    // responseがnullで無ければ一覧ページに遷移（要修正：完了ページ，聖地ページでは削除後にエラーになるため．一旦一覧ページ）
     useEffect(() => {
         if(responseData!== null){
-            navigation(`/admin/place?place_id=${responseData.place_id}`, {state: {responseData}})
+            navigation(`/admin/request_place/list`)
         }
     }, [responseData, navigation])
 
