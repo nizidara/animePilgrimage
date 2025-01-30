@@ -3,7 +3,7 @@ import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { DeleteCommentDetailDisplay } from "../../organisms/display/DeleteCommentDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseDeleteCommentData } from "../../../type/api/comment";
-import { useGetCommenDetail } from "../../../hooks/comments/useGetCommentDetail";
+import { useGetCommentDetail } from "../../../hooks/comments/useGetCommentDetail";
 
 export const DeleteRequestCommentComplete: FC = memo(() =>{
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
 
     const responseData = location.state.responseData as responseDeleteCommentData;
 
-    const { comment, loading, error } = useGetCommenDetail(responseData.comment_id);
+    const { comment, loading, error } = useGetCommentDetail(responseData.comment_id);
     
     const onClickPlace = useCallback((placeId:string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 

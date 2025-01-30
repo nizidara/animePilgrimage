@@ -55,12 +55,20 @@ import { AdminAnimeList } from "../components/pages/admin/AdminAnimeList";
 import { AdminAnimeDetail } from "../components/pages/admin/AdminAnimeDetail";
 import { AdminPlaceDetail } from "../components/pages/admin/AdminPlaceDetail";
 import { AdminPlaceList } from "../components/pages/admin/AdminPlaceList";
+import { AdminRequestAnimeList } from "../components/pages/admin/AdminRequestAnimeList";
+import { AdminRequestAnimeDetail } from "../components/pages/admin/AdminRequestAnimeDetail";
+import { AdminRequestPlaceList } from "../components/pages/admin/AdminRequestPlaceList";
+import { AdminRequestPlaceDetail } from "../components/pages/admin/AdminRequestPlaceDetail";
+import { AdminRequestCommentList } from "../components/pages/admin/AdminRequestCommentList";
+import { AdminRequestCommentDetail } from "../components/pages/admin/AdminRequestCommentDetail";
+
 import { PrivateRoute } from "./PrivateRoute";
 import { RegisterAnimeProvider } from "../providers/RegisterAnimeContext";
 import { EditAnimeProvider } from "../providers/EditAnimeContext";
 import { RegisterPlaceProvider } from "../providers/RegisterPlaceContext";
 import { EditPlaceProvider } from "../providers/EditPlaceContext";
 import { DeletePlaceProvider } from "../providers/DeletePlaceContext";
+
 
 export const Router: FC = memo(() => {
     return(
@@ -115,6 +123,12 @@ export const Router: FC = memo(() => {
                 <Route path="/admin/place" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminPlaceDetail /></FullLayout></PrivateRoute>} />
                 <Route path="/admin/contact/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminContactList /></FullLayout></PrivateRoute>} />
                 <Route path="/admin/contact" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminContactDetail /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/request_anime/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestAnimeList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/request_anime" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestAnimeDetail /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/request_place/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestPlaceList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/request_place" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestPlaceDetail /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/report_comment/list" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestCommentList /></FullLayout></PrivateRoute>} />
+                <Route path="/admin/report_comment" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminRequestCommentDetail /></FullLayout></PrivateRoute>} />
                 
                 <Route path="*" element={<HeaderLayout><Page404 /></HeaderLayout>} />
             </Routes>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { fastAPIURL } from "../../properties/properties";
 import { responseCommentData } from "../../type/api/comment";
 
-export const useGetCommenDetail = (comment_id: string | null) => {
+export const useGetCommentDetail = (comment_id: string | null) => {
     const [comment, setComment] = useState<responseCommentData>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
