@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from pathlib import Path
+# from pathlib import Path
 
 # import .env file
 load_dotenv()
@@ -20,11 +20,11 @@ origins = [
 ]
 
 # image setting(local)
-local_base_path = os.getenv('LOCAL_BASE_PATH')
-base_path = Path(local_base_path)  # base path
-upload_directory = Path("uploads/images/")  # image directory path
-icon_directory = Path("uploads/icons/") # icon directory path
-anime_photo_directory = Path("uploads/anime/")  # anime image directory path
+# local_base_path = os.getenv('LOCAL_BASE_PATH')
+# base_path = Path(local_base_path)  # base path
+# upload_directory = Path("uploads/images/")  # image directory path
+# icon_directory = Path("uploads/icons/") # icon directory path
+# anime_photo_directory = Path("uploads/anime/")  # anime image directory path
 
 # image setting(AWS S3)
 aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID')
