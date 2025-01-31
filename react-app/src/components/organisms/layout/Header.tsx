@@ -45,6 +45,11 @@ export const Header: FC = memo(() => {
                             <Nav.Link as={NavLink} to="/search/anime"><BsSearch /></Nav.Link>
                         </Nav>
                         <Nav>
+                            {user?.user_attribute_name === "admin" && (
+                                <Nav.Link as={NavLink} to="/admin/top">管理者ページ</Nav.Link>
+                            )}
+                        </Nav>
+                        <Nav>
                             {user ? (
                                 <>
                                     <Nav.Link onClick={handleLogout}>ログアウト</Nav.Link>
