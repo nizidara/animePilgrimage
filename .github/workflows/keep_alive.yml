@@ -1,6 +1,10 @@
 name: Keep Render Alive
 
 on:
+  push:  # push時に実行
+    branches:
+      - main  # mainブランチにpushしたとき
+  workflow_dispatch:  # 手動実行
   schedule:
     - cron: "*/10 * * * *"  # 10分ごとに実行
 
@@ -9,5 +13,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send request to keep Render alive
-        run: curl -s https://animepilgrimage.onrender.com/hello
-
+        run: curl -s -o /dev/null -w "%{http_code}" https://animepilgrimage.onrender.com/hello
