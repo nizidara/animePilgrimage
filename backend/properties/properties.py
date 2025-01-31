@@ -6,6 +6,9 @@ from pathlib import Path
 # import .env file
 load_dotenv()
 
+#env setting
+env = os.getenv('ENV')
+
 #DB setting
 user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')

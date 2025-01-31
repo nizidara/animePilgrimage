@@ -4,9 +4,12 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from routers import contact, anime, place, comment, region, user, photo
-from properties.properties import origins
+from properties.properties import origins, env
 
-app = FastAPI(title="App")
+if env == "production":
+    app = FastAPI(docs_url=None, redoc_url=None, title="App")
+else:
+    app = FastAPI(title="App")
 
 # Initialize the limiter
 limiter = Limiter(key_func=get_remote_address)
