@@ -3,5 +3,6 @@ backend/__pycache__/
 backend/*/__pycache__/
 backend/uploads/*
 react-app/public/uploads/*
+react-app/.env
 db/
 .env
