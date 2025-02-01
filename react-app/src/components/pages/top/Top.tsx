@@ -1,12 +1,8 @@
 import { memo, FC, useCallback } from "react";
 import { Button, Card, CardGroup, Container } from "react-bootstrap";
-// import { useFastAPITest } from "../../../hooks/useFastAPITest";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Top: FC = memo(() =>{
-    // const {GetData, data} = useFastAPITest();
-    // const onClickGetData = () => GetData("hello");
-
     const navigate = useNavigate();
 
     const onClickSearchAnime = useCallback(() => navigate("/search/anime"), [navigate]);

@@ -4,6 +4,7 @@ import { useGetUser } from '../hooks/users/useGetUser';
 import { loginData, userData } from '../type/api/user';
 import axios from 'axios';
 import { fastAPIURL } from '../properties/properties';
+import { Spinner } from 'react-bootstrap';
 
 type AuthContextType = {
     user: userData | null;
@@ -59,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ user, login: handleLogin, logout }}>
-            {loading? <div>Loading</div>: children}
+            {loading? <center><Spinner animation="border" /></center>: children}
         </AuthContext.Provider>
     );
 };
