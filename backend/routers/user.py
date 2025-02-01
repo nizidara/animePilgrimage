@@ -38,7 +38,7 @@ async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncS
         return None
 
 #get user info in auth require
-@router.get("/auth", response_model=user_schema.CurrentUserResponse)
+@router.get("/auth/", response_model=user_schema.CurrentUserResponse)
 async def get_current_user_required(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
     if access_token is None:
         raise HTTPException(status_code=401, detail="Access token not found")
