@@ -42,6 +42,8 @@ import { DeleteRequestComment } from "../components/pages/comment/DeleteRequestC
 import { DeleteRequestCommentComplete } from "../components/pages/comment/DeleteRequestCommentComplete";
 
 //other
+import { Terms } from "../components/pages/other/Terms";
+import { Privacy } from "../components/pages/other/Privacy";
 import { Contact } from "../components/pages/other/Contact";
 import { ContactResult } from "../components/pages/other/ContactResult";
 import { Guide } from "../components/pages/other/Guide";
@@ -111,6 +113,8 @@ export const Router: FC = memo(() => {
                 <Route path="/logout" element={<FullLayout><Logout /></FullLayout>} />
 
                 {/* other */}
+                <Route path="/terms" element={<FullLayout><Terms /></FullLayout>} />
+                <Route path="/privacy" element={<FullLayout><Privacy /></FullLayout>} />
                 <Route path="/guide" element={<FullLayout><Guide /></FullLayout>} />
                 <Route path="/contact" element={<FullLayout><Contact /></FullLayout>} />
                 <Route path="/contact/result" element={<FullLayout><ContactResult /></FullLayout>} />

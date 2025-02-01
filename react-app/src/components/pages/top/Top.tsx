@@ -58,15 +58,6 @@ export const Top: FC = memo(() =>{
                     </Card.Body>
                 </Card>
             </CardGroup>
-
-            <hr />
-            {/* {data ? <div>{data.message}</div> : <button onClick={onClickGetData}>FastAPI実行確認</button>} */}
-            <p>ページ稼働確認リンク</p>
-            <ol>
-                <li><Link to="/login">(ログイン)</Link></li>
-                <li><Link to="/admin/top">(AdminTop)</Link></li>
-                <li><a href="http://localhost:3000/admin/top">(AdminTop href)</a></li>              
-            </ol>
         </Container>
     )
 });
