@@ -29,7 +29,7 @@ export const DeleteRequestPlace: FC = memo(() =>{
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
     
     if (!place) {
-        return <div>place not found</div>;
+        return <center><Spinner animation="border" /></center>;
     }
 
     const onClickNext = () => {

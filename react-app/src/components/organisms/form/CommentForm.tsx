@@ -16,6 +16,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const [imageError, setImageError] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onChangeComment = (e:ChangeEvent<HTMLInputElement>) => setComment(e.target.value);
     
@@ -61,7 +62,9 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
     };
 
     const onClickSend = () => {
-        post(comment, placeId, selectedImages, onCommentPosted);
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        post(comment, placeId, selectedImages, onCommentPosted, () => setIsSubmitting(false));
         setComment('');
         setSelectedImages([]);
         setPreviewUrls([]);
@@ -100,7 +103,7 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     </Col>
 
                     <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                        <Button variant="primary" disabled={(!comment && selectedImages.length === 0) || comment.length > 140} onClick={onClickSend} >投稿</Button>
+                        <Button variant="primary" disabled={(!comment && selectedImages.length === 0) || comment.length > 140 || isSubmitting} onClick={onClickSend} >投稿</Button>
                     </Col>
                 </Row>
                 

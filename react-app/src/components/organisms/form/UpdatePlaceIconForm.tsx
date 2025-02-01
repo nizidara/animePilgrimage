@@ -18,6 +18,7 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [iconIndex, setIconIndex] = useState<number | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleEditClick = () => {
         setIsEditing(!isEditing);
@@ -34,7 +35,9 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
     };
 
     const onClickUpdate = () => {
-        animePhotoList && iconIndex !== null && update(animePhotoList[iconIndex].anime_photo_id, onPlaceIconUpdated, animePhotoList[iconIndex].place_id);
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        animePhotoList && iconIndex !== null && update(animePhotoList[iconIndex].anime_photo_id, onPlaceIconUpdated, animePhotoList[iconIndex].place_id, () => setIsSubmitting(false));
         setIconIndex(null);
     };
     
@@ -85,7 +88,7 @@ export const UpdatePlaceIconForm: FC<FormProps> = memo(({animePhotoList, placeIc
                                         </div>}
                                 </Col>
                                 <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                                    <Button variant="primary" disabled={iconIndex === null || placeIcon?.file_name === animePhotoList[iconIndex].file_name} onClick={onClickUpdate}>更新</Button>
+                                    <Button variant="primary" disabled={iconIndex === null || placeIcon?.file_name === animePhotoList[iconIndex].file_name || isSubmitting} onClick={onClickUpdate}>更新</Button>
                                 </Col>
                             </Row>
                         </div>

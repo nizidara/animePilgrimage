@@ -14,7 +14,7 @@ export const useSendContact = () => {
     const {user} = useAuth();
 
     //post
-    const send = useCallback((formData : sendContactFormData) => {
+    const send = useCallback((formData : sendContactFormData, callback?: () => void) => {
         setSendError(null);
         
         const sendData : sendContactData = {
@@ -29,7 +29,9 @@ export const useSendContact = () => {
         })
         .catch(() => {
             setSendError("送信中にエラーが発生しました")
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

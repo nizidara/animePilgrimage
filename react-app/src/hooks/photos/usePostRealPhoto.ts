@@ -13,7 +13,7 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
     const {user} = useAuth();
 
     //post
-    const post = useCallback((placeId : string, images: File[], onRealPhotoPosted: () => void) => {
+    const post = useCallback((placeId : string, images: File[], onRealPhotoPosted: () => void, callback?: () => void) => {
         setPostError(null);
 
         const postData : postRealPhotoData = {
@@ -45,6 +45,8 @@ export const usePostRealPhoto = (isAdmin: boolean) => {
             onRealPhotoPosted();
         }).catch(() => {
             setPostError("投稿中にエラーが発生しました");
+        }).finally(() => {
+            if(callback) callback();
         });
     }, [setResponseData, user])
 

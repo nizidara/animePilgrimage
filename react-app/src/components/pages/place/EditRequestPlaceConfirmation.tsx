@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -14,6 +14,8 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
     const location = useLocation();
 
     const { formData, animePhoto } = useEditPlaceContext();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const placeId = location.state.placeId as string;
     const { anime, loading:animeLoading, error:animeError } = useGetAnimeDetail(formData.anime_id);
     const { region, loading:regionLoading, error:regionError } = useGetRegionDetail(formData.region_id);
@@ -23,7 +25,11 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
     const { edit, editError } = useEditRequestPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-    const onClickSend = () => edit(formData, placeId, animePhoto);
+    const onClickSend = () => {
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        edit(formData, placeId, animePhoto, () => setIsSubmitting(false));
+    }
 
     return (
         <Container>
@@ -45,7 +51,7 @@ export const EditRequestPlaceConfirmation: FC = memo(() =>{
                     file_names={animePhoto}
                 />
             }
-            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });

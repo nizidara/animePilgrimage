@@ -14,7 +14,7 @@ export const useDeleteRequestComment = () => {
     const {user} = useAuth();
 
     //post
-    const request = useCallback((formData : deleteCommentFormData, commentId : string) => {
+    const request = useCallback((formData : deleteCommentFormData, commentId : string, callback?: () => void) => {
         setRequestError(null);
         
         const postData : deleteCommentData = {
@@ -29,7 +29,9 @@ export const useDeleteRequestComment = () => {
         })
         .catch(() => {
             setRequestError("送信中にエラーが発生しました")
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

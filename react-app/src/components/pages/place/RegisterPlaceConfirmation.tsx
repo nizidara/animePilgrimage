@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,8 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
 
     const { formData } = useRegisterPlaceContext();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { anime, loading:animeLoading, error:animeError } = useGetAnimeDetail(formData.anime_id);
     const { region, loading:regionLoading, error:regionError } = useGetRegionDetail(formData.region_id);
     const animeTitle = anime ? anime.title : "";
@@ -20,7 +22,11 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
     const { register, registerError } = useRegisterPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-    const onClickSend = () => register(formData);
+    const onClickSend = () => {
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        register(formData, () => setIsSubmitting(false));
+    }
     
     return (
         <Container>
@@ -44,7 +50,7 @@ export const RegisterPlaceConfirmation: FC = memo(() =>{
                     icon_index={formData.icon_index}
                 />
             } 
-            <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });

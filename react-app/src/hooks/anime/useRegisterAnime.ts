@@ -12,7 +12,7 @@ export const useRegisterAnime = () => {
     const navigation = useNavigate();
 
     //post
-    const register = useCallback((animeData : registerAnimeFormData) => {
+    const register = useCallback((animeData : registerAnimeFormData, callback?: () => void) => {
         setRegisterError(null);
         
         const registerData : registerAnimeData = {
@@ -35,7 +35,9 @@ export const useRegisterAnime = () => {
         })
         .catch(() => {
             setRegisterError("登録時にエラーが発生しました")
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移

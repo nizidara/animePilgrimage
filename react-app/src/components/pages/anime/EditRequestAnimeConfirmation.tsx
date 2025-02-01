@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
@@ -11,6 +11,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
     const location = useLocation();
 
     const { formData } = useEditAnimeContext();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const animeId = location.state.animeId;
     const currentIcon = location.state?.currentIcon;
@@ -18,7 +19,11 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
     const { edit, editError } = useEditRequestAnime();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-    const onClickSend = () => edit(formData, animeId);
+    const onClickSend = () => {
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        edit(formData, animeId, () => setIsSubmitting(false));
+    }
 
     return (
         <Container>
@@ -31,7 +36,7 @@ export const EditRequestAnimeConfirmation: FC = memo(() =>{
                 current_icon={currentIcon}
                 new_icon={formData.icon}
             />
-            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });

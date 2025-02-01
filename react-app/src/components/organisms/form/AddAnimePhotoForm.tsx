@@ -16,6 +16,7 @@ export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFor
     const { post, postError } = usePostAnimePhoto(isAdmin);
 
     const [imageError, setImageError] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && formData.length + e.target.files.length <= 10) {
@@ -49,7 +50,9 @@ export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFor
     };
 
     const onClickSend = () => {
-        post(placeId, formData, onAnimePhotoPosted);
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        post(placeId, formData, onAnimePhotoPosted, () => setIsSubmitting(false));
         setFormData([]);
     };
     
@@ -78,7 +81,7 @@ export const AddAnimePhotoForm: FC<FormProps> = memo(({placeId, formData, setFor
                     </Col>
             
                     <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                            <Button variant="primary" disabled={!formData[0]} onClick={onClickSend}>追加</Button>
+                            <Button variant="primary" disabled={!formData[0] || isSubmitting} onClick={onClickSend}>追加</Button>
                     </Col>
                 </Row>
             </Form>

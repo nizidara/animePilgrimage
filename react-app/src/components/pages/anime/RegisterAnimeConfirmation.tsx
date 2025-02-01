@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +10,16 @@ export const RegisterAnimeConfirmation: FC = memo(() =>{
     const navigate = useNavigate();
 
     const { formData } = useRegisterAnimeContext();
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { register, registerError } = useRegisterAnime();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-    const onClickSend = () => register(formData);
+    const onClickSend = () => {
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        register(formData, () => setIsSubmitting(false));
+    };
 
     return (
         <Container>
@@ -22,7 +27,7 @@ export const RegisterAnimeConfirmation: FC = memo(() =>{
             <p>登録する内容をご確認ください。</p>
             {registerError && <Alert variant="danger">{registerError}</Alert>}
             <RegisterAnimeDetailDisplay title={formData.title} kana={formData.kana} introduction={formData.introduction} icon={formData.icon} />
-            <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="登録" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });
