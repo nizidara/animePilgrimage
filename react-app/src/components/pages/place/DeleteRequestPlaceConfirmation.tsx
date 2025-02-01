@@ -1,4 +1,4 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC, useCallback, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,12 +12,19 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
     const location = useLocation();
 
     const { formData } = useDeletePlaceContext();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const place = location.state.place as responsePlaceData;
 
     const { deleteRequest, deleteRequestError } = useDeleteRequestPlace();
 
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
-    const onClickSend = () => deleteRequest(formData, place);
+    const onClickSend = () => {
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        deleteRequest(formData, place, () => setIsSubmitting(false));
+    }
 
     return (
         <Container>
@@ -36,7 +43,7 @@ export const DeleteRequestPlaceConfirmation: FC = memo(() =>{
                 contents={formData.contents} 
                 anime_icon={place.anime_icon}
             />
-            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });

@@ -13,7 +13,7 @@ export const usePostComment = () => {
     const {user} = useAuth();
     
     //post
-    const post = useCallback((comment: string, placeId : string, images: File[], onCommentPosted: () => void) => {
+    const post = useCallback((comment: string, placeId : string, images: File[], onCommentPosted: () => void, callback?: () => void) => {
         setPostError(null);
         
         if(images.length !== 0 && comment.length === 0){
@@ -48,6 +48,8 @@ export const usePostComment = () => {
             onCommentPosted();
         }).catch(() => {
             setPostError("投稿時にエラーが発生しました");
+        }).finally(() => {
+            if(callback) callback();
         });
     }, [setResponseData, user])
 

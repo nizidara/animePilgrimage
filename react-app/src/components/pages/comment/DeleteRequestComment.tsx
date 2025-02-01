@@ -15,6 +15,7 @@ export const DeleteRequestComment: FC = memo(() =>{
     const comment = location.state.comment as responseCommentData;
     const commentId = comment.comment_id;
     const buttonFlag = false;
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const {request, requestError} = useDeleteRequestComment();
 
@@ -29,9 +30,11 @@ export const DeleteRequestComment: FC = memo(() =>{
     //page transition
     const onClickSend = () => {
         if (formRef.current) {
+            if (isSubmitting) return; // 連打防止
+            setIsSubmitting(true);
             formRef.current.reportValidity();
             if (formRef.current.checkValidity()) {
-                request(formData, commentId);
+                request(formData, commentId, () => setIsSubmitting(false));
             }
         }
     }
@@ -43,7 +46,7 @@ export const DeleteRequestComment: FC = memo(() =>{
             <CommentCard comment={comment} buttonFlag={buttonFlag} />
             {requestError && <Alert variant="danger">{requestError}</Alert>}
             <DeleteRequestCommentForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} />
-            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} />
+            <BackAndNextButtons backName="戻る" nextName="送信" onClickBack={onClickBack} onClickNext={onClickSend} nextDisabled={isSubmitting} />
         </Container>
     )
 });

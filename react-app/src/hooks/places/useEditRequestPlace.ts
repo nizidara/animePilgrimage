@@ -15,7 +15,7 @@ export const useEditRequestPlace = () => {
     const {user} = useAuth();
 
     //post
-    const edit = useCallback((formData : editPlaceFormData, placeId: string, animePhoto: string[]) => {
+    const edit = useCallback((formData : editPlaceFormData, placeId: string, animePhoto: string[], callback?: () => void) => {
         setEditError(null);
 
         const editData : requestPlaceData = {
@@ -33,7 +33,9 @@ export const useEditRequestPlace = () => {
         })
         .catch(() => {
             setEditError("送信中にエラーが発生しました");
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

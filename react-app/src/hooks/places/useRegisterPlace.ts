@@ -14,7 +14,7 @@ export const useRegisterPlace = () => {
     const {user} = useAuth();
 
     //post
-    const register = useCallback((placeData : registerPlaceFormData) => {
+    const register = useCallback((placeData : registerPlaceFormData, callback?: () => void) => {
         setRegisterError(null);
 
         const { images, ...registerData} : registerPlaceData = {
@@ -43,7 +43,9 @@ export const useRegisterPlace = () => {
         })
         .catch(() => {
             setRegisterError("送信中にエラーが発生しました");
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

@@ -14,7 +14,7 @@ export const useEditRequestAnime = () => {
     const {user} = useAuth();
 
     //post
-    const edit = useCallback((animeData : editAnimeFormData, animeId : number) => {
+    const edit = useCallback((animeData : editAnimeFormData, animeId : number, callback?: () => void) => {
         setEditError(null);
         
         const editData : editAnimeData = {
@@ -39,7 +39,9 @@ export const useEditRequestAnime = () => {
         })
         .catch(() => {
             setEditError("送信中にエラーが発生しました")
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

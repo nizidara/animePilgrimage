@@ -15,7 +15,7 @@ export const useDeleteRequestPlace = () => {
     const {user} = useAuth();
 
     //post
-    const deleteRequest = useCallback((formData : deletePlaceFormData, place: responsePlaceData) => {
+    const deleteRequest = useCallback((formData : deletePlaceFormData, place: responsePlaceData, callback?: () => void) => {
         setDeleteRequestError(null);
 
         const deleteData : requestPlaceData = {
@@ -35,7 +35,9 @@ export const useDeleteRequestPlace = () => {
         })
         .catch(() => {
             setDeleteRequestError("送信中にエラーが発生しました");
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData, user])
 
     // responseがnullで無ければ完了ページに遷移

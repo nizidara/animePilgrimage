@@ -11,7 +11,7 @@ export const useUpdatePlaceIcon = (isAdmin:boolean) => {
     const navigation = useNavigate();
 
     //update
-    const update = useCallback((anime_photo_id: string, onPlaceIconUpdated: () => void, place_id?: string | null) => {
+    const update = useCallback((anime_photo_id: string, onPlaceIconUpdated: () => void, place_id?: string | null, callback?: () => void) => {
         setUpdateError(null);
 
         const postData : updatePlaceIconData = {
@@ -26,7 +26,9 @@ export const useUpdatePlaceIcon = (isAdmin:boolean) => {
         })
         .catch(() => {
             setUpdateError("更新中にエラーが発生しました");
-        })
+        }).finally(() => {
+            if(callback) callback();
+        });
     }, [setResponseData])
 
     // responseがnullで無ければ完了ページに遷移

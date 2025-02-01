@@ -11,6 +11,7 @@ export const ContactForm: FC = memo(() => {
     const [email, setEmail] = useState('');
     const [title, setTitle] = useState('');
     const [contents, setContents] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onChangeName = (e:ChangeEvent<HTMLInputElement>) => setName(e.target.value);
     const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
@@ -20,7 +21,9 @@ export const ContactForm: FC = memo(() => {
     const sendContents = {name, email, title, contents} as sendContactFormData;
     const onClickSend = (e: FormEvent) => {
         e.preventDefault();
-        send(sendContents);
+        if (isSubmitting) return; // 連打防止
+        setIsSubmitting(true);
+        send(sendContents, () => setIsSubmitting(false));
     }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -54,7 +57,7 @@ export const ContactForm: FC = memo(() => {
                 </Form.Group>
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" type="submit">送信</Button>
+                        <Button variant="primary" type="submit" disabled={isSubmitting} >送信</Button>
                     </Col>
                 </Row>
             </Form>
