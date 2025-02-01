@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 export const useGetUser = () => {
     const getUser = useCallback(async () => {
         try {
-            const response = await axios.get(`${fastAPIURL}/users/auth/`, {
+            const response = await axios.get(`${fastAPIURL}/users/auth`, {
                 withCredentials: true,
             });
             return response.data; // ユーザーデータを返す
