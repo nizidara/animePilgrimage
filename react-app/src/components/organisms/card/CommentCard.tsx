@@ -23,7 +23,7 @@ export const CommentCard: FC<Comment> = memo((props) => {
                     <div>
                         <strong>{comment.user_name}</strong> <DateTimeFormatter datetime={comment.comment_date}/>
                     </div>
-                    {buttonFlag && <Button variant="danger" className="float-right" onClick={onClickDeleteComment}>削除</Button>}
+                    {buttonFlag && <Button size="sm" variant="danger" className="float-right" onClick={onClickDeleteComment}>通報</Button>}
                 </Card.Header>
                 <Card.Body>
                     <Card.Text style={{ whiteSpace: 'pre-line' }}>{comment.comment}</Card.Text>
