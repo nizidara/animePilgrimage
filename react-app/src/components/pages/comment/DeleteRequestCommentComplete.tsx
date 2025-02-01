@@ -16,7 +16,7 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
     const onClickPlace = useCallback((placeId:string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     if(!comment){
-        return <div>Comment Not Found</div>
+        return <center><Spinner animation="border" /></center>;
     }
 
     return (
