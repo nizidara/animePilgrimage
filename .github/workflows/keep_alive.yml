@@ -6,11 +6,11 @@ on:
       - main  # mainブランチにpushしたとき
   workflow_dispatch:  # 手動実行
   schedule:
-    - cron: "*/5 * * * *"  # 10分ごとに実行
+    - cron: "*/5 * * * *"  # 5分ごとに実行
 
 jobs:
   keep_alive:
     runs-on: ubuntu-latest
     steps:
       - name: Send request to keep Render alive
-        run: curl -s -o /dev/null -w "%{http_code}" https://animepilgrimage.onrender.com/hello
+        run: curl -s -o /dev/null -w "%{http_code}" https://api.pilgrimage.nizidara.com/hello
