@@ -35,7 +35,7 @@ export const RegisterAnime: FC = memo(() =>{
         <Container>
             
             <div className="d-flex justify-content-between mt-2">
-                <h2>新規アニメ登録申請</h2>
+                <h2>新規アニメ登録</h2>
                 <Button variant="outline-primary" className="float-right" onClick={onClickRegisterPlace}>聖地申請はこちら</Button>
             </div>
             
