@@ -9,17 +9,20 @@ export const OpenGooglemapAppButton: FC<openMapProps> = memo((props) =>{
     const {coodinates} = props
 
     const openMaps = (lat:number, lng:number) => {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const appUrl = `geo:${lat},${lng}?q=${lat},${lng}`;
+        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+        const isAndroid = /Android/.test(navigator.userAgent);
         const webUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-        if (isMobile) {
-            // スマホの場合は Googleマップアプリを開く
-            window.location.href = appUrl;
-          } else {
-            // PCブラウザの場合は新しいタブで開く
+        if (isIOS) {
+            // iPhone / iPad では maps:// を使用
+            window.location.href = `maps://?q=${lat},${lng}`;
+        } else if (isAndroid) {
+            // Android では geo: を使用
+            window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`;
+        } else {
+            // PCブラウザでは新しいタブでGoogleマップを開く
             window.open(webUrl, "_blank");
-          }
+        }
     }
 
     return (    
