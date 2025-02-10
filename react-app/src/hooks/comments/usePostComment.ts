@@ -1,15 +1,12 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useCallback, useState } from "react";
 import { fastAPIURL } from "../../properties/properties";
-import { postCommentData, responseCommentData } from "../../type/api/comment";
+import { postCommentData } from "../../type/api/comment";
 import { useAuth } from "../../providers/AuthContext";
 
 //post comment
 export const usePostComment = () => {
-    const [responseData, setResponseData] = useState<responseCommentData | null>(null);
     const [postError, setPostError] = useState<string | null>(null);
-    const navigation = useNavigate();
     const {user} = useAuth();
     
     //post
@@ -43,22 +40,14 @@ export const usePostComment = () => {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        }).then((res) => {
-            setResponseData(res.data);
+        }).then(() => {
             onCommentPosted();
         }).catch(() => {
             setPostError("投稿時にエラーが発生しました");
         }).finally(() => {
             if(callback) callback();
         });
-    }, [setResponseData, user])
-
-    // responseがnullで無ければ完了ページに遷移
-    useEffect(() => {
-        if(responseData!== null){
-            navigation(`/place?place_id=${responseData.place_id}`)
-        }
-    }, [responseData, navigation])
+    }, [user]);
 
     return {post, postError};
 }
