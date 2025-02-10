@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, memo, useState } from "react"
-import { Alert, Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
 import { usePostComment } from "../../../hooks/comments/usePostComment";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 
@@ -103,7 +103,9 @@ export const CommentForm: FC<commentFormData> = memo((props) => {
                     </Col>
 
                     <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                        <Button variant="primary" disabled={(!comment && selectedImages.length === 0) || comment.length > 140 || isSubmitting} onClick={onClickSend} >投稿</Button>
+                        <Button variant="primary" disabled={(!comment && selectedImages.length === 0) || comment.length > 140 || isSubmitting} onClick={onClickSend} >
+                            {isSubmitting ? <div>投稿中… <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /></div> : "投稿" }
+                        </Button>
                     </Col>
                 </Row>
                 

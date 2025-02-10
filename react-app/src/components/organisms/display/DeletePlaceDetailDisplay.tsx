@@ -7,6 +7,7 @@ import { convertPlaceDataToGeoJson } from "../../../utilities/mapbox/convertPlac
 import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { Col, Row } from "react-bootstrap";
+import { OpenGooglemapAppButton } from "../../atoms/OpenGooglemapAppButton";
 
 type deletePlaceDetailData = Omit<responseRequestPlaceData, 'region_id' | 'region_name' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -49,6 +50,9 @@ export const DeletePlaceDetailDisplay: FC<deletePlaceDetailData> = memo((props) 
                 <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
             </Row>
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
+            <div className="mt-1 mb-1 justify-content-end d-flex">
+                <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+            </div>
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>削除申請理由：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{contents}</Col>
