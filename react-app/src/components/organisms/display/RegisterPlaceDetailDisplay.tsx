@@ -8,6 +8,7 @@ import { ImagePreview } from "../../molecules/ImagePreview";
 import { Icon } from "../../atoms/Icon";
 import { Col, Row } from "react-bootstrap";
 import { PhotoListDisplay } from "./PhotoListDisplay";
+import { OpenGooglemapAppButton } from "../../atoms/OpenGooglemapAppButton";
 
 type registerPlaceDetailData = Omit<responsePlaceData, 'flag' | 'place_id' | 'anime_id' | 'region_id' | 'file_names'> & {
     anime_id?: number | null;
@@ -46,7 +47,9 @@ export const RegisterPlaceDetailDisplay: FC<registerPlaceDetailData> = memo((pro
                 <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
             </Row>
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
-            
+            <div className="mt-1 mb-1 justify-content-end d-flex">
+                <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+            </div>
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>紹介コメント：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>

@@ -7,6 +7,7 @@ import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../map/DummyMap";
 import { Col, Row } from "react-bootstrap";
 import { PhotoListDisplay } from "./PhotoListDisplay";
+import { OpenGooglemapAppButton } from "../../atoms/OpenGooglemapAppButton";
 
 type editPlaceDetailData = Omit<responseRequestPlaceData, 'place_id' | 'anime_id' | 'region_id' | 'request_date' | 'request_place_id' | 'request_type'> & {
     request_date?: string | null;
@@ -67,6 +68,9 @@ export const EditPlaceDetailDisplay: FC<editPlaceDetailData> = memo((props) => {
                 <Col xs={12} md={9}><small className="text-muted">({latitude}, {longitude})</small></Col>
             </Row>
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
+            <div className="mt-1 mb-1 justify-content-end d-flex">
+                <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+            </div>
             <Row className="mb-2 mt-2">
                 <Col xs={12} md={3}><b>紹介コメント：</b></Col>
                 <Col xs={12} md={9} style={{ whiteSpace: 'pre-line' }}>{comment}</Col>

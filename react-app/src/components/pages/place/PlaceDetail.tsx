@@ -14,6 +14,7 @@ import { DummyMap } from "../../organisms/map/DummyMap";
 import { PaginationControls } from "../../molecules/PaginationControls";
 import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
+import { OpenGooglemapAppButton } from "../../atoms/OpenGooglemapAppButton";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -114,7 +115,9 @@ export const PlaceDetail: FC = memo(() =>{
             </Row>
 
             {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
-
+            <div className="mt-1 mb-1 justify-content-end d-flex">
+                <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+            </div>
             <PlaceSummaryCard 
                 name={place.name} 
                 title={place.anime_title} 
