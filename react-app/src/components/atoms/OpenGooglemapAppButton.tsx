@@ -15,10 +15,10 @@ export const OpenGooglemapAppButton: FC<openMapProps> = memo((props) =>{
 
         if (isIOS) {
             // iPhone / iPad では maps:// を使用
-            window.location.href = `maps://?q=${lat},${lng}`;
+            window.location.href = webUrl;
         } else if (isAndroid) {
             // Android では geo: を使用
-            window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`;
+            window.location.href = webUrl;
         } else {
             // PCブラウザでは新しいタブでGoogleマップを開く
             window.open(webUrl, "_blank");
