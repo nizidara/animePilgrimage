@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, KeyboardEvent, memo, RefObject, useState } from "react"
-import { Alert, Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
 import { FileUploadIcon } from "../../atoms/FileUploadIcon";
 import { usePostRealPhoto } from "../../../hooks/photos/usePostRealPhoto";
 
@@ -83,7 +83,9 @@ export const AddRealPhotoForm: FC<FormProps> = memo(({placeId, formData, setForm
                     </Col>
             
                     <Col xs="auto" className="d-flex justify-content-end align-items-end">
-                            <Button variant="primary" disabled={!formData[0] || isSubmitting} onClick={onClickSend}>追加</Button>
+                            <Button variant="primary" disabled={!formData[0] || isSubmitting} onClick={onClickSend}>
+                                {isSubmitting ? <div>追加中… <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /></div> : "追加" }
+                            </Button>
                     </Col>
                 </Row>
             </Form>
