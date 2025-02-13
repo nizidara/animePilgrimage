@@ -29,6 +29,9 @@ export const Guide: FC = memo(() =>{
     return (
         <>
             <Container>
+                <h2 className="mt-2">利用ガイド</h2>
+                <p><a href="https://nizidara.com/pilgrimage-guide/" target="_blank" rel="noopener">こちらのページ</a>（外部ページ）に基本的な利用方法を記載しています。</p>
+                <p>気軽に聖地登録やコメント投稿をよろしくお願いします！</p>
                 <h2 className="mt-2">FAQ</h2>
                 <FAQCard faq={faq}/>
                 <br />
