@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 
 type ButtonsProps = {
     backName:string;
@@ -16,10 +16,14 @@ export const BackAndNextButtons: FC<ButtonsProps> = memo((props) =>{
     return (    
         <Row className="d-flex justify-content-center">
             <Col xs="auto" sm="auto" className="d-grid">
-                <Button variant="secondary" onClick={onClickBack} disabled={nextDisabled}>{backName}</Button>
+                <Button variant="secondary" onClick={onClickBack} disabled={nextDisabled}>
+                    {backName}
+                </Button>
             </Col>
             <Col xs="auto" sm="auto" className="d-grid">
-                <Button variant="primary" onClick={onClickNext} disabled={nextDisabled}>{nextName}</Button>
+                <Button variant="primary" onClick={onClickNext} disabled={nextDisabled}>
+                    {nextDisabled ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : nextName }
+                </Button>
             </Col>
         </Row>
     )

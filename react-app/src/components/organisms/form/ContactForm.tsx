@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, FormEvent, KeyboardEvent, memo, useState } from "react"
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { useSendContact } from "../../../hooks/contacts/useSendContact";
 import { sendContactFormData } from "../../../type/form/contact";
 
@@ -57,7 +57,9 @@ export const ContactForm: FC = memo(() => {
                 </Form.Group>
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" type="submit" disabled={isSubmitting} >送信</Button>
+                        <Button variant="primary" type="submit" disabled={isSubmitting} >
+                            {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "送信" }
+                        </Button>
                     </Col>
                 </Row>
             </Form>
