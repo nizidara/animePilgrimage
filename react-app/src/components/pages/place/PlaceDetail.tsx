@@ -15,6 +15,7 @@ import { PaginationControls } from "../../molecules/PaginationControls";
 import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 import { useGetAnimePhotoList } from "../../../hooks/photos/useGetAnimePhotoList";
 import { OpenGooglemapAppButton } from "../../atoms/OpenGooglemapAppButton";
+import { Helmet } from "react-helmet-async";
 
 
 export const PlaceDetail: FC = memo(() =>{
@@ -102,65 +103,93 @@ export const PlaceDetail: FC = memo(() =>{
 
 
     const geojson = convertPlaceListToGeoJson([place]);
+
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": place.name,
+        "description": `${place.anime_title}の${place.name}の聖地情報`,
+        "image": place.place_icon,
+        "url": `https://pilgrimage.nizidara.com/place?place_id=${place.place_id}`,
+        "address": {
+            "@type": "PostalAddress",
+            "addressRegion": place.region_name,
+            "addressLocality": "日本",
+            "addressCountry": "JP"
+        }
+    }
     
     return (
-        <Container>
-            <Row className="mt-2 mb-2">
-                <Col xs={7}>
-                    <h2>{place.name}</h2>
-                </Col>
-                <Col xs={5} className="d-flex justify-content-end align-items-center">
-                    <Button variant="warning" onClick={onClickEdit} className="mx-2">修正</Button> <Button variant="danger" onClick={onClickDelete}>削除</Button>
-                </Col>
-            </Row>
+        <>
+            <Helmet>
+                <title>{place.name}</title>
+                <meta name="description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび`} />
+                <meta property="og:title" content={`${place.name} - にじげんたび`} />
+                <meta property="og:description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび`} />
+                {place.place_icon ? <meta property="og:image" content={place.place_icon} /> : place.anime_icon && <meta property="og:image" content={place.anime_icon} />}
+                {place.place_icon ? <meta property="twitter:image" content={place.place_icon} /> : place.anime_icon && <meta property="og:image" content={place.anime_icon} />}
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
+            <Container>
+                <Row className="mt-2 mb-2">
+                    <Col xs={7}>
+                        <h2>{place.name}</h2>
+                    </Col>
+                    <Col xs={5} className="d-flex justify-content-end align-items-center">
+                        <Button variant="warning" onClick={onClickEdit} className="mx-2">修正</Button> <Button variant="danger" onClick={onClickDelete}>削除</Button>
+                    </Col>
+                </Row>
 
-            {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
-            <div className="mt-1 mb-1 justify-content-end d-flex">
-                <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
-            </div>
-            <PlaceSummaryCard 
-                name={place.name} 
-                title={place.anime_title} 
-                comment={place.comment} 
-                anime_id={place.anime_id} 
-                place_id={place.place_id}
-                place_icon={place.place_icon}
-            />
-            <div className="position-relative m-1">
-                <p className="mt-2">作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
-                {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
-                {animePhotoListLoading && <center><Spinner animation="border" /></center>}
-                {animePhotoTotalCount > 0 && 
-                    <>
-                        <PhotoListDisplay animePhotoList={animePhotoList} />
-                        <PaginationControls currentPage={currentAnimePhotoPage} totalPages={totalAnimePhotoPages} onPrevious={handleAnimePhotoPrevious} onSelect={handleAnimePhotoPageSelect} onNext={handleAnimePhotoNext} />
-                    </>
+                {mapboxFlag ? <DisplayMap geojson={geojson} coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} defaultZoom={15} /> : <DummyMap />}
+                <div className="mt-1 mb-1 justify-content-end d-flex">
+                    <OpenGooglemapAppButton coodinates={geojson.features.at(0)?.geometry.coordinates as [number, number]} />
+                </div>
+                <PlaceSummaryCard 
+                    name={place.name} 
+                    title={place.anime_title} 
+                    comment={place.comment} 
+                    anime_id={place.anime_id} 
+                    place_id={place.place_id}
+                    place_icon={place.place_icon}
+                />
+                <div className="position-relative m-1">
+                    <p className="mt-2">作中写真<Button variant="outline-success" size="sm" onClick={onClickAddPhoto}>+</Button></p>
+                    {animePhotoListError && <Alert variant="danger">{animePhotoListError}</Alert>}
+                    {animePhotoListLoading && <center><Spinner animation="border" /></center>}
+                    {animePhotoTotalCount > 0 && 
+                        <>
+                            <PhotoListDisplay animePhotoList={animePhotoList} />
+                            <PaginationControls currentPage={currentAnimePhotoPage} totalPages={totalAnimePhotoPages} onPrevious={handleAnimePhotoPrevious} onSelect={handleAnimePhotoPageSelect} onNext={handleAnimePhotoNext} />
+                        </>
+                    }
+                    {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
+                    {realPhotoTotalCount > 0 &&
+                        <div>
+                            <p className="mt-5">現地写真（みんなの投稿）</p>
+                            <PhotoListDisplay realPhotoList={realPhotoList} />
+                            <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handleRealPhotoPrevious} onSelect={handleRealPhotoPageSelect} onNext={handleRealPhotoNext} />
+                        </div>
+                    }
+                </div>
+                
+                <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
+                {commentListError && <Alert variant="danger">{commentListError}</Alert>}
+                {commentListLoading ? <center><Spinner animation="border" /></center> :
+                    <ListGroup>
+                        {commentList.map(comment => (
+                            <ListGroup.Item key={comment.comment_id}>
+                                <CommentCard comment={comment} buttonFlag={true} />
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
                 }
-                {realPhotoListError && <Alert variant="danger">{realPhotoListError}</Alert>}
-                {realPhotoTotalCount > 0 &&
-                    <div>
-                        <p className="mt-5">現地写真（みんなの投稿）</p>
-                        <PhotoListDisplay realPhotoList={realPhotoList} />
-                        <PaginationControls currentPage={currentRealPhotoPage} totalPages={totalRealPhotoPages} onPrevious={handleRealPhotoPrevious} onSelect={handleRealPhotoPageSelect} onNext={handleRealPhotoNext} />
-                    </div>
+                {commentTotalCount > 0 && 
+                    <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
                 }
-            </div>
-            
-            <CommentForm onCommentPosted={fetchComments} placeId={place.place_id} />
-            {commentListError && <Alert variant="danger">{commentListError}</Alert>}
-            {commentListLoading ? <center><Spinner animation="border" /></center> :
-                <ListGroup>
-                    {commentList.map(comment => (
-                        <ListGroup.Item key={comment.comment_id}>
-                            <CommentCard comment={comment} buttonFlag={true} />
-                        </ListGroup.Item>
-                    ))}
-                </ListGroup>
-            }
-            {commentTotalCount > 0 && 
-                <PaginationControls currentPage={currentCommentPage} totalPages={commentTotalPages} onPrevious={handleCommentPrevious} onSelect={handleCommentPageSelect} onNext={handleCommentNext} />
-            }
-            
-        </Container>
+                
+            </Container>
+        </>
     )
 });
