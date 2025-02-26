@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BackAndNextButtons } from "../../molecules/BackAndNextButtons";
 import { registerPlaceFormData } from "../../../type/form/place";
 import { useRegisterPlaceContext } from "../../../providers/RegisterPlaceContext";
+import { Helmet } from "react-helmet-async";
 
 export const RegisterPlace: FC = memo(() =>{
     const navigate = useNavigate();
@@ -52,16 +53,40 @@ export const RegisterPlace: FC = memo(() =>{
     const onClickRegisterAnime = useCallback(() => navigate("/register_anime"), [navigate]);
     const onClickBack = useCallback(() => navigate(-1), [navigate]);
 
-    return (
-        <Container>
-            <div className="d-flex justify-content-between mt-2">
-                <h2>聖地登録</h2>
-                <Button variant="outline-primary" className="float-right" onClick={onClickRegisterAnime}>作品登録申請はこちら</Button>
-            </div>
-            {mapError && <Alert variant="danger">{mapError}</Alert>}
-            <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={false} />
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "聖地登録",
+        "description": `聖地情報を新規登録するページです。`,
+        "url": `https://pilgrimage.nizidara.com/register_place`,
+        "mainEntityOfPage": {
+            "@type": "Place",
+            "name": "聖地情報登録",
+            "url": "https://pilgrimage.nizidara.com/register_place"
+        }
+    }
 
-            <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
-        </Container>
+    return (
+        <>
+            <Helmet>
+                <title>{"聖地登録"}</title>
+                <meta name="description" content={`聖地登録ページです。 - にじげんたび`} />
+                <meta property="og:title" content={`聖地登録 - にじげんたび`} />
+                <meta property="og:description" content={`聖地登録ページです。 - にじげんたび`} />
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
+            <Container>
+                <div className="d-flex justify-content-between mt-2">
+                    <h2>聖地登録</h2>
+                    <Button variant="outline-primary" className="float-right" onClick={onClickRegisterAnime}>作品登録申請はこちら</Button>
+                </div>
+                {mapError && <Alert variant="danger">{mapError}</Alert>}
+                <RegisterPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} isAdmin={false} />
+
+                <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
+            </Container>
+        </>
     )
 });
