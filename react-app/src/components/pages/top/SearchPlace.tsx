@@ -6,6 +6,7 @@ import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { PaginationControls } from "../../molecules/PaginationControls";
+import { Helmet } from "react-helmet-async";
 
 export const SearchPlace: FC = memo(() =>{
     const navigate = useNavigate();
@@ -48,42 +49,74 @@ export const SearchPlace: FC = memo(() =>{
 
     if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "SearchAction",
+        "target": "https://pilgrimage.nizidara.com/search/place?name={search_name}&region_id={search_region}&page={search_page}",
+        "query-input": "optional name=search_name&optional name=search_region&optional name=search_page",
+        "name": "聖地検索",
+        "description": "登録されている聖地一覧・検索ページ",
+        "url": "https://pilgrimage.nizidara.com/search/place",
+        "potentialAction": {
+            "@type": "ItemList",
+            "itemListElement": placeList.slice(0, pageSize).map((place, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": place.name,
+                "description": place.comment,
+                "image": place.place_icon,
+                "url": `https://pilgrimage.nizidara.com/place?${place.place_id}`
+            }))
+        }
+    }
+
     return (
-        <Container>
-            <h1 className="mt-2">聖地検索</h1>
-            <SearchPlaceForm initialName={name} initialRegionId={regionId} onSearch={handleSearch}  />
+        <>
+            <Helmet>
+                <title>{"聖地検索"}</title>
+                <meta name="description" content={`聖地検索ページ - にじげんたび`} />
+                <meta property="og:title" content={`聖地検索ページ - にじげんたび`} />
+                <meta property="og:description" content={`聖地検索ページ - にじげんたび`} />
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
+            <Container>
+                <h1 className="mt-2">聖地検索</h1>
+                <SearchPlaceForm initialName={name} initialRegionId={regionId} onSearch={handleSearch}  />
 
-            <SwitchSearchLink flag={1} />
+                <SwitchSearchLink flag={1} />
 
-            <Row className="mb-2">
-                <Col xs={3}>
-                    全{totalCount}件
-                </Col>
-                <Col xs={9} className="d-flex justify-content-end align-items-center">
-                    <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
-                </Col>
-            </Row>
-            {loading ? <center><Spinner animation="border" /></center> :
-                <ListGroup>
-                    {placeList.map(place => (
-                        <ListGroup.Item key={place.place_id}>
-                            <PlaceSummaryCard 
-                                name={place.name} 
-                                title={place.anime_title} 
-                                comment={place.comment} 
-                                anime_id={place.anime_id} 
-                                onClickDetail={onClickDetail} 
-                                place_id={place.place_id}
-                                place_icon={place.place_icon}
-                            />
-                        </ListGroup.Item>
-                    ))}
-                </ListGroup>
-            }
-            
-            {totalCount > 0 && 
-                <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
-            }
-        </Container>
+                <Row className="mb-2">
+                    <Col xs={3}>
+                        全{totalCount}件
+                    </Col>
+                    <Col xs={9} className="d-flex justify-content-end align-items-center">
+                        <Button variant="primary" onClick={() => onClickMap(name, regionId)} disabled={placeList.length === 0}>一覧をMAPで表示</Button>
+                    </Col>
+                </Row>
+                {loading ? <center><Spinner animation="border" /></center> :
+                    <ListGroup>
+                        {placeList.map(place => (
+                            <ListGroup.Item key={place.place_id}>
+                                <PlaceSummaryCard 
+                                    name={place.name} 
+                                    title={place.anime_title} 
+                                    comment={place.comment} 
+                                    anime_id={place.anime_id} 
+                                    onClickDetail={onClickDetail} 
+                                    place_id={place.place_id}
+                                    place_icon={place.place_icon}
+                                />
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                }
+                
+                {totalCount > 0 && 
+                    <PaginationControls currentPage={currentPage} totalPages={totalPages} onPrevious={handlePrevious} onSelect={handlePageSelect} onNext={handleNext} />
+                }
+            </Container>
+        </>
     )
 });

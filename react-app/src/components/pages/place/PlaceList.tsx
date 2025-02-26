@@ -62,7 +62,7 @@ export const PlaceList: FC = memo(() =>{
         "description": `${anime ? anime.title : ""}聖地MAP・聖地情報の一覧`,
         "image": anime && anime.file_name,
         "url": animeId ? `https://pilgrimage.nizidara.com/place/list?anime_id=${animeId}` : `https://pilgrimage.nizidara.com/place/list"`,
-        "itemListElement": placeList.slice(0, 20).map((place, index) => ({  // 上位10件のみ
+        "itemListElement": placeList.slice(0, 20).map((place, index) => ({  // 上位20件のみ
             "@type": "ListItem",
             "position": index + 1,
             "name": place.name,
