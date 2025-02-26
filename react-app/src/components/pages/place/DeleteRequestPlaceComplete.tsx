@@ -3,6 +3,7 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import { DeletePlaceDetailDisplay } from "../../organisms/display/DeletePlaceDetailDisplay";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseRequestPlaceData } from "../../../type/api/place";
+import { Helmet } from "react-helmet-async";
 
 export const DeleteRequestPlaceComplete: FC = memo(() =>{
     const navigate = useNavigate();
@@ -15,36 +16,57 @@ export const DeleteRequestPlaceComplete: FC = memo(() =>{
     const onClickPlace = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
     const onClickTop = useCallback(() => navigate("/"), [navigate]);
 
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "聖地削除リクエスト 完了",
+        "description": `聖地削除リクエスト情報の登録が完了しました。承認完了までお待ちください。`,
+        "url": `https://pilgrimage.nizidara.com/delete_place/complete`
+    }
+
     return (
-        <Container>
-            <h2 className="mt-2">削除リクエストを送信しました</h2>
+        <>
+            <Helmet>
+                <title>{"聖地削除リクエスト 完了"}</title>
+                <meta name="description" content={`聖地削除リクエスト情報の登録が完了しました。承認完了までお待ちください。 - にじげんたび`} />
+                <meta property="og:title" content={`聖地削除リクエスト 完了 - にじげんたび`} />
+                <meta property="og:description" content={`聖地削除リクエスト情報の登録が完了しました。承認完了までお待ちください。 - にじげんたび`} />
+                <meta name="robots" content="noindex, nofollow"/>
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
 
-            <DeletePlaceDetailDisplay 
-                name={responseData.name}
-                anime_title={responseData.anime_title}
-                comment={responseData.comment}
-                anime_id={responseData.anime_id}
-                place_id={responseData.place_id}
-                latitude={responseData.latitude}
-                longitude={responseData.longitude}
-                place_icon={placeIcon}
-                contents={responseData.contents} 
-                request_place_id={responseData.request_place_id}
-                request_date={responseData.request_date}
-                anime_icon={responseData.anime_icon}
-            />
+            <Container>
+                <h2 className="mt-2">削除リクエストを送信しました</h2>
 
-            <Row className="justify-content-center mt-2">
-                <Col xs="auto">
-                    <Button variant="primary" onClick={() => onClickPlace(placeId)}>聖地情報に戻る</Button>
-                </Col>
-            </Row>
+                <DeletePlaceDetailDisplay 
+                    name={responseData.name}
+                    anime_title={responseData.anime_title}
+                    comment={responseData.comment}
+                    anime_id={responseData.anime_id}
+                    place_id={responseData.place_id}
+                    latitude={responseData.latitude}
+                    longitude={responseData.longitude}
+                    place_icon={placeIcon}
+                    contents={responseData.contents} 
+                    request_place_id={responseData.request_place_id}
+                    request_date={responseData.request_date}
+                    anime_icon={responseData.anime_icon}
+                />
 
-            <Row className="justify-content-center mt-2">
-                <Col xs="auto">
-                    <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
-                </Col>
-            </Row>
-        </Container>
+                <Row className="justify-content-center mt-2">
+                    <Col xs="auto">
+                        <Button variant="primary" onClick={() => onClickPlace(placeId)}>聖地情報に戻る</Button>
+                    </Col>
+                </Row>
+
+                <Row className="justify-content-center mt-2">
+                    <Col xs="auto">
+                        <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                    </Col>
+                </Row>
+            </Container>
+        </>
     )
 });

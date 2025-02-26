@@ -6,6 +6,7 @@ import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { EditAnimeForm } from "../../organisms/form/EditAnimeForm";
 import { editAnimeFormData } from "../../../type/form/anime";
 import { useEditAnimeContext } from "../../../providers/EditAnimeContext";
+import { Helmet } from "react-helmet-async";
 
 export const EditRequestAnime: FC = memo(() =>{
     const navigate = useNavigate();
@@ -44,14 +45,40 @@ export const EditRequestAnime: FC = memo(() =>{
         setFormData(data);
     };
 
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "アニメ修正リクエスト",
+        "description": `登録されているアニメ情報の修正リクエストページです。`,
+        "url": `https://pilgrimage.nizidara.com/edit_anime`,
+        "mainEntityOfPage": {
+            "@type": "CreativeWork",
+            "url": "https://pilgrimage.nizidara.com/edit_anime",
+            "name": "アニメ修正リクエスト",
+        }
+    }
+
     return (
-        <Container>
-            <h2 className="mt-2">作品修正リクエスト</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {loading ? <center><Spinner animation="border" /></center> : 
-                <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
-            }
-            <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
-        </Container>
+        <>
+            <Helmet>
+                <title>{"アニメ修正リクエスト"}</title>
+                <meta name="description" content={`登録されているアニメ情報の修正リクエストページです。 - にじげんたび`} />
+                <meta property="og:title" content={`アニメ修正リクエスト - にじげんたび`} />
+                <meta property="og:description" content={`登録されているアニメ情報の修正リクエストページです。 - にじげんたび`} />
+                <meta name="robots" content="noindex, nofollow"/>
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
+        
+            <Container>
+                <h2 className="mt-2">作品修正リクエスト</h2>
+                {error && <Alert variant="danger">{error}</Alert>}
+                {loading ? <center><Spinner animation="border" /></center> : 
+                    <EditAnimeForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef} anime_icon={anime?.file_name}/>
+                }
+                <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
+            </Container>
+        </>
     )
 });

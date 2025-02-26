@@ -8,6 +8,7 @@ import { useGetPlaceDetail } from "../../../hooks/places/useGetPlaceDetail";
 import { deletePlaceFormData } from "../../../type/form/place";
 import { responsePlaceData } from "../../../type/api/place";
 import { useDeletePlaceContext } from "../../../providers/DeletePlaceContext";
+import { Helmet } from "react-helmet-async";
 
 export const DeleteRequestPlace: FC = memo(() =>{
     const navigate = useNavigate();
@@ -41,17 +42,43 @@ export const DeleteRequestPlace: FC = memo(() =>{
         }
     }
 
+    const structData = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "聖地削除リクエスト",
+        "description": `登録されている聖地情報の削除リクエストページです。`,
+        "url": `https://pilgrimage.nizidara.com/delete_place`,
+        "mainEntityOfPage": {
+            "@type": "Place",
+            "url": "https://pilgrimage.nizidara.com/delete_place",
+            "name": "聖地削除リクエスト",
+        }
+    }
+
     return (
-        <Container>
-            <h2 className="mt-2">聖地削除リクエスト</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {loading ? <center><Spinner animation="border" /></center> :
-                <>
-                    <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
-                    <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
-                </>
-            }
-            <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
-        </Container>
+        <>
+            <Helmet>
+                <title>{"聖地削除リクエスト"}</title>
+                <meta name="description" content={`登録されている聖地情報の削除リクエストページです。 - にじげんたび`} />
+                <meta property="og:title" content={`聖地削除リクエスト - にじげんたび`} />
+                <meta property="og:description" content={`登録されている聖地情報の削除リクエストページです。 - にじげんたび`} />
+                <meta name="robots" content="noindex, nofollow"/>
+                <script type="application/ld+json">
+                    {JSON.stringify(structData)}
+                </script>
+            </Helmet>
+
+            <Container>
+                <h2 className="mt-2">聖地削除リクエスト</h2>
+                {error && <Alert variant="danger">{error}</Alert>}
+                {loading ? <center><Spinner animation="border" /></center> :
+                    <>
+                        <PlaceSummaryCard name={place.name} title={place.anime_title} comment={place.comment} anime_id={place.anime_id} place_id={place.place_id} place_icon={place.place_icon}/>
+                        <DeleteRequestPlaceForm onFormChange={formChange} formData={formData} setFormData={setFormData} formRef={formRef}/>
+                    </>
+                }
+                <BackAndNextButtons backName="戻る" nextName="次へ" onClickBack={onClickBack} onClickNext={onClickNext} />
+            </Container>
+        </>
     )
 });
