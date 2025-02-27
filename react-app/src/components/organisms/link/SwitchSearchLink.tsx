@@ -1,20 +1,18 @@
-import { FC, memo, useCallback } from "react"
+import { FC, memo } from "react"
 import { Button, Col, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type Props = {
     flag : number;
 }
 
 export const SwitchSearchLink: FC<Props> = memo((props) => {
-
-    const navigate = useNavigate();
-
-    const onClickSearchAnime = useCallback(() => navigate("/search/anime"), [navigate]);
-    const onClickSearchPlace = useCallback(() => navigate("/search/place"), [navigate]);
-
-    const animeSearchButton = props.flag === 0 ? <Button variant="primary" size="lg" disabled>アニメ検索</Button> : <Button variant="outline-primary" size="lg" onClick={onClickSearchAnime}>アニメ検索</Button>
-    const placeSearchButton = props.flag === 1 ? <Button variant="primary" size="lg" disabled>聖地検索</Button> : <Button variant="outline-primary" size="lg" onClick={onClickSearchPlace}>聖地検索</Button>
+    const animeSearchButton = props.flag === 0 ? 
+        <Button variant="primary" size="lg" disabled>アニメ検索</Button> :
+        <Link to="/search/anime"><Button variant="outline-primary" size="lg">アニメ検索</Button></Link>
+    const placeSearchButton = props.flag === 1 ? 
+        <Button variant="primary" size="lg" disabled>聖地検索</Button> : 
+        <Link to="/search/place"><Button variant="outline-primary" size="lg">聖地検索</Button></Link>
 
     return (
         <>

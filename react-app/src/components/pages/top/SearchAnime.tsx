@@ -2,10 +2,9 @@ import { memo, FC, useCallback, useState, useEffect } from "react";
 import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { SearchAnimeForm } from "../../organisms/form/SearchAnimeForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
-import { AnimeSummaryCard } from "../../organisms/card/AnimeSummaryCard";
 import { useGetAnimeList } from "../../../hooks/anime/useGetAnimeList";
-import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { AnimeSummaryLinkCard } from "../../organisms/card/AnimeSummaryLinkCard";
 
 export const SearchAnime: FC = memo(() =>{
     const { animeList, loading, error } = useGetAnimeList();
@@ -23,9 +22,6 @@ export const SearchAnime: FC = memo(() =>{
         }
     }, [animeList]);
 
-    const navigate = useNavigate();
-    const onClickDetail = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-
     if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
     const structData = {
@@ -34,13 +30,13 @@ export const SearchAnime: FC = memo(() =>{
         "name": "アニメ検索",
         "description": "登録されているアニメ作品タイトル一覧・検索ページ",
         "url": "https://pilgrimage.nizidara.com/search/anime",
-        "itemListElement": animeList.slice(0, 50).map((anime, index) => ({  // 上位50件のみ
+        "itemListElement": animeList.slice(0, 100).map((anime, index) => ({  // 上位100件のみ
             "@type": "ListItem",
             "position": index + 1,
             "name": anime.title,
             "description": anime.introduction,
             "image": anime.file_name,
-            "url": `https://pilgrimage.nizidara.com/anime?${anime.anime_id}`
+            "url": `https://pilgrimage.nizidara.com/anime?anime_id=${anime.anime_id}`
         }))
     }
 
@@ -64,14 +60,13 @@ export const SearchAnime: FC = memo(() =>{
                     <ListGroup>
                         {filteredAnimeList.map(anime => (
                             <ListGroup.Item key={anime.anime_id}>
-                                <AnimeSummaryCard 
+                                <AnimeSummaryLinkCard 
                                     anime_id={anime.anime_id} 
                                     title={anime.title} 
                                     kana={anime.kana}
                                     flag={anime.flag}
                                     introduction={anime.introduction} 
-                                    file_name={anime.file_name}
-                                    onClickDetail={onClickDetail}/>
+                                    file_name={anime.file_name} />
                             </ListGroup.Item>
                         ))}
                 </ListGroup>
