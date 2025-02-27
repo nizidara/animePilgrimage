@@ -5,3 +5,13 @@
 .clickable-card:hover {
     background-color: #f8f9fa; /* ホバー時の背景色を変更（任意） */
 }
+
+.clickable-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit; /* リンクの色を継承 */
+}
+
+.clickable-card-link:hover {
+    background-color: #f8f9fa; /* ホバー時の背景色を変更（任意） */
+}

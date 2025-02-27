@@ -1,18 +1,15 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { RegisterAnimeDetailDisplay } from "../../organisms/display/RegisterAnimeDetailDisplay";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { responseAnimeData } from "../../../type/api/anime";
 import { Icon } from "../../atoms/Icon";
 import { Helmet } from "react-helmet-async";
 
 export const RegisterAnimeComplete: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const responseData = location.state.responseData as responseAnimeData;
-    
-    const onClickTop = useCallback(() => navigate("/"), [navigate]);
 
     const structData = {
         "@context": "https://schema.org",
@@ -44,7 +41,7 @@ export const RegisterAnimeComplete: FC = memo(() =>{
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                        <Link to={'/'}><Button variant="primary">TOPへ</Button></Link>
                     </Col>
                 </Row>
             </Container>

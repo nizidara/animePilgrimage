@@ -1,20 +1,17 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC } from "react";
 import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { DeleteCommentDetailDisplay } from "../../organisms/display/DeleteCommentDetailDisplay";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { responseDeleteCommentData } from "../../../type/api/comment";
 import { useGetCommentDetail } from "../../../hooks/comments/useGetCommentDetail";
 import { Helmet } from "react-helmet-async";
 
 export const DeleteRequestCommentComplete: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const responseData = location.state.responseData as responseDeleteCommentData;
 
     const { comment, loading, error } = useGetCommentDetail(responseData.comment_id);
-    
-    const onClickPlace = useCallback((placeId:string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     if(!comment){
         return <center><Spinner animation="border" /></center>;
@@ -49,7 +46,7 @@ export const DeleteRequestCommentComplete: FC = memo(() =>{
                 }
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={() => onClickPlace(comment.place_id)}>聖地情報に戻る</Button>
+                        <Link to={`/place?place_id=${comment.place_id}`}><Button variant="primary">聖地情報に戻る</Button></Link>
                     </Col>
                 </Row>
             </Container>

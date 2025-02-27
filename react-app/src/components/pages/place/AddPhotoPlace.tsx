@@ -1,6 +1,6 @@
-import { memo, FC, useCallback, useRef, useState } from "react";
+import { memo, FC, useRef, useState } from "react";
 import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AddAnimePhotoForm } from "../../organisms/form/AddAnimePhotoForm";
 import { AddRealPhotoForm } from "../../organisms/form/AddRealPhotoForm";
 import { useGetRealPhotoList } from "../../../hooks/photos/useGetRealPhotoList";
@@ -12,7 +12,6 @@ import { PaginationControls } from "../../molecules/PaginationControls";
 import { Helmet } from "react-helmet-async";
 
 export const AddPhotoPlace: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const placeId = location.state.placeId;
@@ -28,8 +27,6 @@ export const AddPhotoPlace: FC = memo(() =>{
 
     const totalAnimePhotoPages = Math.ceil(animePhotoTotalCount / animePhotoPageSize);
     const totalRealPhotoPages = Math.ceil(realPhotoTotalCount / realPhotoPageSize);
-
-    const onClickBack = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     //handle anime photo
     const handleAnimePhotoPrevious = () => {
@@ -96,7 +93,7 @@ export const AddPhotoPlace: FC = memo(() =>{
                     <h2>写真追加フォーム</h2>
                     </Col>
                     <Col xs={6} className="d-flex justify-content-end align-items-center">
-                        <Button variant="outline-primary" onClick={() => onClickBack(placeId)}>聖地情報に戻る</Button>
+                        <Link to={`/place?place_id=${placeId}`}><Button variant="outline-primary">聖地情報に戻る</Button></Link>
                     </Col>
                 </Row>
                 

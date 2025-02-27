@@ -1,15 +1,8 @@
-import { memo, FC, useCallback } from "react";
-import { Button, Card, CardGroup, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { memo, FC } from "react";
+import { Card, CardGroup, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const Top: FC = memo(() =>{
-    const navigate = useNavigate();
-
-    const onClickSearchAnime = useCallback(() => navigate("/search/anime"), [navigate]);
-    const onClickSearchPlace = useCallback(() => navigate("/search/place"), [navigate]);
-    const onClickRegisterAnime = useCallback(() => navigate("/register_anime"), [navigate]);
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place"), [navigate]);
-
     return (
         <Container>
             <h2 className="mt-2">見てきた世界を、旅しよう。</h2>
@@ -24,8 +17,8 @@ export const Top: FC = memo(() =>{
                             MAP表示は、作品別はもちろん、検索結果別のMAP表示もでき、色々な作品の聖地を一括で見れます。
                         </Card.Text>
                         <center>
-                            <Button className="mb-2" variant="primary" onClick={onClickSearchAnime}>アニメ検索</Button><br />
-                            <Button variant="primary" onClick={onClickSearchPlace}>聖地検索</Button>
+                            <Link to="/search/anime" className="btn btn-primary mb-2">アニメ検索</Link><br />
+                            <Link to="/search/place" className="btn btn-primary">聖地検索</Link>
                         </center>
                     </Card.Body>
                 </Card>
@@ -47,10 +40,9 @@ export const Top: FC = memo(() =>{
                             作品が存在しない場合は、アニメ登録から作品申請をお願いします。
                         </Card.Text>
                         <center>
-                            <Button className="mb-2" variant="primary" onClick={onClickRegisterPlace}>聖地登録</Button><br />
-                            <Button variant="primary" onClick={onClickRegisterAnime}>アニメ申請</Button>
+                            <Link to="/register_place" className="btn btn-primary mb-2">聖地登録</Link><br />
+                            <Link to="/register_anime" className="btn btn-primary">アニメ申請</Link>
                         </center>
-                        
                     </Card.Body>
                 </Card>
             </CardGroup>

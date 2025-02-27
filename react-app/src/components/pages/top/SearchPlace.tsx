@@ -2,11 +2,11 @@ import { memo, FC, useCallback, useState } from "react";
 import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { SearchPlaceForm } from "../../organisms/form/SearchPlaceForm";
 import { SwitchSearchLink } from "../../organisms/link/SwitchSearchLink";
-import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { PaginationControls } from "../../molecules/PaginationControls";
 import { Helmet } from "react-helmet-async";
+import { PlaceSummaryLinkCard } from "../../organisms/card/PlaceSummaryLinkCard";
 
 export const SearchPlace: FC = memo(() =>{
     const navigate = useNavigate();
@@ -25,7 +25,6 @@ export const SearchPlace: FC = memo(() =>{
     const totalPages = Math.ceil(totalCount / pageSize);
 
     const onClickMap = useCallback((name?:string | null, regionId?:string | null) => navigate("/place/list", {state: {name, regionId}}), [navigate]);
-    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
 
     const handleSearch = useCallback((searchName: string, searchRegionId: string) => {
         setName(searchName);
@@ -65,7 +64,7 @@ export const SearchPlace: FC = memo(() =>{
                 "name": place.name,
                 "description": place.comment,
                 "image": place.place_icon,
-                "url": `https://pilgrimage.nizidara.com/place?${place.place_id}`
+                "url": `https://pilgrimage.nizidara.com/place?place_id=${place.place_id}`
             }))
         }
     }
@@ -99,12 +98,11 @@ export const SearchPlace: FC = memo(() =>{
                     <ListGroup>
                         {placeList.map(place => (
                             <ListGroup.Item key={place.place_id}>
-                                <PlaceSummaryCard 
+                                <PlaceSummaryLinkCard 
                                     name={place.name} 
                                     title={place.anime_title} 
                                     comment={place.comment} 
                                     anime_id={place.anime_id} 
-                                    onClickDetail={onClickDetail} 
                                     place_id={place.place_id}
                                     place_icon={place.place_icon}
                                 />
