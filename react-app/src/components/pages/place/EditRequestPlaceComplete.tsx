@@ -1,19 +1,15 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { EditPlaceDetailDisplay } from "../../organisms/display/EditPlaceDetailDisplay";
 import { responseRequestPlaceData } from "../../../type/api/place";
 import { Helmet } from "react-helmet-async";
 
 export const EditRequestPlaceComplete: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const responseData = location.state.responseData as responseRequestPlaceData;
     const animePhoto = location.state.animePhoto as string[];
-
-    const onClickPlace = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
-    const onClickTop = useCallback(() => navigate("/"), [navigate]);
 
     const structData = {
         "@context": "https://schema.org",
@@ -55,13 +51,13 @@ export const EditRequestPlaceComplete: FC = memo(() =>{
                 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={() => onClickPlace(responseData.place_id)}>聖地情報に戻る</Button>
+                        <Link to={`/place?place_id=${responseData.place_id}`}><Button variant="primary">聖地情報に戻る</Button></Link>
                     </Col>
                 </Row>
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                        <Link to={'/'}><Button variant="secondary">TOPへ</Button></Link>
                     </Col>
                 </Row>
             </Container>

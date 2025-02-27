@@ -1,19 +1,15 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { responseEditAnimeData } from "../../../type/api/anime";
 import { EditAnimeDetailDisplay } from "../../organisms/display/EditAnimeDetailDisplay";
 import { Icon } from "../../atoms/Icon";
 import { Helmet } from "react-helmet-async";
 
 export const EditRequestAnimeComplete: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const responseData = location.state.responseData as responseEditAnimeData;
-    
-    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-    const onClickTop = useCallback(() => navigate("/"), [navigate]);
 
     const structData = {
         "@context": "https://schema.org",
@@ -49,13 +45,13 @@ export const EditRequestAnimeComplete: FC = memo(() =>{
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={() => onClickAnime(responseData.anime_id)}>アニメ情報に戻る</Button>
+                        <Link to={`/anime?anime_id=${responseData.anime_id}`}><Button variant="primary">アニメ情報に戻る</Button></Link>
                     </Col>
                 </Row>
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickTop}>TOPへ</Button>
+                        <Link to={'/'}><Button variant="secondary">TOPへ</Button></Link>
                     </Col>
                 </Row>
             </Container>

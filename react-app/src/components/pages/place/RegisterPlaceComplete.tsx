@@ -1,21 +1,16 @@
-import { memo, FC, useCallback } from "react";
+import { memo, FC } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { RegisterPlaceDetailDisplay } from "../../organisms/display/RegisterPlaceDetailDisplay";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { responsePlaceData } from "../../../type/api/place";
 import { Helmet } from "react-helmet-async";
 
 export const RegisterPlaceComplete: FC = memo(() =>{
-    const navigate = useNavigate();
     const location = useLocation();
 
     const responseData = location.state.responseData as responsePlaceData;
     const placeId = responseData.place_id;
     const animeId = responseData.anime_id;
-
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
-    const onClickPlace = useCallback(() => navigate(`/place?place_id=${placeId}`), [navigate, placeId]);
-    const onClickAnime = useCallback(() => navigate(`/anime?anime_id=${animeId}`), [navigate, animeId]);
 
     const structData = {
         "@context": "https://schema.org",
@@ -54,21 +49,23 @@ export const RegisterPlaceComplete: FC = memo(() =>{
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickRegisterPlace}>続けて聖地を登録</Button>
+                        <Link to={"/register_place"} state = {{animeId}}><Button variant="primary">続けて聖地を登録</Button></Link>
                     </Col>
                 </Row>
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickAnime}>アニメ情報</Button>
+                        <Link to={`/place?place_id=${placeId}`}><Button variant="secondary">聖地情報</Button></Link>
                     </Col>
                 </Row>
 
                 <Row className="justify-content-center mt-2">
                     <Col xs="auto">
-                        <Button variant="primary" onClick={onClickPlace}>聖地情報</Button>
+                        <Link to={`/anime?anime_id=${animeId}`}><Button variant="secondary">アニメ情報</Button></Link>
                     </Col>
                 </Row>
+
+                
             </Container>
         </>
     )
