@@ -1,6 +1,6 @@
-import { FC, memo, useCallback } from "react"
-import { Button, Card, Col, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { FC, memo } from "react"
+import { Card, Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import '../../../thema/card/CardStyles.css';
 import { Icon } from "../../atoms/Icon";
@@ -18,11 +18,7 @@ type PlaceSummary = {
 }
 
 export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
-    const navigate = useNavigate();
-
     const {name, title, comment, anime_id, onClickDetail, place_id, place_icon, flag} = props;
-
-    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
 
     return (
         <>
@@ -64,7 +60,7 @@ export const PlaceSummaryCard: FC<PlaceSummary> = memo((props) => {
                 )}
                 <Card.Footer>
                     <div className="d-flex justify-content-end">
-                        <Button variant="link" onClick={() => onClickAnime(anime_id)} size="sm">#{title}</Button>
+                        <Link to={`/anime?anime_id=${anime_id}`} className="btn btn-link btn-sm" style={{ display: "block", textAlign: "right" }}>#{title}</Link>
                     </div>
                 </Card.Footer>
             </Card>

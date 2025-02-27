@@ -1,8 +1,7 @@
-import { memo, FC, useCallback, useState, useEffect } from "react";
+import { memo, FC, useState, useEffect } from "react";
 import { Alert, Button, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import { DisplayMap } from "../../organisms/map/DisplayMap";
-import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useGetPlaceList } from "../../../hooks/places/useGetPlaceList";
 import { useGetAnimeDetail } from "../../../hooks/anime/useGetAnimeDetail";
 import { convertPlaceListToGeoJson } from "../../../utilities/mapbox/convertPlaceListToGeoJson";
@@ -12,10 +11,9 @@ import { mapboxFlag } from "../../../properties/properties";
 import { DummyMap } from "../../organisms/map/DummyMap";
 import { PhotoListDisplay } from "../../organisms/display/PhotoListDisplay";
 import { Helmet } from "react-helmet-async";
+import { PlaceSummaryLinkCard } from "../../organisms/card/PlaceSummaryLinkCard";
 
-export const PlaceList: FC = memo(() =>{
-    const navigate = useNavigate();
-    
+export const PlaceList: FC = memo(() =>{    
     const [searchParams] = useSearchParams();
     const location = useLocation();
     const animeId = searchParams.get('anime_id');
@@ -36,10 +34,6 @@ export const PlaceList: FC = memo(() =>{
     const selectedPlacePhotoPage = 1;
     const selectedPhotoPageSize = 12;
     const { realPhotoList: fetchedRealPhotoList, loading:realPhotoListLoading, error:realPhotoListError } = useGetRealPhotoList(selectedPlace ? selectedPlace.place_id : null, selectedPlacePhotoPage, selectedPhotoPageSize, true);
-
-    const onClickAnime = useCallback((animeId: number) => navigate(`/anime?anime_id=${animeId}`), [navigate]);
-    const onClickRegisterPlace = useCallback(() => navigate("/register_place", {state: {animeId}}), [navigate, animeId]);
-    const onClickDetail = useCallback((placeId: string) => navigate(`/place?place_id=${placeId}`), [navigate]);
  
     const handleMarkerClick = (placeId: string) => {
         setSelectedPlaceId(placeId);
@@ -62,13 +56,13 @@ export const PlaceList: FC = memo(() =>{
         "description": `${anime ? anime.title : ""}聖地MAP・聖地情報の一覧`,
         "image": anime && anime.file_name,
         "url": animeId ? `https://pilgrimage.nizidara.com/place/list?anime_id=${animeId}` : `https://pilgrimage.nizidara.com/place/list"`,
-        "itemListElement": placeList.slice(0, 20).map((place, index) => ({  // 上位20件のみ
+        "itemListElement": placeList.slice(0, 100).map((place, index) => ({  // 上位100件のみ
             "@type": "ListItem",
             "position": index + 1,
             "name": place.name,
             "description": place.comment,
             "image": place.place_icon,
-            "url": `https://pilgrimage.nizidara.com/place?${place.place_id}`
+            "url": `https://pilgrimage.nizidara.com/place?place_id=${place.place_id}`
         }))
     }
     
@@ -92,7 +86,7 @@ export const PlaceList: FC = memo(() =>{
                         <h2>聖地一覧</h2>
                     </Col>
                     <Col xs={8} className="d-flex justify-content-end align-items-center">
-                        {anime != null && <Button variant="outline-primary" onClick={() => onClickAnime(anime.anime_id)}>#{anime.title}</Button>}
+                        {anime != null && <Link to={`/anime?anime_id=${animeId}`}><Button variant="outline-primary">#{anime.title}</Button></Link>}
                     </Col>
                 </Row>
 
@@ -105,14 +99,13 @@ export const PlaceList: FC = memo(() =>{
                 {selectedPlace && (
                     <>
                         <div className="position-relative m-1">
-                            <PlaceSummaryCard 
+                            <PlaceSummaryLinkCard 
                                 name={selectedPlace.name} 
                                 place_icon={selectedPlace.place_icon}
                                 title={selectedPlace.anime_title} 
                                 comment={selectedPlace.comment} 
                                 anime_id={selectedPlace.anime_id} 
                                 place_id={selectedPlace.place_id}
-                                onClickDetail={onClickDetail}
                             />
                             <Button variant="danger" size="sm" className="position-absolute top-0 end-0" onClick={handleXClick}>×</Button>
                         </div>
@@ -128,18 +121,17 @@ export const PlaceList: FC = memo(() =>{
                 <hr />
                 
                 <div className="d-flex justify-content-end mb-2">
-                    <Button variant="success" onClick={onClickRegisterPlace}>登録</Button>
+                    <Link to={"/register_place"} state = {{animeId}}><Button variant="success">登録</Button></Link>
                 </div>
                 {placeListError && <Alert variant="danger">{placeListError}</Alert>}
                 {PlaceListLoading ? <center><Spinner animation="border" /></center>:
                     <ListGroup>
                         {placeList.map(place => (
                             <ListGroup.Item key={place.place_id}>
-                                <PlaceSummaryCard 
+                                <PlaceSummaryLinkCard 
                                     name={place.name} 
                                     title={place.anime_title} 
                                     comment={place.comment} 
-                                    onClickDetail={onClickDetail} 
                                     anime_id={place.anime_id} 
                                     place_id={place.place_id}
                                     place_icon={place.place_icon}
