@@ -123,9 +123,9 @@ export const PlaceDetail: FC = memo(() =>{
         <>
             <Helmet>
                 <title>{place.name}</title>
-                <meta name="description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび`} />
-                <meta property="og:title" content={`${place.name} - にじげんたび`} />
-                <meta property="og:description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび`} />
+                <meta name="description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび 聖地巡礼`} />
+                <meta property="og:title" content={`${place.name} - にじげんたび 聖地巡礼`} />
+                <meta property="og:description" content={`${place.anime_title}の${place.name}の聖地情報 - にじげんたび 聖地巡礼`} />
                 {place.place_icon ? <meta property="og:image" content={place.place_icon} /> : place.anime_icon && <meta property="og:image" content={place.anime_icon} />}
                 {place.place_icon ? <meta property="twitter:image" content={place.place_icon} /> : place.anime_icon && <meta property="og:image" content={place.anime_icon} />}
                 <script type="application/ld+json">

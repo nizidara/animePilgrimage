@@ -7,7 +7,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 function App() {
     return (
         <HelmetProvider>
-            <Helmet defaultTitle="にじげんたび" titleTemplate="%s - にじげんたび" />
+            <Helmet defaultTitle="にじげんたび 聖地巡礼" titleTemplate="%s - にじげんたび 聖地巡礼" />
             <AuthProvider>
                 <Router />
             </AuthProvider>
