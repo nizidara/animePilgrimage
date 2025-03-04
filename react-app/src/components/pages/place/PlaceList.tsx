@@ -86,8 +86,10 @@ export const PlaceList: FC = memo(() =>{
                         <h2>聖地一覧</h2>
                     </Col>
                     <Col xs={8} className="d-flex justify-content-end align-items-center">
-                        {anime != null && <Link to={`/anime?anime_id=${animeId}`}><Button variant="outline-primary">#{anime.title}</Button></Link>}
+                        {anime != null && <Link to={`/anime?anime_id=${animeId}`}><Button variant="outline-primary" style={{ textAlign: "right" }}>#{anime.title}</Button></Link>}
                     </Col>
+
+
                 </Row>
 
                 {mapboxFlag ? 
