@@ -54,9 +54,9 @@ export const AnimeDetail: FC = memo(() =>{
         <>
             <Helmet>
                 <title>{anime.title}</title>
-                <meta name="description" content={`${anime.title}の聖地情報 - にじげんたび`} />
-                <meta property="og:title" content={`${anime.title} - にじげんたび`} />
-                <meta property="og:description" content={`${anime.title}の聖地情報 - にじげんたび`} />
+                <meta name="description" content={`${anime.title}の聖地情報 - にじげんたび 聖地巡礼`} />
+                <meta property="og:title" content={`${anime.title} - にじげんたび 聖地巡礼`} />
+                <meta property="og:description" content={`${anime.title}の聖地情報 - にじげんたび 聖地巡礼`} />
                 {anime.file_name && <meta property="og:image" content={anime.file_name} />}
                 {anime.file_name && <meta name="twitter:image" content={anime.file_name} />}
                 <script type="application/ld+json">

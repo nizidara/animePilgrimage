@@ -70,9 +70,9 @@ export const PlaceList: FC = memo(() =>{
         <>
             <Helmet>
                 <title>{anime ? `${anime.title} 聖地MAP` : `聖地MAP`}</title>
-                <meta name="description" content={`${anime ? anime.title : ""}聖地MAP・聖地情報の一覧ページ - にじげんたび`} />
-                <meta property="og:title" content={`${anime ? anime.title : ""}聖地MAP - にじげんたび`} />
-                <meta property="og:description" content={`${anime ? anime.title: ""} 聖地MAP・聖地情報の一覧ページ - にじげんたび`} />
+                <meta name="description" content={`${anime ? anime.title : ""}聖地MAP・聖地情報の一覧ページ - にじげんたび 聖地巡礼`} />
+                <meta property="og:title" content={`${anime ? anime.title : ""}聖地MAP - にじげんたび 聖地巡礼`} />
+                <meta property="og:description" content={`${anime ? anime.title: ""} 聖地MAP・聖地情報の一覧ページ - にじげんたび 聖地巡礼`} />
                 {anime && anime.file_name && <meta property="og:image" content={anime.file_name} />}
                 {anime && anime.file_name && <meta name="twitter:image" content={anime.file_name} />}
                 <script type="application/ld+json">
