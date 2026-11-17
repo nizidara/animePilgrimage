@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from typing import List
+from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from jose import JWTError
+from jwt import PyJWTError
 
 import schemas.user as user_schema
 import cruds.user as user_crud
@@ -20,7 +20,7 @@ user_model.Base.metadata.create_all(bind=engine)
 limiter = Limiter(key_func=get_remote_address)
 
 #get user info in auth optional
-@router.get("/auth/optional", response_model=user_schema.CurrentUserResponse)
+@router.get("/auth/optional", response_model=Optional[user_schema.CurrentUserResponse])
 async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncSession = Depends(get_db)):
     if access_token is None:
         return None
@@ -34,7 +34,7 @@ async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncS
         
         return await user_crud.auth_user(db=db, user_id=user_id)
         
-    except JWTError:
+    except PyJWTError:
         return None
 
 #get user info in auth require
@@ -49,10 +49,14 @@ async def get_current_user_required(access_token: str = Cookie(None), db: AsyncS
         
         if user_id is None:
             raise HTTPException(status_code=401, detail="Access refresh token")
-        
-        return await user_crud.auth_user(db=db, user_id=user_id)
-        
-    except JWTError:
+
+        user = await user_crud.auth_user(db=db, user_id=user_id)
+        if user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
+
+    except PyJWTError:
         raise HTTPException(status_code=401, detail="Access refresh token")
 
 # get user detail
@@ -135,7 +139,7 @@ async def refresh_token(response: Response, refresh_token: str = Cookie(None)):
 
         return {"message": "Token refreshed"}
     
-    except JWTError:
+    except PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
     
 # logout

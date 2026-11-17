@@ -65,6 +65,7 @@ import { AdminRequestCommentList } from "../components/pages/admin/AdminRequestC
 import { AdminRequestCommentDetail } from "../components/pages/admin/AdminRequestCommentDetail";
 
 import { PrivateRoute } from "./PrivateRoute";
+import { RequireState } from "./RequireState";
 import { RegisterAnimeProvider } from "../providers/RegisterAnimeContext";
 import { EditAnimeProvider } from "../providers/EditAnimeContext";
 import { RegisterPlaceProvider } from "../providers/RegisterPlaceContext";
@@ -84,29 +85,29 @@ export const Router: FC = memo(() => {
                 {/* anime */}
                 <Route path="/register_anime" element={<RegisterAnimeProvider><FullLayout><RegisterAnime /></FullLayout></RegisterAnimeProvider>} />
                 <Route path="/register_anime/confirmation" element={<RegisterAnimeProvider><FullLayout><RegisterAnimeConfirmation /></FullLayout></RegisterAnimeProvider>} />
-                <Route path="/register_anime/complete" element={<FullLayout><RegisterAnimeComplete /></FullLayout>} />
+                <Route path="/register_anime/complete" element={<RequireState stateKey="responseData"><FullLayout><RegisterAnimeComplete /></FullLayout></RequireState>} />
                 <Route path="/anime" element={<FullLayout><AnimeDetail /></FullLayout>} />
-                <Route path="/edit_anime" element={<EditAnimeProvider><FullLayout><EditRequestAnime /></FullLayout></EditAnimeProvider>} />
-                <Route path="/edit_anime/confirmation" element={<EditAnimeProvider><FullLayout><EditRequestAnimeConfirmation /></FullLayout></EditAnimeProvider>} />
-                <Route path="/edit_anime/complete" element={<FullLayout><EditRequestAnimeComplete /></FullLayout>} />
+                <Route path="/edit_anime" element={<RequireState stateKey="animeId"><EditAnimeProvider><FullLayout><EditRequestAnime /></FullLayout></EditAnimeProvider></RequireState>} />
+                <Route path="/edit_anime/confirmation" element={<RequireState stateKey="animeId"><EditAnimeProvider><FullLayout><EditRequestAnimeConfirmation /></FullLayout></EditAnimeProvider></RequireState>} />
+                <Route path="/edit_anime/complete" element={<RequireState stateKey="responseData"><FullLayout><EditRequestAnimeComplete /></FullLayout></RequireState>} />
 
                 {/* place */}
                 <Route path="/register_place" element={<RegisterPlaceProvider><FullLayout><RegisterPlace /></FullLayout></RegisterPlaceProvider>} />
                 <Route path="/register_place/confirmation" element={<RegisterPlaceProvider><FullLayout><RegisterPlaceConfirmation /></FullLayout></RegisterPlaceProvider>} />
-                <Route path="/register_place/complete" element={<FullLayout><RegisterPlaceComplete /></FullLayout>} />
+                <Route path="/register_place/complete" element={<RequireState stateKey="responseData"><FullLayout><RegisterPlaceComplete /></FullLayout></RequireState>} />
                 <Route path="/place/list" element={<FullLayout><PlaceList /></FullLayout>} />
                 <Route path="/place" element={<FullLayout><PlaceDetail /></FullLayout>} />
-                <Route path="/place/photo" element={<FullLayout><AddPhotoPlace /></FullLayout>} />
-                <Route path="/edit_place" element={<EditPlaceProvider><FullLayout><EditRequestPlace /></FullLayout></EditPlaceProvider>} />
-                <Route path="/edit_place/confirmation" element={<EditPlaceProvider><FullLayout><EditRequestPlaceConfirmation /></FullLayout></EditPlaceProvider>} />
-                <Route path="/edit_place/complete" element={<FullLayout><EditRequestPlaceComplete /></FullLayout>} />
-                <Route path="/delete_place" element={<DeletePlaceProvider><FullLayout><DeleteRequestPlace /></FullLayout></DeletePlaceProvider>} />
-                <Route path="/delete_place/confirmation" element={<DeletePlaceProvider><FullLayout><DeleteRequestPlaceConfirmation /></FullLayout></DeletePlaceProvider>} />
-                <Route path="/delete_place/complete" element={<FullLayout><DeleteRequestPlaceComplete /></FullLayout>} />
+                <Route path="/place/photo" element={<RequireState stateKey="placeId"><FullLayout><AddPhotoPlace /></FullLayout></RequireState>} />
+                <Route path="/edit_place" element={<RequireState stateKey="placeId"><EditPlaceProvider><FullLayout><EditRequestPlace /></FullLayout></EditPlaceProvider></RequireState>} />
+                <Route path="/edit_place/confirmation" element={<RequireState stateKey="placeId"><EditPlaceProvider><FullLayout><EditRequestPlaceConfirmation /></FullLayout></EditPlaceProvider></RequireState>} />
+                <Route path="/edit_place/complete" element={<RequireState stateKey="responseData"><FullLayout><EditRequestPlaceComplete /></FullLayout></RequireState>} />
+                <Route path="/delete_place" element={<RequireState stateKey="placeId"><DeletePlaceProvider><FullLayout><DeleteRequestPlace /></FullLayout></DeletePlaceProvider></RequireState>} />
+                <Route path="/delete_place/confirmation" element={<RequireState stateKey="place"><DeletePlaceProvider><FullLayout><DeleteRequestPlaceConfirmation /></FullLayout></DeletePlaceProvider></RequireState>} />
+                <Route path="/delete_place/complete" element={<RequireState stateKey="responseData"><FullLayout><DeleteRequestPlaceComplete /></FullLayout></RequireState>} />
 
                 {/* comment */}
-                <Route path="/delete_comment" element={<FullLayout><DeleteRequestComment /></FullLayout>} />
-                <Route path="/delete_comment/complete" element={<FullLayout><DeleteRequestCommentComplete /></FullLayout>} />
+                <Route path="/delete_comment" element={<RequireState stateKey="comment"><FullLayout><DeleteRequestComment /></FullLayout></RequireState>} />
+                <Route path="/delete_comment/complete" element={<RequireState stateKey="responseData"><FullLayout><DeleteRequestCommentComplete /></FullLayout></RequireState>} />
 
                 {/* user */}
                 <Route path="/login" element={<FullLayout><Login /></FullLayout>} />
@@ -117,7 +118,7 @@ export const Router: FC = memo(() => {
                 <Route path="/privacy" element={<FullLayout><Privacy /></FullLayout>} />
                 <Route path="/guide" element={<FullLayout><Guide /></FullLayout>} />
                 <Route path="/contact" element={<FullLayout><Contact /></FullLayout>} />
-                <Route path="/contact/result" element={<FullLayout><ContactResult /></FullLayout>} />
+                <Route path="/contact/result" element={<RequireState stateKey="responseData"><FullLayout><ContactResult /></FullLayout></RequireState>} />
 
                 {/* admin */}
                 <Route path="/admin/top" element={<PrivateRoute roleRequired="admin"><FullLayout><AdminTop /></FullLayout></PrivateRoute>} />

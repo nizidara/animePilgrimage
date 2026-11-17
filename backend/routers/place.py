@@ -130,6 +130,7 @@ async def palce_edit_admin(request: Request, place_id: str, place_body: place_sc
 async def delete_place(request: Request, place_id: str, current_user: user_schema.CurrentUserResponse = Depends(user_router.get_current_user_required), db: AsyncSession = Depends(get_db)):
     if current_user.user_attribute_name != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="管理者権限が必要です")
+    else:
         place = await place_crud.delete_place(db=db, place_id=place_id)
         if place is None:
             raise HTTPException(status_code=404, detail="Place not found")

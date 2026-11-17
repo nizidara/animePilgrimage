@@ -2,8 +2,8 @@
 
 ## 必要なもの
 
-- Python 3.12（動作確認済みのバージョン）
-- Node.js と npm
+- Python 3.11 または 3.12（3.12 で動作確認済み。3.10 以下は依存パッケージが対応していません）
+- Node.js 20 以上と npm
 - MySQL 互換の DB（ローカルでは MariaDB を使用）
 - Mapbox のアクセストークン
 - 画像アップロードを試す場合は、S3 に書き込める AWS のアクセスキー
@@ -21,8 +21,6 @@ source venv/Scripts/activate            # Windows (Git Bash)。PowerShell は ve
 git show main:backend/requirements.txt > requirements.txt   # develop にはコミットしない
 pip install -r requirements.txt
 ```
-
-`mysqlclient` と `mysql-connector-python` はコードから使っていません（DB ドライバは PyMySQL）。インストールに失敗する場合は、この 2 行を外して構いません。
 
 ### 2. 設定ファイル
 
@@ -55,11 +53,40 @@ npm run build   # 本番ビルド
 
 `npm install` ではなく `npm ci` を使ってください。`npm install` で依存が新しくなると、本番（lockfile どおり）では出ない型エラーが出ることがあります。例: react-icons 5.5 と TypeScript 4.9 の組み合わせで `TS2786` が出ます。
 
+### 画面遷移で値を受け取るページ
+
+修正・削除リクエストや完了画面などは、前の画面から `navigate(path, { state })` で渡された値を使います。こうしたページは `react-app/src/router/Router.tsx` で `RequireState` で包み、必須の値のキーを `stateKey` に指定します。URL を直接開いたときなど値が無い場合は、トップページへ移動します。
+
 ### TypeScript について
 
 - ビルドに使う TypeScript は 4.9 系です（react-scripts 5 の制約）。
 - `tsconfig.json` の `"ignoreDeprecations": "6.0"` は、エディタ同梱の新しい TypeScript が出す非推奨警告を消すためのものです。ビルドには影響しません。
 - `moduleResolution` は react-scripts が `node` に固定するため、変更できません。
+
+## 依存パッケージの更新と脆弱性の確認
+
+GitHub の Dependabot alerts（リポジトリの Security タブ）で、`main` の `backend/requirements.txt` と `react-app/package-lock.json` が検査されます。
+
+### バックエンド
+
+```bash
+pip install pip-audit
+pip-audit -r requirements.txt
+```
+
+- `requirements.txt` は、間接的な依存も含めてバージョンを固定しています。更新するときは、新しい venv に直接使うパッケージを入れ直し、動作確認のあと `pip freeze` の結果で置き換えます。
+- 直接使うパッケージ: fastapi、uvicorn、SQLAlchemy、PyMySQL、cryptography（PyMySQL の認証用）、pydantic、email-validator、python-multipart、PyJWT、bcrypt、boto3、slowapi、python-dotenv。
+- `Deprecated` は Python 3.11 でも入る 1.x に固定しています（3.x は Python 3.12 以上が必要）。
+
+### フロントエンド
+
+```bash
+cd react-app
+npm audit
+```
+
+- 画面で実際に動くライブラリ（axios、react-router-dom など）は、`package.json` のバージョンを上げて対応します。
+- 残っている指摘は、すべて react-scripts（Create React App）が内部で使うビルド・開発用ツールのものです。Create React App は更新が止まっているため、`npm audit fix` では解消できません（`npm audit fix --force` は react-scripts を壊すので使わないこと）。これらはブラウザに配信されるコードには含まれません。根本的に解消するには、ビルドツールの移行（Vite など）が必要です。
 
 ## ログインの確認
 

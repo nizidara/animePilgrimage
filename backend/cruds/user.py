@@ -7,6 +7,7 @@ import uuid
 import models.user as user_model
 import schemas.user as user_schema
 import logic.auth as auth
+import logic.input as input_logic
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
@@ -27,7 +28,7 @@ async def get_user_list(db:AsyncSession) -> List[Tuple[user_schema.UserLoginResp
 # read detail
 async def get_user_detail(db: AsyncSession, user_id: str) -> user_schema.UserLoginResponse:
     # convert str -> UUID
-    user_id_bytes = uuid.UUID(user_id).bytes
+    user_id_bytes = input_logic.uuid_to_bytes(user_id)
 
     # get
     user = db.query(user_model.User).filter(user_model.User.user_id == user_id_bytes).first()
@@ -44,7 +45,7 @@ async def get_user_detail(db: AsyncSession, user_id: str) -> user_schema.UserLog
 # auth function
 async def auth_user(db: AsyncSession, user_id:str) -> user_schema.CurrentUserResponse:
     # convert str -> UUID
-    user_id_bytes = uuid.UUID(user_id).bytes
+    user_id_bytes = input_logic.uuid_to_bytes(user_id)
 
     # get
     user = db.query(user_model.User).filter(user_model.User.user_id == user_id_bytes).first()

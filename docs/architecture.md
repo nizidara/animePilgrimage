@@ -45,12 +45,13 @@ flowchart LR
 | `cruds/` | DB の読み書き、S3 への画像保存・削除 |
 | `models/` | SQLAlchemy のテーブル定義 |
 | `schemas/` | Pydantic のリクエスト／レスポンス定義 |
-| `logic/` | 認証（`auth.py`）、S3（`upload.py`）、メール（`mail.py`）、入力整形（`input.py`） |
+| `logic/` | 認証（`auth.py`）、S3（`upload.py`）、メール（`mail.py`）、入力整形と ID の変換（`input.py`） |
 | `database/` | DB 接続（`db.py`）、DB コピースクリプト（`copy_db.py`） |
 | `properties/` | 環境変数の読み込みと定数（`properties.py`） |
 
 ## 認証
 
+- JWT の発行と検証には PyJWT を使います。
 - ログインすると、JWT のアクセストークン（1 時間）とリフレッシュトークン（30 日）を HttpOnly・Secure の Cookie に保存します。
 - フロントエンドは API が 401 を返すと `/users/refresh` でアクセストークンを取り直し、元のリクエストを 1 回だけ再試行します（`react-app/src/api/axiosInstance.ts`）。
 - パスワードは bcrypt でハッシュ化して保存します。

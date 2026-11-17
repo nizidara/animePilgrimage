@@ -51,7 +51,7 @@ async def edit_request_anime(
     anime_edit_dict.pop("icon", None)    # delete icon field
     user_name = None
     if anime_edit.user_id is not None:
-        anime_edit_dict['user_id'] = uuid.UUID(anime_edit.user_id).bytes
+        anime_edit_dict['user_id'] = input_logic.uuid_to_bytes(anime_edit.user_id)
         user = db.query(user_model.User).filter(user_model.User.user_id == anime_edit_dict['user_id']).first()
         user_name = user.user_name
     anime_edit_dict['contents'] = input_logic.normalize_break(anime_edit.contents)
