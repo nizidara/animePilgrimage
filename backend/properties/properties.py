@@ -14,6 +14,8 @@ user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
 database = os.getenv('DB_NAME')
+# set DB_SSL=true for DBs that require TLS (e.g. TiDB Cloud)
+db_ssl = os.getenv('DB_SSL', 'false').lower() == 'true'
 
 DB_URL = f"mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8mb4"
 
