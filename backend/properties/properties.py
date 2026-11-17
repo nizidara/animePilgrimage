@@ -48,8 +48,6 @@ refresh_token_expire_days = os.getenv('REFRESH_TOKEN_EXPIRE_DAYS')
 # cookie setting(dev)
 samesite = os.getenv('SAMESITE')
 
-# mail setting
-sender_email = os.getenv('SENDER_EMAIL')
-sender_password = os.getenv('SENDER_PASSWORD')
-recipient_email = os.getenv('RECIPIENT_EMAIL')
-email_server = os.getenv('EMAIL_SERVER')
+# mail setting (HTTPS relay on Xserver: xserver/contact_mail.php)
+mail_relay_url = os.getenv('MAIL_RELAY_URL')
+mail_relay_token = os.getenv('MAIL_RELAY_TOKEN')

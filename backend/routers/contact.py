@@ -45,7 +45,6 @@ async def get_contact(request: Request, current_user: user_schema.CurrentUserRes
 async def send_contact(request: Request, contents_body: contact_schema.ContactCreate, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     # send mail
     background_tasks.add_task(mail.notify_new_contact, contents_body)
-    background_tasks.add_task(mail.send_complete_contact, contents_body)
 
     return await contact_crud.create_contact(db, contents_body)
 
