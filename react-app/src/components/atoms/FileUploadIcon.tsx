@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid -- 見た目用のアイコン。クリックは親の label が受ける */
 import { FC, memo } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BsImage } from "react-icons/bs";

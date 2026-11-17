@@ -1,5 +1,5 @@
 import { memo, FC, useCallback, useState } from "react";
-import { Alert, Container, Form, ListGroup, Spinner } from "react-bootstrap";
+import { Alert, Container, ListGroup, Spinner } from "react-bootstrap";
 import { PlaceSummaryCard } from "../../organisms/card/PlaceSummaryCard";
 import { useNavigate } from "react-router-dom";
 import { PaginationControls } from "../../molecules/PaginationControls";

@@ -49,6 +49,7 @@ export const Guide: FC = memo(() =>{
 
             <Container>
                 <h2 className="mt-2">利用ガイド</h2>
+                {/* eslint-disable-next-line react/jsx-no-target-blank -- 自サイトへのリンク。noopener で十分で、リファラは残す */}
                 <p><a href="https://nizidara.com/pilgrimage-guide/" target="_blank" rel="noopener">こちらのページ</a>（外部ページ）に基本的な利用方法を記載しています。</p>
                 <p>気軽に聖地登録やコメント投稿をよろしくお願いします！</p>
                 <h2 className="mt-2">FAQ</h2>
