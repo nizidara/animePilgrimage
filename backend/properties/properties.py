@@ -14,6 +14,8 @@ user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
 database = os.getenv('DB_NAME')
+# set DB_SSL=true for DBs that require TLS (e.g. TiDB Cloud)
+db_ssl = os.getenv('DB_SSL', 'false').lower() == 'true'
 
 DB_URL = f"mysql+pymysql://{user}:{password}@{host}/{database}?charset=utf8mb4"
 
@@ -46,8 +48,6 @@ refresh_token_expire_days = os.getenv('REFRESH_TOKEN_EXPIRE_DAYS')
 # cookie setting(dev)
 samesite = os.getenv('SAMESITE')
 
-# mail setting
-sender_email = os.getenv('SENDER_EMAIL')
-sender_password = os.getenv('SENDER_PASSWORD')
-recipient_email = os.getenv('RECIPIENT_EMAIL')
-email_server = os.getenv('EMAIL_SERVER')
+# mail setting (HTTPS relay on Xserver: xserver/contact_mail.php)
+mail_relay_url = os.getenv('MAIL_RELAY_URL')
+mail_relay_token = os.getenv('MAIL_RELAY_TOKEN')

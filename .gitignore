@@ -6,3 +6,4 @@ react-app/public/uploads/*
 react-app/.env
 db/
 .env
+xserver/contact_mail_config.php
