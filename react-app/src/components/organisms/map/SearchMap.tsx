@@ -55,6 +55,7 @@ export const SearchMap: FC<SearchMapProps> = memo((props) => {
                 marker.remove();
             };
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- 初期マーカーは地図の準備時に一度だけ置く
     }, [map]);
 
     const handleSearch = (searchResult: { lat: number; lng: number }) => {

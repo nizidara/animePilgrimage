@@ -54,6 +54,7 @@ export const DisplayMap: FC<DisplayMapProps> = memo((props) => {
                     }); //マップに追加
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- map は ref を持つオブジェクトで再実行の条件にしない
     }, [geojson, onMarkerClick]);
 
     return (
