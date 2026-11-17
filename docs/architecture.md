@@ -51,6 +51,7 @@ flowchart LR
 
 ## 認証
 
+- JWT の発行と検証には PyJWT を使います。
 - ログインすると、JWT のアクセストークン（1 時間）とリフレッシュトークン（30 日）を HttpOnly・Secure の Cookie に保存します。
 - フロントエンドは API が 401 を返すと `/users/refresh` でアクセストークンを取り直し、元のリクエストを 1 回だけ再試行します（`react-app/src/api/axiosInstance.ts`）。
 - パスワードは bcrypt でハッシュ化して保存します。

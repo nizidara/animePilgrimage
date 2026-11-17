@@ -31,7 +31,7 @@ git checkout develop
 ### リリース前の確認
 
 - フロントエンド: `react-app/` で `npm ci` のあと `npm run build` が通ること。
-- バックエンド: Python パッケージを追加した場合は、`main` の `backend/requirements.txt` にも追加すること。
+- バックエンド: Python パッケージを追加・更新した場合は、`main` の `backend/requirements.txt` にも反映すること。
 - 環境変数を追加した場合は、push の前に Render／Vercel へ設定すること（[environment-variables.md](environment-variables.md)）。
 
 ### リリース後の確認
@@ -47,6 +47,8 @@ git checkout develop
 ### Render（バックエンド）
 
 - 無料プラン、リージョンは Singapore です。
+- Python は 3.11 または 3.12 が必要です。バージョンは Render の環境変数 `PYTHON_VERSION`（例: `3.12.10`）で指定できます。ビルドログの「Using Python version」で確認できます。
+- ビルドに失敗した場合、直前のデプロイがそのまま動き続けます。
 - 環境変数を変更して保存すると、自動で再デプロイされます。
 - 無料プランは一定時間アクセスがないとスリープするため、GitHub Actions の keep-alive で起こし続けています。
 - 無料プランは外向きの SMTP ポートが使えません。メールは Xserver の中継を使います（[mail-relay.md](mail-relay.md)）。
@@ -54,6 +56,7 @@ git checkout develop
 ### Vercel（フロントエンド）
 
 - 対象ディレクトリは `react-app/` です。
+- Node.js は 20 以上が必要です（Vercel のプロジェクト設定の Node.js Version）。
 - 環境変数はビルド時に埋め込まれるため、変更したら再デプロイが必要です。
 - ビルドに失敗した場合、直前のデプロイがそのまま公開され続けます。
 

@@ -1,5 +1,5 @@
 import bcrypt
-from jose import jwt
+import jwt
 from datetime import datetime, timedelta, timezone
 
 from properties.properties import secret_key, algorithm, access_token_expire_minutes, refresh_token_expire_days

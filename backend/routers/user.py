@@ -4,7 +4,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from jose import JWTError
+from jwt import PyJWTError
 
 import schemas.user as user_schema
 import cruds.user as user_crud
@@ -34,7 +34,7 @@ async def get_current_user_optional(access_token: str = Cookie(None), db: AsyncS
         
         return await user_crud.auth_user(db=db, user_id=user_id)
         
-    except JWTError:
+    except PyJWTError:
         return None
 
 #get user info in auth require
@@ -52,7 +52,7 @@ async def get_current_user_required(access_token: str = Cookie(None), db: AsyncS
         
         return await user_crud.auth_user(db=db, user_id=user_id)
         
-    except JWTError:
+    except PyJWTError:
         raise HTTPException(status_code=401, detail="Access refresh token")
 
 # get user detail
@@ -135,7 +135,7 @@ async def refresh_token(response: Response, refresh_token: str = Cookie(None)):
 
         return {"message": "Token refreshed"}
     
-    except JWTError:
+    except PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
     
 # logout
