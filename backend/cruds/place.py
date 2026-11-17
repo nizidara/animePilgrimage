@@ -29,11 +29,11 @@ async def create_place(
         place_dict.pop("images", None)    # delete image field
         place_dict.pop("icon_index", None)
         if place_body.created_user_id is not None:
-            place_dict['created_user_id'] = uuid.UUID(place_body.created_user_id).bytes
+            place_dict['created_user_id'] = input_logic.uuid_to_bytes(place_body.created_user_id)
             created_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['created_user_id']).first()
             created_user_name = created_user.user_name
         if place_body.edited_user_id is not None:
-            place_dict['edited_user_id'] = uuid.UUID(place_body.edited_user_id).bytes
+            place_dict['edited_user_id'] = input_logic.uuid_to_bytes(place_body.edited_user_id)
             edited_user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['edited_user_id']).first()
             edited_user_name = edited_user.user_name
         if place_body.comment:
@@ -94,12 +94,12 @@ async def create_request_place(
     user_name = None
     if place_body:
         place_dict = place_body.model_dump()
-        place_dict['place_id'] = uuid.UUID(place_body.place_id).bytes
+        place_dict['place_id'] = input_logic.uuid_to_bytes(place_body.place_id)
         place_dict['contents'] = input_logic.normalize_break(place_body.contents)
         if place_body.comment:
             place_dict['comment'] = input_logic.normalize_break(place_body.comment)
         if place_body.user_id is not None:
-            place_dict['user_id'] = uuid.UUID(place_body.user_id).bytes
+            place_dict['user_id'] = input_logic.uuid_to_bytes(place_body.user_id)
             user = db.query(user_model.User).filter(user_model.User.user_id == place_dict['user_id']).first()
             user_name = user.user_name
         
@@ -193,7 +193,7 @@ async def get_place_list(db:AsyncSession, name: Optional[str] = None, anime_id: 
 # read detail
 async def get_place_detail(db: AsyncSession, place_id: str) -> place_schema.PlaceResponse:
     # convert str -> UUID
-    place_id_bytes = uuid.UUID(place_id).bytes
+    place_id_bytes = input_logic.uuid_to_bytes(place_id)
 
     # get
     Created_User = aliased(user_model.User)
@@ -265,7 +265,7 @@ async def get_request_place_detail(db: AsyncSession, request_place_id: int) -> p
 # update flag
 async def update_place_flag(db: AsyncSession, place_id: str, flag: int) -> place_schema.PlaceResponse:
     # convert str -> UUID
-    place_id_bytes = uuid.UUID(place_id).bytes
+    place_id_bytes = input_logic.uuid_to_bytes(place_id)
     
     # update flag
     Created_User = aliased(user_model.User)
@@ -377,7 +377,7 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
                 response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
             if place.edited_user_id is not None:
                 response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-                edited_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['edited_user_id']).bytes).first()
+                edited_user = db.query(user_model.User).filter(user_model.User.user_id == input_logic.uuid_to_bytes(response_dict['edited_user_id'])).first()
                 edited_user_name = edited_user.user_name
 
             # get anime photo file names
@@ -392,14 +392,14 @@ async def approve_request_place(db: AsyncSession, request_place_id: int) -> plac
 # update place(direct)
 async def update_place(db: AsyncSession, place_id: str, place_body: place_schema.PlaceAdminEdit) -> place_schema.PlaceResponse:
     # convert str -> UUID
-    place_id_bytes = uuid.UUID(place_id).bytes
+    place_id_bytes = input_logic.uuid_to_bytes(place_id)
     place_dict = None
     if place_body:
         place_dict = place_body.model_dump()
         if place_body.created_user_id is not None:
-            place_dict['created_user_id'] = uuid.UUID(place_body.created_user_id).bytes
+            place_dict['created_user_id'] = input_logic.uuid_to_bytes(place_body.created_user_id)
         if place_body.edited_user_id is not None:
-            place_dict['edited_user_id'] = uuid.UUID(place_body.edited_user_id).bytes
+            place_dict['edited_user_id'] = input_logic.uuid_to_bytes(place_body.edited_user_id)
     
     # update
     place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_bytes).first()
@@ -422,11 +422,11 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
         response_dict['place_id'] = str(uuid.UUID(bytes=place.place_id))
         if place.created_user_id is not None:
             response_dict['created_user_id'] = str(uuid.UUID(bytes=place.created_user_id))
-            created_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['created_user_id']).bytes).first()
+            created_user = db.query(user_model.User).filter(user_model.User.user_id == input_logic.uuid_to_bytes(response_dict['created_user_id'])).first()
             created_user_name = created_user.user_name
         if place.edited_user_id is not None:
             response_dict['edited_user_id'] = str(uuid.UUID(bytes=place.edited_user_id))
-            edited_user = db.query(user_model.User).filter(user_model.User.user_id == uuid.UUID(response_dict['edited_user_id']).bytes).first()
+            edited_user = db.query(user_model.User).filter(user_model.User.user_id == input_logic.uuid_to_bytes(response_dict['edited_user_id'])).first()
             edited_user_name = edited_user.user_name
 
         # get place icon
@@ -445,7 +445,7 @@ async def update_place(db: AsyncSession, place_id: str, place_body: place_schema
 # delete place
 async def delete_place(db: AsyncSession, place_id: str) -> place_model.Place:
     # convert str -> UUID
-    place_id_bytes = uuid.UUID(place_id).bytes
+    place_id_bytes = input_logic.uuid_to_bytes(place_id)
     
     # delete
     place = db.query(place_model.Place).filter(place_model.Place.place_id == place_id_bytes).first()

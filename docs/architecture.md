@@ -45,7 +45,7 @@ flowchart LR
 | `cruds/` | DB の読み書き、S3 への画像保存・削除 |
 | `models/` | SQLAlchemy のテーブル定義 |
 | `schemas/` | Pydantic のリクエスト／レスポンス定義 |
-| `logic/` | 認証（`auth.py`）、S3（`upload.py`）、メール（`mail.py`）、入力整形（`input.py`） |
+| `logic/` | 認証（`auth.py`）、S3（`upload.py`）、メール（`mail.py`）、入力整形と ID の変換（`input.py`） |
 | `database/` | DB 接続（`db.py`）、DB コピースクリプト（`copy_db.py`） |
 | `properties/` | 環境変数の読み込みと定数（`properties.py`） |
 

@@ -53,6 +53,10 @@ npm run build   # 本番ビルド
 
 `npm install` ではなく `npm ci` を使ってください。`npm install` で依存が新しくなると、本番（lockfile どおり）では出ない型エラーが出ることがあります。例: react-icons 5.5 と TypeScript 4.9 の組み合わせで `TS2786` が出ます。
 
+### 画面遷移で値を受け取るページ
+
+修正・削除リクエストや完了画面などは、前の画面から `navigate(path, { state })` で渡された値を使います。こうしたページは `react-app/src/router/Router.tsx` で `RequireState` で包み、必須の値のキーを `stateKey` に指定します。URL を直接開いたときなど値が無い場合は、トップページへ移動します。
+
 ### TypeScript について
 
 - ビルドに使う TypeScript は 4.9 系です（react-scripts 5 の制約）。

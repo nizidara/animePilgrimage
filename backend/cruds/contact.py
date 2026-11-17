@@ -17,7 +17,7 @@ async def create_contact(
     contact_dict = contact_create.model_dump()
     user_name = None
     if contact_create.user_id is not None:
-        contact_dict['user_id'] = uuid.UUID(contact_create.user_id).bytes
+        contact_dict['user_id'] = input_logic.uuid_to_bytes(contact_create.user_id)
         user = db.query(user_model.User).filter(user_model.User.user_id == contact_dict['user_id']).first()
         user_name = user.user_name
     contact_dict['contents'] = input_logic.normalize_break(contact_create.contents)

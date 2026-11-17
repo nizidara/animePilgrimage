@@ -8,7 +8,7 @@
 - **権限**: 「管理者」の API は、未ログインだと 401、管理者以外だと 403 を返します。
 - **レート制限**: IP 単位です。超えると 429 を返します。表の「制限」は 1 分あたりの回数です。
 - **形式**: 「form」は `multipart/form-data`（画像を含む）、それ以外は JSON です。
-- **ID**: アニメは数値、聖地・コメント・写真は UUID の文字列です。
+- **ID**: アニメは数値、聖地・コメント・写真は UUID の文字列です。UUID として読めない値を渡すと 422（`Invalid ID format`）を返します。
 
 ## アニメ `/anime`
 
@@ -41,7 +41,7 @@
 | PUT | `/places/{place_id}?flag=` | 管理者 | 10 | 表示フラグの変更 |
 | PUT | `/places/edit/{request_place_id}` | 管理者 | 10 | 修正リクエストの承認 |
 | PUT | `/places/edit/admin/{place_id}` | 管理者 | 10 | 聖地の直接編集 |
-| DELETE | `/places/{place_id}` | 管理者 | 10 | 聖地の削除 |
+| DELETE | `/places/{place_id}` | 管理者 | 10 | 聖地の削除。コメント・写真・アイコン・リクエストと S3 の画像も消える。画面からは呼んでいない |
 | DELETE | `/places/request/{request_place_id}` | 管理者 | 10 | リクエストの削除 |
 
 ## コメント `/comments`
@@ -96,8 +96,8 @@
 | POST | `/users/login` | 公開 | 5 | ログイン（form: `username`、`password`）。認証 Cookie を発行 |
 | POST | `/users/refresh` | Cookie | なし | リフレッシュトークンからアクセストークンを再発行 |
 | POST | `/users/logout` | 公開 | なし | 認証 Cookie を削除 |
-| GET | `/users/auth` | ログイン | なし | ログイン中のユーザー情報。未ログインは 401 |
-| GET | `/users/auth/optional` | 公開 | なし | ログイン中のユーザー情報。未ログインは `null` |
+| GET | `/users/auth` | ログイン | なし | ログイン中のユーザー情報。未ログイン、またはユーザーが削除済みの場合は 401 |
+| GET | `/users/auth/optional` | 公開 | なし | ログイン中のユーザー情報。未ログインは `null`（200） |
 
 ## その他
 
